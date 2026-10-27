@@ -1,0 +1,38 @@
+name: Bug
+description: Signaler un comportement incorrect
+title: "[BUG] "
+labels: ["type: bug"]
+assignees: ["ycuzou22"]
+body:
+  - type: textarea
+    id: constat
+    attributes:
+      label: Ce qui se passe
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Ce qui devrait se passer
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes pour reproduire
+      value: |
+        1.
+    validations:
+      required: true
+  - type: input
+    id: appareil
+    attributes:
+      label: Appareil ou émulateur
+      placeholder: "Pixel 8, Android 15 / émulateur API 26"
+  - type: dropdown
+    id: priorite
+    attributes:
+      label: Priorité
+      options: ["P0 critique", "P1 haute", "P2 moyenne", "P3 basse"]
+    validations:
+      required: true

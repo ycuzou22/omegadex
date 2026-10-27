@@ -1,0 +1,43 @@
+name: Tâche
+description: Une tâche parente qui regroupe plusieurs sous-tâches
+title: "[TXX] "
+labels: ["type: tâche"]
+assignees: ["ycuzou22"]
+body:
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte
+      description: Pourquoi cette tâche existe, lien avec le cahier des charges.
+    validations:
+      required: true
+  - type: textarea
+    id: objectif
+    attributes:
+      label: Objectif
+      description: Ce qui doit être vrai une fois la tâche terminée.
+    validations:
+      required: true
+  - type: textarea
+    id: criteres
+    attributes:
+      label: Critères d'acceptation
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: ordre
+    attributes:
+      label: Ordre d'exécution
+      description: Tâches dont celle-ci dépend et tâches qu'elle débloque.
+      value: |
+        - Commence après :
+        - Débloque :
+  - type: dropdown
+    id: priorite
+    attributes:
+      label: Priorité
+      options: ["P0 critique", "P1 haute", "P2 moyenne", "P3 basse"]
+    validations:
+      required: true

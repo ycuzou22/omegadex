@@ -1,0 +1,47 @@
+name: Sous-tâche
+description: Une étape concrète d'une tâche, traitée dans une seule branche et une seule pull request
+title: "[TXX.Y] "
+labels: ["type: sous-tâche"]
+assignees: ["ycuzou22"]
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Tâche parente
+      placeholder: "#12"
+    validations:
+      required: true
+  - type: textarea
+    id: but
+    attributes:
+      label: But
+    validations:
+      required: true
+  - type: textarea
+    id: travail
+    attributes:
+      label: Travail à réaliser
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: criteres
+    attributes:
+      label: Critères d'acceptation
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: ordre
+    attributes:
+      label: Ordre d'exécution
+      value: |
+        - Commence après :
+        - Ensuite :
+  - type: input
+    id: branche
+    attributes:
+      label: Branche
+      placeholder: "feature/<numéro>-<description>"
