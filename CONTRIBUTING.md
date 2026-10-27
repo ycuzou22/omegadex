@@ -1,6 +1,6 @@
 # Contribuer à Omégadex
 
-Ce document fixe les règles du dépôt : branches, commits, pull requests et nommage des fichiers. Les contrôles automatiques de `.github/workflows/pr-conventions.yml` refusent toute pull request qui ne les respecte pas.
+Ce document fixe les règles du dépôt : branches, commits, pull requests, nommage des fichiers et qualité du code. Les contrôles automatiques de `.github/workflows/pr-conventions.yml` refusent toute pull request qui ne les respecte pas.
 
 ## 1. Branches
 
@@ -169,7 +169,32 @@ app/src/main/java/com/omegadex/app/
     └── theme/       # couleurs, typographies, formes
 ```
 
-## 6. Tâches GitHub
+## 6. Qualité du code
+
+Trois outils vérifient le code Kotlin. Ils doivent passer avant d'ouvrir une pull request :
+
+```bash
+./gradlew ktlintFormat          # corrige automatiquement la mise en forme
+./gradlew ktlintCheck detekt lint
+```
+
+| Outil | Rôle | Configuration |
+| --- | --- | --- |
+| `.editorconfig` | Base commune à l'IDE et à ktlint : UTF-8, fin de ligne LF, indentation 4 espaces (2 pour YAML et JSON), lignes de 120 caractères maximum | `.editorconfig` |
+| ktlint (`ktlintCheck`, `ktlintFormat`) | Mise en forme Kotlin, style `android_studio`, virgules finales autorisées, imports triés | section `[*.{kt,kts}]` de `.editorconfig` |
+| detekt (`detekt`) | Analyse statique : complexité, nommage, code mort, nombres magiques | `config/detekt/detekt.yml` |
+| Android Lint (`lint`) | Erreurs propres à Android : ressources, manifeste, API | bloc `lint` de `app/build.gradle.kts` |
+
+Règles adaptées à Jetpack Compose :
+
+- les fonctions `@Composable` sont en PascalCase et peuvent avoir plus de paramètres et de lignes que les autres ;
+- les aperçus `@Preview` sont privés et ne sont pas signalés comme inutilisés ;
+- les nombres magiques sont tolérés dans `ui/theme/` (couleurs, dimensions) et dans les tests ;
+- les imports avec `*` sont interdits.
+
+Une règle ne se désactive pas dans le code (`@Suppress`) sans justification en commentaire.
+
+## 7. Tâches GitHub
 
 - Les tâches parentes portent le label `type: tâche`, les sous-tâches `type: sous-tâche`, et sont liées entre elles.
 - L'ordre d'exécution est donné par le numéro `T01`, `T02`… et détaillé dans `docs/roadmap.md` et dans chaque issue.

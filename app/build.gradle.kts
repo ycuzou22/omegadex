@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -35,6 +37,37 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    lint {
+        abortOnError = true
+        checkDependencies = true
+        // Les mises à jour de dépendances sont suivies à part, elles ne bloquent pas le build.
+        disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
+    }
+}
+
+ktlint {
+    android.set(true)
+    outputToConsole.set(true)
+    filter {
+        exclude { it.file.path.contains("/build/") }
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+    source.setFrom("src/main/java", "src/test/java")
+}
+
+// detekt 1.23 embarque son propre compilateur Kotlin : on évite qu'il soit aligné sur la version du projet.
+configurations.matching { it.name == "detekt" }.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin") {
+            useVersion("2.0.21")
+        }
     }
 }
 
