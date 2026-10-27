@@ -3,7 +3,7 @@ name: Conventions de PR
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
-    branches: [main, dev]
+    branches: [main, dev, dev-frontend, dev-backend]
 
 permissions:
   contents: read
@@ -20,27 +20,32 @@ jobs:
           BASE: ${{ github.event.pull_request.base.ref }}
         run: |
           fail=0
-          if [ "$BASE" = "main" ]; then
-            if [ "$HEAD" != "dev" ]; then
-              echo "::error::Seule la branche dev peut être fusionnée dans main (branche reçue : $HEAD)."
-              fail=1
-            fi
-            if ! printf '%s' "$TITLE" | grep -Eq '^\[RELEASE\] v[0-9]+\.[0-9]+\.[0-9]+$'; then
-              echo "::error::Le titre d'une release doit être « [RELEASE] vX.Y.Z »."
-              fail=1
-            fi
-          else
-            if ! printf '%s' "$HEAD" | grep -Eq '^(feature|fix|docs|test|refactor|chore|ci)/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$'; then
-              echo "::error::Nom de branche invalide : « $HEAD ». Format attendu : <type>/<numéro-issue>-<description> (voir CONTRIBUTING.md)."
-              fail=1
-            fi
-            if ! printf '%s' "$TITLE" | grep -Eq '^\[(ADD|UPDATE|FIX|DEL|REFACTO|STYLE|TEST|DOCS|CONFIG|CI)\] .+ \(#[0-9]+\)$'; then
-              echo "::error::Titre invalide : « $TITLE ». Format attendu : [TAG] description (#numéro-issue) (voir CONTRIBUTING.md)."
-              fail=1
-            fi
-          fi
-          if [ "${#TITLE}" -gt 100 ]; then
-            echo "::error::Le titre dépasse 100 caractères."
-            fail=1
-          fi
+          err() { echo "::error::$1"; fail=1; }
+          matches() { printf '%s' "$1" | grep -Eq "$2"; }
+
+          case "$BASE" in
+            main)
+              [ "$HEAD" = "dev" ] || err "Seule la branche dev peut être fusionnée dans main (reçu : $HEAD)."
+              matches "$TITLE" '^\[RELEASE\] v[0-9]+\.[0-9]+\.[0-9]+$' || err "Titre attendu pour une release : « [RELEASE] vX.Y.Z »."
+              ;;
+            dev)
+              case "$HEAD" in
+                dev-frontend|dev-backend) ;;
+                *) err "Seules dev-frontend et dev-backend peuvent être fusionnées dans dev (reçu : $HEAD)." ;;
+              esac
+              [ "$TITLE" = "[MERGE] $HEAD vers dev" ] || err "Titre attendu : « [MERGE] $HEAD vers dev »."
+              ;;
+            dev-frontend|dev-backend)
+              if [ "$HEAD" = "dev" ]; then
+                [ "$TITLE" = "[MERGE] dev vers $BASE" ] || err "Titre attendu pour une remise à jour : « [MERGE] dev vers $BASE »."
+              else
+                matches "$HEAD" '^(feature|fix|docs|test|refactor|chore|ci)/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$' \
+                  || err "Nom de branche invalide : « $HEAD ». Format attendu : <type>/<numéro-issue>-<description> (voir CONTRIBUTING.md)."
+                matches "$TITLE" '^\[(ADD|UPDATE|FIX|DEL|REFACTO|STYLE|TEST|DOCS|CONFIG|CI)\] .+ \(#[0-9]+\)$' \
+                  || err "Titre invalide : « $TITLE ». Format attendu : [TAG] description (#numéro-issue)."
+              fi
+              ;;
+          esac
+
+          [ "${#TITLE}" -le 100 ] || err "Le titre dépasse 100 caractères."
           exit $fail

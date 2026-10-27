@@ -27,7 +27,7 @@ Le projet Android sera initialisé par la tâche T01. Le guide de lancement sur 
 
 ## Organisation
 
-- Branches : `main` (stable) ← `dev` (intégration) ← branches éphémères par sous-tâche.
+- Branches : `main` (stable, une release par milestone) ← `dev` (branche par défaut) ← `dev-frontend` / `dev-backend` ← branches éphémères par sous-tâche.
 - Conventions de branches, commits, pull requests et nommage : [CONTRIBUTING.md](CONTRIBUTING.md).
 - Ordre d'exécution des tâches : [docs/roadmap.md](docs/roadmap.md).
 

@@ -1,7 +1,8 @@
 <!--
-Titre de la PR : [TAG] description (#numéro-issue)
-Exemple : [ADD] écran de l'étape en cours (#42)
-Cible : dev (seule une release [RELEASE] vX.Y.Z va de dev vers main)
+Sous-tâche : [TAG] description (#numéro-issue), vers dev-frontend ou dev-backend selon le label « couche ».
+  Exemple : [ADD] écran de l'étape en cours (#42)
+Intégration : [MERGE] dev-frontend vers dev  |  [MERGE] dev-backend vers dev
+Release (fin de milestone) : [RELEASE] vX.Y.Z, de dev vers main
 -->
 
 ## Sous-tâche traitée
@@ -24,7 +25,7 @@ Closes #
 
 ## Vérifications
 
-- [ ] La branche suit le format `<type>/<numéro-issue>-<description>`
+- [ ] La branche suit le format `<type>/<numéro-issue>-<description>` et cible la bonne branche d'intégration (`dev-frontend` ou `dev-backend`)
 - [ ] Le titre suit le format `[TAG] description (#numéro-issue)`
 - [ ] Les commits suivent la norme de CONTRIBUTING.md
 - [ ] Le build et les tests passent en local (`./gradlew build test`)
