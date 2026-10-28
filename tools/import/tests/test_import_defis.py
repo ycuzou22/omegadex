@@ -62,6 +62,9 @@ class ValidationDefisTest(unittest.TestCase):
     def test_defi_d_etape_sans_etape(self):
         self.rejet(avec(type="ETAPE", etape=None), "doit indiquer « etape » entre 0 et 12")
 
+    def test_ecart_au_dessus_du_plafond(self):
+        self.rejet(avec(parametres={"type": "eau", "ecart": -3}), "ne vise jamais au-dessus du plafond")
+
     def test_condition_inconnue(self):
         self.rejet(avec(deblocage={"etapeMin": 1, "conditions": ["TOUJOURS"]}), "condition inconnue")
 
