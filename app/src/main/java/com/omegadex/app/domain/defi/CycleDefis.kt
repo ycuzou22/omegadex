@@ -131,3 +131,10 @@ class RetenterDefiUseCase @Inject constructor(private val progression: Progressi
         return progression.ajouterDefi(runId, rate.modeleId, rate.especeId, rate.etapeId)
     }
 }
+
+/** Les trois actions du joueur sur ses défis, regroupées pour les écrans. */
+class ActionsSurDefis @Inject constructor(
+    val accepter: AccepterDefiUseCase,
+    val valider: ValiderDefiUseCase,
+    val retenter: RetenterDefiUseCase,
+)
