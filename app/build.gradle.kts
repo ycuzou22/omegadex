@@ -22,6 +22,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Couverture JaCoCo des tests JVM (createDebugUnitTestCoverageReport), contrôlée par la CI.
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
