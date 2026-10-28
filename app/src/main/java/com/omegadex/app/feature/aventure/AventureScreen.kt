@@ -108,8 +108,12 @@ private fun AventureContenu(
 }
 
 @Composable
-private fun CarteEtape(etape: AventureUiState.EtapeEnCours, onCocher: (Int, Boolean) -> Unit) {
-    CarteRubis(Modifier.fillMaxWidth()) {
+internal fun CarteEtape(
+    etape: AventureUiState.EtapeEnCours,
+    onCocher: (Int, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    CarteRubis(modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.aventure_etape, etape.numero, etape.total).uppercase(),

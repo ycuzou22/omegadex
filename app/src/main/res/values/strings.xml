@@ -146,4 +146,46 @@
     <string name="methode_oeuf">Œuf</string>
     <string name="methode_echange_requis">Échange requis</string>
     <string name="espece_fiche_titre">Fiche Pokémon</string>
+
+    <!-- Défis -->
+    <string name="defis_titre">Défis</string>
+    <string name="defis_titre_espece">Défis de %1$s</string>
+    <string name="defis_reussite">%1$d / %2$d réussis</string>
+    <string name="defis_bilan">%1$d actifs · %2$d réussis · %3$d ratés</string>
+    <string name="defis_jauge">Taux de réussite : %1$d %%</string>
+    <string name="defis_toutes">Toutes</string>
+    <string name="defis_onglet_actifs">Actifs</string>
+    <string name="defis_onglet_disponibles">Disponibles</string>
+    <string name="defis_onglet_termines">Terminés</string>
+    <string name="defis_relever">Relever</string>
+    <string name="defis_reussi">Réussi</string>
+    <string name="defis_rate">Raté</string>
+    <string name="defis_retenter">Retenter</string>
+    <string name="defis_etat_reussi">Réussi</string>
+    <string name="defis_etat_rate">Raté</string>
+    <string name="defis_voir_espece">Défis de %1$s</string>
+    <string name="defis_vide_actifs">Aucun défi en cours. Relève un défi disponible !</string>
+    <string name="defis_vide_disponibles">Aucun défi disponible pour l\'instant : capture des Pokémon et avance dans l\'aventure.</string>
+    <string name="defis_vide_termines">Aucun défi terminé.</string>
+    <string name="defis_refus_espece">Ce Pokémon relève déjà un défi : termine-le d\'abord.</string>
+    <string name="defis_aucune_run">Aucune run en cours.</string>
+    <string name="defis_retour">Retour</string>
+    <string name="type_defi_etape">Étape</string>
+    <string name="type_defi_espece">Espèce</string>
+    <string name="type_defi_evolution">Évolution</string>
+    <string name="type_defi_rotation">Rotation</string>
+    <string name="type_defi_monotype">Monotype</string>
+    <string name="type_defi_navi_dex">Navi-Dex</string>
+    <string name="type_defi_mega">Méga</string>
+    <string name="type_defi_concours">Concours</string>
+
+    <!-- Accueil : jauges -->
+    <string name="accueil_jauge_aventure">Aventure</string>
+    <string name="accueil_jauge_pokedex">Pokédex</string>
+    <string name="accueil_jauge_defis">Défis</string>
+    <string name="accueil_pourcentage">%1$d %%</string>
+    <string name="accueil_fraction">%1$d/%2$d</string>
+    <string name="accueil_jauge_description_pourcentage">%1$s : %2$d %%</string>
+    <string name="accueil_jauge_description_fraction">%1$s : %2$d sur %3$d</string>
+    <string name="accueil_defi_du_jour">Défi du jour · %1$s</string>
 </resources>
