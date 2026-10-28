@@ -14,9 +14,8 @@ import kotlinx.coroutines.withContext
  * Écrit les sauvegardes dans le fichier choisi par le joueur avec le sélecteur de fichiers Android
  * (`ActivityResultContracts.CreateDocument("application/json")`), via le ContentResolver.
  */
-class FichiersSauvegardeAndroid @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : FichiersSauvegarde {
+class FichiersSauvegardeAndroid @Inject constructor(@ApplicationContext private val context: Context) :
+    FichiersSauvegarde {
     override suspend fun ecrire(destination: String, sauvegarde: Sauvegarde) = withContext(Dispatchers.IO) {
         val contenu = SauvegardeJson.encoder(sauvegarde)
         // « wt » : un fichier existant choisi à nouveau est tronqué, pas complété.
