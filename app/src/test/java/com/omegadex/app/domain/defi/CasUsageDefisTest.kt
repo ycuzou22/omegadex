@@ -25,8 +25,8 @@ import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.repository.RunActiveRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
-import com.omegadex.app.testutil.FauxComptes
 import com.omegadex.app.testutil.FausseSession
+import com.omegadex.app.testutil.FauxComptes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
