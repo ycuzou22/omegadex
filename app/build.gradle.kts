@@ -101,6 +101,7 @@ dependencies {
 
     // Argon2id (hachage des mots de passe), en Java pur
     implementation(libs.bouncycastle)
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
