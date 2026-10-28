@@ -51,19 +51,20 @@ def wikitexte(titre: str, rafraichir: bool = False) -> str:
     return texte
 
 
-def telecharger_lieux() -> list[str]:
-    """Télécharge la page de chaque lieu de donnees/lieux_rosa.json ; renvoie les pages introuvables."""
-    lieux = json.loads((pathlib.Path(__file__).resolve().parent / "donnees" / "lieux_rosa.json").read_text(encoding="utf-8"))
-    manquantes = []
-    for lieu in lieux:
+def telecharger_tout() -> list[str]:
+    """Télécharge le module de localisations et la page du champion de chaque étape ; renvoie les échecs."""
+    pages = [MODULE_LOCALISATIONS]
+    etapes = json.loads((pathlib.Path(__file__).resolve().parent / "donnees" / "etapes_rosa.json").read_text(encoding="utf-8"))
+    pages += [e["page"] for e in etapes["etapes"]]
+    echecs = []
+    for page in dict.fromkeys(pages):
         try:
-            wikitexte(lieu["page"])
+            wikitexte(page)
         except (LookupError, OSError) as erreur:
-            manquantes.append(f"{lieu['page']} : {erreur}")
-    return manquantes
+            echecs.append(f"{page} : {erreur}")
+    return echecs
 
 
 if __name__ == "__main__":
-    for ligne in telecharger_lieux():
+    for ligne in telecharger_tout():
         print("INTROUVABLE", ligne)
-    wikitexte(MODULE_LOCALISATIONS)
