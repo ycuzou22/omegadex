@@ -12,19 +12,13 @@ import com.omegadex.app.ui.components.EcranEnConstruction
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 @Composable
-fun AccueilScreen(
-    modifier: Modifier = Modifier,
-    viewModel: AccueilViewModel = hiltViewModel(),
-) {
+fun AccueilScreen(modifier: Modifier = Modifier, viewModel: AccueilViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     AccueilContenu(uiState = uiState, modifier = modifier)
 }
 
 @Composable
-private fun AccueilContenu(
-    uiState: AccueilUiState,
-    modifier: Modifier = Modifier,
-) {
+private fun AccueilContenu(uiState: AccueilUiState, modifier: Modifier = Modifier) {
     EcranEnConstruction(
         titre = stringResource(R.string.app_nom),
         detail = stringResource(R.string.accueil_version, uiState.version),

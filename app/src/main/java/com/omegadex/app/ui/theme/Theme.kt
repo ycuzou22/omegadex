@@ -11,10 +11,7 @@ import androidx.compose.runtime.Composable
  * La direction artistique « Épuré Oméga » (couleurs, typographies, formes) arrive avec T02.1.
  */
 @Composable
-fun OmegadexTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
-) {
+fun OmegadexTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colorScheme = if (darkTheme) {
         darkColorScheme(primary = RubisClair)
     } else {

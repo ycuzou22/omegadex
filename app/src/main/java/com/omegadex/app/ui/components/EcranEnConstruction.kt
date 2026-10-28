@@ -13,11 +13,7 @@ import com.omegadex.app.ui.theme.OmegadexTheme
 
 /** Écran temporaire affiché par les onglets qui ne sont pas encore développés. */
 @Composable
-fun EcranEnConstruction(
-    titre: String,
-    modifier: Modifier = Modifier,
-    detail: String? = null,
-) {
+fun EcranEnConstruction(titre: String, modifier: Modifier = Modifier, detail: String? = null) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

@@ -12,10 +12,7 @@ import com.omegadex.app.feature.equipe.EquipeScreen
 import com.omegadex.app.feature.pokedex.PokedexScreen
 
 @Composable
-fun OmegadexNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
-) {
+fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
         startDestination = Destination.ACCUEIL.route,

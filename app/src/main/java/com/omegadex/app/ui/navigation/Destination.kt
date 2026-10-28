@@ -14,11 +14,7 @@ import com.omegadex.app.R
  * Onglets de la barre de navigation principale, dans l'ordre d'affichage.
  * Les icônes Material sont provisoires : les icônes Ω et gemme arrivent avec T02.3.
  */
-enum class Destination(
-    val route: String,
-    @param:StringRes val libelle: Int,
-    val icone: ImageVector,
-) {
+enum class Destination(val route: String, @param:StringRes val libelle: Int, val icone: ImageVector) {
     ACCUEIL("accueil", R.string.nav_accueil, Icons.Filled.Home),
     AVENTURE("aventure", R.string.nav_aventure, Icons.Filled.Place),
     POKEDEX("pokedex", R.string.nav_pokedex, Icons.AutoMirrored.Filled.List),
