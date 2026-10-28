@@ -185,6 +185,10 @@ Trois outils vérifient le code Kotlin. Ils doivent passer avant d'ouvrir une pu
 | detekt (`detekt`) | Analyse statique : complexité, nommage, code mort, nombres magiques | `config/detekt/detekt.yml` |
 | Android Lint (`lint`) | Erreurs propres à Android : ressources, manifeste, API | bloc `lint` de `app/build.gradle.kts` |
 
+Les tests JVM (`./gradlew test`, Robolectric) tournent dans la CI. Les tests qui ont besoin d'un vrai appareil
+(chiffrement SQLCipher, Android Keystore) sont dans `app/src/androidTest` : lancez-les avec un émulateur démarré via
+`./gradlew connectedDebugAndroidTest` avant d'ouvrir une pull request qui touche à la sécurité ou aux bases.
+
 Règles adaptées à Jetpack Compose :
 
 - les fonctions `@Composable` sont en PascalCase et peuvent avoir plus de paramètres et de lignes que les autres ;

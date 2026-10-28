@@ -6,7 +6,9 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
-import com.omegadex.app.data.repository.SessionEnMemoire
+import com.omegadex.app.data.repository.SessionDataStore
+import com.omegadex.app.data.securite.CleBaseKeystore
+import com.omegadex.app.data.securite.FournisseurCleBase
 import com.omegadex.app.data.securite.HacheurArgon2
 import com.omegadex.app.domain.compte.HacheurMotDePasse
 import com.omegadex.app.domain.repository.CompteRepository
@@ -47,5 +49,9 @@ abstract class RepositoryModule {
     abstract fun bindHacheur(impl: HacheurArgon2): HacheurMotDePasse
 
     @Binds
-    abstract fun bindSession(impl: SessionEnMemoire): SessionRepository
+    abstract fun bindSession(impl: SessionDataStore): SessionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCleBase(impl: CleBaseKeystore): FournisseurCleBase
 }
