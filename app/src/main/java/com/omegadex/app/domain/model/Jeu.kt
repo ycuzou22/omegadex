@@ -82,4 +82,6 @@ data class Rencontre(
     val methode: MethodeRencontre,
     val niveauMin: Int?,
     val niveauMax: Int?,
+    val taux: Int?,
+    val condition: String?,
 )

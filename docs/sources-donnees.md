@@ -4,7 +4,10 @@ Les données de Rubis Oméga embarquées dans l'application sont importées par 
 
 | Source | Données | Accès | Licence |
 | --- | --- | --- | --- |
+| [Poképédia](https://www.pokepedia.fr) | Lieux de Rubis Oméga (zones annexes et lieux mirages compris), rencontres : méthode, niveaux, taux, conditions, exclusivités de version | Module « Localisations/Données/Pokémon Rubis Oméga et Saphir Alpha » lu par l'API MediaWiki (`source_pokepedia.py`), mis en cache | [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/deed.fr) : seuls des faits en sont extraits |
 | [PokéAPI](https://github.com/PokeAPI/pokeapi) | Espèces, noms français, types, statistiques, talents, évolutions, attaques et apprentissages | Fichiers CSV du dépôt (`data/v2/csv`), commit figé dans `source_pokeapi.py` | Code sous licence BSD-3-Clause ; données issues du projet [veekun/pokedex](https://github.com/veekun/pokedex) |
+
+L'étape de déblocage de chaque lieu est fixée dans `tools/import/donnees/lieux_rosa.json` d'après la progression du jeu. Une espèce introuvable dans Hoenn et hors de la famille d'évolution d'une espèce trouvable est rattachée au lieu « Hors de Hoenn » avec la mention « échange requis ».
 
 Les apprentissages d'attaques sont ceux du groupe de versions Rubis Oméga / Saphir Alpha (`version_group_id = 16`), CT / CS numérotées comme dans ce jeu.
 

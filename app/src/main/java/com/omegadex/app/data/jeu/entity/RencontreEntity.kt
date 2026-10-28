@@ -6,7 +6,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.omegadex.app.domain.model.MethodeRencontre
 
-/** Possibilité de trouver une espèce dans un lieu, avec la méthode et la fourchette de niveaux. */
+/**
+ * Possibilité de trouver une espèce dans un lieu, avec la méthode et la fourchette de niveaux.
+ * [taux] est le pourcentage d'apparition (nul pour une rencontre unique) ; [condition] précise
+ * quand la rencontre devient possible (« après avoir vaincu Groudon ou Kyogre »…).
+ */
 @Entity(
     tableName = "rencontre",
     foreignKeys = [
@@ -22,4 +26,6 @@ data class RencontreEntity(
     val methode: MethodeRencontre,
     val niveauMin: Int?,
     val niveauMax: Int?,
+    val taux: Int?,
+    val condition: String?,
 )
