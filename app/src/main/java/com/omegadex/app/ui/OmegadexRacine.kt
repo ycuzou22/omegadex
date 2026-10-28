@@ -12,22 +12,27 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.omegadex.app.domain.repository.EtatSession
 import com.omegadex.app.feature.comptes.ConnexionScreen
 import com.omegadex.app.feature.comptes.InscriptionScreen
+import com.omegadex.app.feature.runs.CreationRunScreen
 
 private const val ROUTE_CONNEXION = "connexion"
 private const val ROUTE_INSCRIPTION = "inscription"
 
-/** Point d'entrée de l'interface : écrans de compte tant que personne n'est connecté, puis l'application. */
+/**
+ * Point d'entrée de l'interface : écrans de compte tant que personne n'est connecté,
+ * création de la première run si le compte n'en a pas, puis l'application.
+ */
 @Composable
 fun OmegadexRacine(modifier: Modifier = Modifier, viewModel: RacineViewModel = hiltViewModel()) {
-    val session by viewModel.session.collectAsStateWithLifecycle()
-    when (session) {
+    val etat by viewModel.etat.collectAsStateWithLifecycle()
+    when (etat) {
         // Le temps de relire la session enregistrée : simple fond, pour ne pas montrer la connexion à tort.
-        EtatSession.Chargement -> Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
-        is EtatSession.Connecte -> OmegadexApp(modifier)
-        EtatSession.Deconnecte -> EcransDeCompte(modifier)
+        EtatRacine.Chargement -> Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
+        EtatRacine.Deconnecte -> EcransDeCompte(modifier)
+        // La run créée devient la run active : la racine passe d'elle-même à l'application.
+        EtatRacine.SansRun -> CreationRunScreen(onCree = {}, modifier = modifier)
+        EtatRacine.Pret -> OmegadexApp(modifier)
     }
 }
 

@@ -6,6 +6,7 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
+import com.omegadex.app.data.repository.RunActiveDataStore
 import com.omegadex.app.data.repository.SessionDataStore
 import com.omegadex.app.data.securite.CleBaseKeystore
 import com.omegadex.app.data.securite.FournisseurCleBase
@@ -15,6 +16,7 @@ import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
+import com.omegadex.app.domain.repository.RunActiveRepository
 import com.omegadex.app.domain.repository.SessionRepository
 import dagger.Binds
 import dagger.Module
@@ -50,6 +52,10 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSession(impl: SessionDataStore): SessionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRunActive(impl: RunActiveDataStore): RunActiveRepository
 
     @Binds
     @Singleton
