@@ -36,7 +36,7 @@ private const val MOMENT_REBOND_MS = 240
 /**
  * Case à cocher en rubis taillé. Éteinte, elle est gris rosé ; cochée, elle s'allume
  * et rebondit (0,5 → 1,25 → 1). Avec un [libelle], toute la ligne est cliquable
- * et le texte est barré une fois la quête faite.
+ * et le texte est barré une fois la quête faite (sauf si [barrerSiCoche] vaut false, pour une option choisie).
  */
 @Composable
 fun GemCheckbox(
@@ -45,6 +45,7 @@ fun GemCheckbox(
     modifier: Modifier = Modifier,
     libelle: String? = null,
     actif: Boolean = true,
+    barrerSiCoche: Boolean = true,
 ) {
     val couleurs = OmegadexTheme.couleurs
     val reduites = OmegadexTheme.animationsReduites
@@ -85,8 +86,8 @@ fun GemCheckbox(
             Text(
                 text = libelle,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (coche) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
-                textDecoration = if (coche) TextDecoration.LineThrough else null,
+                color = if (coche && barrerSiCoche) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
+                textDecoration = if (coche && barrerSiCoche) TextDecoration.LineThrough else null,
             )
         }
     }

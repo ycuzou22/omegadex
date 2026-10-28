@@ -37,4 +37,43 @@
     <string name="inscription_erreur_confirmation">Les deux mots de passe sont différents.</string>
     <string name="accueil_bonjour">Bonjour, %1$s</string>
     <string name="accueil_deconnexion">Changer de joueur</string>
+
+    <!-- Runs -->
+    <string name="creation_run_sous_titre">Lance une nouvelle aventure à Hoenn</string>
+    <string name="creation_run_nom">Nom de la run</string>
+    <string name="creation_run_nom_defaut">Rubis Oméga</string>
+    <string name="creation_run_erreur_nom_vide">Donne un nom à ta run.</string>
+    <string name="creation_run_erreur_nom_long">%1$d caractères maximum.</string>
+    <string name="creation_run_starter">Ton starter</string>
+    <string name="creation_run_erreur_starter">Choisis ton starter.</string>
+    <string name="creation_run_difficulte">Difficulté</string>
+    <string name="creation_run_regles">Règles optionnelles</string>
+    <string name="creation_run_info">La run commence aujourd\'hui, à l\'étape 0. La difficulté choisit les défis proposés.</string>
+    <string name="creation_run_bouton">Commencer l\'aventure</string>
+    <string name="creation_run_en_cours">Création…</string>
+    <string name="creation_run_annuler">Annuler</string>
+    <string name="starter_arcko">Arcko</string>
+    <string name="starter_poussifeu">Poussifeu</string>
+    <string name="starter_gobou">Gobou</string>
+    <string name="type_plante">Plante</string>
+    <string name="type_feu">Feu</string>
+    <string name="type_eau">Eau</string>
+    <string name="difficulte_normal">Normal</string>
+    <string name="difficulte_normal_description">Défis de base à chaque étape ; aucun Pokémon au-dessus du plafond.</string>
+    <string name="difficulte_difficile">Difficile</string>
+    <string name="difficulte_difficile_description">Ajoute les défis Difficile, toujours sans dépasser le plafond.</string>
+    <string name="difficulte_hardcore">Hardcore</string>
+    <string name="difficulte_hardcore_description">Tous les défis, et toute l\'équipe exactement au niveau du plafond avant chaque champion.</string>
+    <string name="regle_nuzlocke">Nuzlocke</string>
+    <string name="regle_nuzlocke_description">Une seule capture par zone ; un Pokémon K.O. est relâché.</string>
+    <string name="regle_monotype">Monotype</string>
+    <string name="regle_monotype_description">Toute l\'équipe partage un même type.</string>
+    <string name="regle_sans_objets">Sans objets en combat</string>
+    <string name="regle_sans_objets_description">Aucune potion ni baie utilisée pendant les combats.</string>
+    <string name="regle_sans_multi_exp">Sans Multi Exp</string>
+    <string name="regle_sans_multi_exp_description">Le Multi Exp reste désactivé toute la partie.</string>
+    <string name="regle_surnoms">Surnoms obligatoires</string>
+    <string name="regle_surnoms_description">Chaque Pokémon capturé reçoit un surnom.</string>
+    <string name="accueil_run">Run %1$s · %2$s</string>
+    <string name="accueil_etape">Étape %1$d sur %2$d</string>
 </resources>
