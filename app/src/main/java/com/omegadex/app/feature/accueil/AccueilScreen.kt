@@ -23,13 +23,27 @@ import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 @Composable
-fun AccueilScreen(modifier: Modifier = Modifier, viewModel: AccueilViewModel = hiltViewModel()) {
+fun AccueilScreen(
+    onMesRuns: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AccueilViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AccueilContenu(uiState = uiState, onChangerDeJoueur = viewModel::changerDeJoueur, modifier = modifier)
+    AccueilContenu(
+        uiState = uiState,
+        onChangerDeJoueur = viewModel::changerDeJoueur,
+        onMesRuns = onMesRuns,
+        modifier = modifier,
+    )
 }
 
 @Composable
-private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Unit, modifier: Modifier = Modifier) {
+private fun AccueilContenu(
+    uiState: AccueilUiState,
+    onChangerDeJoueur: () -> Unit,
+    onMesRuns: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier
             .fillMaxSize()
@@ -51,6 +65,11 @@ private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Uni
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(run.etapeTitre, style = MaterialTheme.typography.bodyLarge)
+            OmegaButton(
+                stringResource(R.string.accueil_changer_run),
+                onClick = onMesRuns,
+                variante = VarianteBouton.SOMBRE,
+            )
         }
         Text(
             stringResource(R.string.accueil_version, uiState.version),
@@ -76,6 +95,7 @@ private fun AccueilPreview() {
                 run = RunAccueil("Rubis Oméga", Difficulte.DIFFICILE, 3, "Voltère", 13),
             ),
             onChangerDeJoueur = {},
+            onMesRuns = {},
         )
     }
 }
