@@ -5,6 +5,7 @@
         android:name=".OmegadexApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/regles_extraction_donnees"
+        android:fullBackupContent="@xml/regles_sauvegarde"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_nom"
         android:roundIcon="@mipmap/ic_launcher"

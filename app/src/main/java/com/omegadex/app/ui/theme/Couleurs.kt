@@ -34,6 +34,8 @@ data class CouleursOmegadex(
     val magma: Color,
     /** Lueur au cœur des éclats et des icônes sur fond rubis. */
     val lueurMagma: Color,
+    /** Couleur du Ω posé sur un bouton rubis (lueur en clair, roche sur le rubis lumineux du thème sombre). */
+    val omegaSurRubis: Color,
     /** Trois tons du rubis taillé : facette claire, corps, facette sombre. */
     val gemmeClaire: Color,
     val gemme: Color,
@@ -54,6 +56,7 @@ data class CouleursOmegadex(
 val CouleursOmegadexClaires = CouleursOmegadex(
     magma = Magma,
     lueurMagma = LueurMagma,
+    omegaSurRubis = LueurMagma,
     gemmeClaire = RubisEclat,
     gemme = Rubis,
     gemmeSombre = RubisProfond,
@@ -68,6 +71,7 @@ val CouleursOmegadexClaires = CouleursOmegadex(
 val CouleursOmegadexSombres = CouleursOmegadex(
     magma = Magma,
     lueurMagma = LueurMagma,
+    omegaSurRubis = Roche,
     gemmeClaire = RubisLumineux,
     gemme = RubisEclat,
     gemmeSombre = Rubis,
