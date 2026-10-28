@@ -6,6 +6,7 @@ import com.omegadex.app.domain.model.Identifiants
 import com.omegadex.app.domain.model.Run
 import com.omegadex.app.domain.model.Utilisateur
 import com.omegadex.app.domain.repository.CompteRepository
+import com.omegadex.app.domain.repository.EtatSession
 import com.omegadex.app.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,15 +50,18 @@ class FauxComptes : CompteRepository {
 }
 
 class FausseSession : SessionRepository {
-    private val etat = MutableStateFlow<Long?>(null)
-    override val utilisateurConnecte: StateFlow<Long?> = etat
+    private val id = MutableStateFlow<Long?>(null)
+    override val utilisateurConnecte: StateFlow<Long?> = id
+    override val etat: StateFlow<EtatSession> = MutableStateFlow(EtatSession.Deconnecte)
 
     override suspend fun ouvrir(utilisateurId: Long) {
-        etat.value = utilisateurId
+        id.value = utilisateurId
+        (etat as MutableStateFlow).value = EtatSession.Connecte(utilisateurId)
     }
 
     override suspend fun fermer() {
-        etat.value = null
+        id.value = null
+        (etat as MutableStateFlow).value = EtatSession.Deconnecte
     }
 }
 
