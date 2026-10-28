@@ -16,11 +16,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-    /** Base jeu : remplaçable, elle peut être recréée sans perte (aucune donnée du joueur). */
+    /**
+     * Base jeu : copiée depuis les assets au premier lancement (disponible hors ligne) et
+     * recopiée quand sa version change. Elle est en lecture seule par construction :
+     * ses DAO ne contiennent que des requêtes SELECT, aucune insertion ni modification.
+     */
     @Provides
     @Singleton
     fun jeuDatabase(@ApplicationContext context: Context): JeuDatabase =
         Room.databaseBuilder(context, JeuDatabase::class.java, JeuDatabase.NOM_FICHIER)
+            .createFromAsset(JeuDatabase.CHEMIN_ASSET)
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 

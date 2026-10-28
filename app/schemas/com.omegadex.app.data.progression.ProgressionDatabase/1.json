@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "utilisateur",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `identifiant` TEXT NOT NULL, `hashMotDePasse` TEXT NOT NULL, `sel` TEXT NOT NULL, `dateCreation` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `identifiant` TEXT NOT NULL COLLATE NOCASE, `hashMotDePasse` TEXT NOT NULL, `sel` TEXT NOT NULL, `dateCreation` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
