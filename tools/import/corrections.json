@@ -1,0 +1,4 @@
+{
+ "_description": "Corrections manuelles, en dernier recours, quand aucune source ne couvre une donnée. Chaque correction est une requête SQL appliquée après l'import, avec sa justification et sa source. Liste vide tant qu'aucune correction n'est nécessaire.",
+ "corrections": []
+}
