@@ -7,6 +7,7 @@ import com.omegadex.app.data.progression.dao.CompteDao
 import com.omegadex.app.data.progression.dao.DefiDao
 import com.omegadex.app.data.progression.dao.EquipeDao
 import com.omegadex.app.data.progression.dao.PokedexDao
+import com.omegadex.app.data.progression.dao.SauvegardeDao
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
@@ -43,6 +44,7 @@ abstract class ProgressionDatabase : RoomDatabase() {
     abstract fun equipeDao(): EquipeDao
 
     abstract fun defiDao(): DefiDao
+    abstract fun sauvegardeDao(): SauvegardeDao
 
     companion object {
         const val VERSION = 1
