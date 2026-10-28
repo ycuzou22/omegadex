@@ -1,25 +1,874 @@
 {
- "_description": "Modèles de défis (seule saisie manuelle). Format : docs/modeles-defis.md.",
+ "_description": "Modèles de défis (seule saisie manuelle). Format : docs/modeles-defis.md. Défis d'étape : id 1000 + étape × 10 + 1 (défi de base) ou + 2 (défi Difficile) ; défis d'espèce : 2xxx Espèce, 3xxx Évolution, 4xxx Rotation, 5xxx Monotype, 6xxx Navi-Dex, 7xxx Méga, 8xxx Concours.",
  "modeles": [
   {
-   "id": 1,
+   "id": 1001,
+   "type": "ETAPE",
+   "etape": 0,
+   "titre": "Starter seul",
+   "gabarit": "Battre le rival avec {starter} seul dans l'équipe",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1002,
+   "type": "ETAPE",
+   "etape": 0,
+   "titre": "Sans objet de soin",
+   "gabarit": "Battre le rival sans utiliser d'objet de soin",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1011,
    "type": "ETAPE",
    "etape": 1,
    "titre": "Sans le starter",
    "gabarit": "Battre {adversaire} sans utiliser {starter}",
    "parametres": {},
    "difficulteMin": "NORMAL",
-   "deblocage": {"etapeMin": 1, "conditions": []}
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
   },
   {
-   "id": 1001,
+   "id": 1012,
+   "type": "ETAPE",
+   "etape": 1,
+   "titre": "Sans soin en combat",
+   "gabarit": "Battre {adversaire} sans utiliser d'objet de soin pendant le combat",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1021,
+   "type": "ETAPE",
+   "etape": 2,
+   "titre": "Capturés récents",
+   "gabarit": "Battre {adversaire} avec une équipe composée uniquement de Pokémon capturés depuis l'étape {etapeSource}",
+   "parametres": {
+    "etapeSource": 1
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 2,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1022,
+   "type": "ETAPE",
+   "etape": 2,
+   "titre": "Ni Vol ni Psy",
+   "gabarit": "Battre {adversaire} sans Pokémon de type Vol ni Psy",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 2,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1031,
+   "type": "ETAPE",
+   "etape": 3,
+   "titre": "Sol inédit",
+   "gabarit": "Battre {adversaire} avec un Pokémon de type Sol jamais utilisé en combat jusqu'ici",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 3,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1032,
+   "type": "ETAPE",
+   "etape": 3,
+   "titre": "Trois maximum",
+   "gabarit": "Battre {adversaire} avec une équipe de {nombre} Pokémon au maximum",
+   "parametres": {
+    "nombre": 3
+   },
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 3,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1041,
+   "type": "ETAPE",
+   "etape": 4,
+   "titre": "Monotype Eau ou Sol",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type Eau ou Sol",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 4,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1042,
+   "type": "ETAPE",
+   "etape": 4,
+   "titre": "Sans le starter",
+   "gabarit": "Battre {adversaire} sans utiliser {starter}",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 4,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1051,
+   "type": "ETAPE",
+   "etape": 5,
+   "titre": "Combat de zéro",
+   "gabarit": "Battre {adversaire} avec un Pokémon de type Combat entraîné de zéro pour ce combat",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 5,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1052,
+   "type": "ETAPE",
+   "etape": 5,
+   "titre": "Combat bridé",
+   "gabarit": "Battre {adversaire} sans aucun Pokémon de type Combat au-dessus du niveau {plafond} − {ecart}",
+   "parametres": {
+    "ecart": 5
+   },
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 5,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1061,
+   "type": "ETAPE",
+   "etape": 6,
+   "titre": "Nouvelle garde",
+   "gabarit": "Battre {adversaire} avec {nombre} Pokémon jamais utilisés en arène",
+   "parametres": {
+    "nombre": 3
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 6,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1062,
+   "type": "ETAPE",
+   "etape": 6,
+   "titre": "Sans Électrik",
+   "gabarit": "Battre {adversaire} sans Pokémon de type Électrik",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 6,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1071,
+   "type": "ETAPE",
+   "etape": 7,
+   "titre": "Duo de route",
+   "gabarit": "Battre {adversaire} avec deux espèces capturées sur la même route",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 7,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1072,
+   "type": "ETAPE",
+   "etape": 7,
+   "titre": "Sans soin en combat",
+   "gabarit": "Battre {adversaire} sans utiliser d'objet de soin pendant le combat",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 7,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1081,
+   "type": "ETAPE",
+   "etape": 8,
+   "titre": "Capturer Groudon",
+   "gabarit": "Capturer Groudon dans la Grotte Origine",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 8,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1082,
+   "type": "ETAPE",
+   "etape": 8,
+   "titre": "Groudon en réserve",
+   "gabarit": "Garder Groudon hors de l'équipe jusqu'au combat contre Marc",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 8,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1091,
+   "type": "ETAPE",
+   "etape": 9,
+   "titre": "Sans l'étape 4",
+   "gabarit": "Battre {adversaire} sans aucun Pokémon capturé pendant l'étape {etapeExclue}",
+   "parametres": {
+    "etapeExclue": 4
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 9,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1092,
+   "type": "ETAPE",
+   "etape": 9,
+   "titre": "Ni Plante ni Électrik",
+   "gabarit": "Battre {adversaire} sans Pokémon de type Plante ni Électrik",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 9,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1101,
+   "type": "ETAPE",
+   "etape": 10,
+   "titre": "Équipes tournantes",
+   "gabarit": "Battre le Conseil 4 avec une équipe différente contre chacun de ses membres",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 10,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1102,
+   "type": "ETAPE",
+   "etape": 10,
+   "titre": "Sans Méga",
+   "gabarit": "Battre la Ligue sans aucune Méga-Évolution",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 10,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1111,
+   "type": "ETAPE",
+   "etape": 11,
+   "titre": "Six nouveaux",
+   "gabarit": "Terminer l'Épisode Delta avec {nombre} espèces absentes de l'équipe de Ligue",
+   "parametres": {
+    "nombre": 6
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 11,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1112,
+   "type": "ETAPE",
+   "etape": 11,
+   "titre": "Soins au Centre",
+   "gabarit": "Terminer l'Épisode Delta sans objet de soin, en ne soignant qu'au Centre Pokémon",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 11,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1121,
+   "type": "ETAPE",
+   "etape": 12,
+   "titre": "Maître d'un type",
+   "gabarit": "Maîtriser toutes les espèces de type {type}",
+   "parametres": {
+    "type": "dragon"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 12,
+    "conditions": []
+   }
+  },
+  {
+   "id": 1122,
+   "type": "ETAPE",
+   "etape": 12,
+   "titre": "Maître de deux types",
+   "gabarit": "Maîtriser toutes les espèces de types {type} et {type2}",
+   "parametres": {
+    "type": "dragon",
+    "type2": "acier"
+   },
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 12,
+    "conditions": []
+   }
+  },
+  {
+   "id": 2001,
    "type": "ESPECE",
    "etape": null,
    "titre": "Seul en équipe",
    "gabarit": "Gagner un combat de dresseur avec {espece} seul dans l'équipe",
    "parametres": {},
    "difficulteMin": "NORMAL",
-   "deblocage": {"etapeMin": 0, "conditions": ["ESPECE_DANS_EQUIPE"]}
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 2002,
+   "type": "ESPECE",
+   "etape": null,
+   "titre": "Pilier de l'arène",
+   "gabarit": "Battre {adversaire} avec {espece} dans l'équipe, sans qu'il soit mis K.O.",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 2003,
+   "type": "ESPECE",
+   "etape": null,
+   "titre": "Tête de série",
+   "gabarit": "Gagner {nombre} combats de dresseurs d'affilée avec {espece} en tête d'équipe",
+   "parametres": {
+    "nombre": 3
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 2004,
+   "type": "ESPECE",
+   "etape": null,
+   "titre": "Coup décisif",
+   "gabarit": "Mettre K.O. le dernier Pokémon de {adversaire} avec {espece}",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 2005,
+   "type": "ESPECE",
+   "etape": null,
+   "titre": "Seul face à l'arène",
+   "gabarit": "Battre {adversaire} avec {espece} seul dans l'équipe",
+   "parametres": {},
+   "difficulteMin": "HARDCORE",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 3001,
+   "type": "EVOLUTION",
+   "etape": null,
+   "titre": "Évolution sous le plafond",
+   "gabarit": "Faire évoluer {espece} en {evolution} avant {adversaire}, sans dépasser le niveau {plafond}",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": [
+     "ESPECE_CAPTUREE",
+     "EVOLUTION_SOUS_PLAFOND"
+    ]
+   }
+  },
+  {
+   "id": 3002,
+   "type": "EVOLUTION",
+   "etape": null,
+   "titre": "Évolution au combat",
+   "gabarit": "Faire évoluer {espece} en {evolution} puis battre {adversaire} avec lui dans l'équipe",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": [
+     "ESPECE_DANS_EQUIPE",
+     "EVOLUTION_SOUS_PLAFOND"
+    ]
+   }
+  },
+  {
+   "id": 4001,
+   "type": "ROTATION",
+   "etape": null,
+   "titre": "Rotation d'arène",
+   "gabarit": "Battre {adversaire} avec {nombre} Pokémon jamais utilisés en arène",
+   "parametres": {
+    "nombre": 3
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 2,
+    "conditions": []
+   }
+  },
+  {
+   "id": 4002,
+   "type": "ROTATION",
+   "etape": null,
+   "titre": "Équipe renouvelée",
+   "gabarit": "Battre {adversaire} sans aucun Pokémon utilisé contre l'arène précédente",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 2,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5001,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Normal",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "normal"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5002,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Feu",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "feu"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5003,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Eau",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "eau"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5004,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Plante",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "plante"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5005,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Électrik",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "electrik"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5006,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Glace",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "glace"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5007,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Combat",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "combat"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5008,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Poison",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "poison"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5009,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Sol",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "sol"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5010,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Vol",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "vol"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5011,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Psy",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "psy"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5012,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Insecte",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "insecte"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5013,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Roche",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "roche"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5014,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Spectre",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "spectre"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5015,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Dragon",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "dragon"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5016,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Ténèbres",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "tenebres"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5017,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Acier",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "acier"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 5018,
+   "type": "MONOTYPE",
+   "etape": null,
+   "titre": "Monotype Fée",
+   "gabarit": "Battre {adversaire} uniquement avec des Pokémon de type {type}",
+   "parametres": {
+    "type": "fee"
+   },
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 1,
+    "conditions": []
+   }
+  },
+  {
+   "id": 6001,
+   "type": "NAVI_DEX",
+   "etape": null,
+   "titre": "Talent caché",
+   "gabarit": "Trouver {espece} avec son talent caché grâce au Navi-Dex",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": [
+     "TALENT_CACHE"
+    ]
+   }
+  },
+  {
+   "id": 6002,
+   "type": "NAVI_DEX",
+   "etape": null,
+   "titre": "Capacité Œuf",
+   "gabarit": "Trouver {espece} avec une capacité Œuf grâce au Navi-Dex",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": []
+   }
+  },
+  {
+   "id": 6003,
+   "type": "NAVI_DEX",
+   "etape": null,
+   "titre": "Potentiel maximal",
+   "gabarit": "Trouver {espece} avec au moins {nombre} étoiles de potentiel au Navi-Dex",
+   "parametres": {
+    "nombre": 3
+   },
+   "difficulteMin": "HARDCORE",
+   "deblocage": {
+    "etapeMin": 0,
+    "conditions": []
+   }
+  },
+  {
+   "id": 7001,
+   "type": "MEGA",
+   "etape": null,
+   "titre": "Méga inédite",
+   "gabarit": "Gagner un combat de la Ligue avec la Méga-Évolution de {espece}, jamais utilisée jusqu'ici",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 10,
+    "conditions": [
+     "MEGA_DISPONIBLE",
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 7002,
+   "type": "MEGA",
+   "etape": null,
+   "titre": "Méga d'arène",
+   "gabarit": "Battre {adversaire} grâce à la Méga-Évolution de {espece}",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 5,
+    "conditions": [
+     "MEGA_DISPONIBLE",
+     "ESPECE_DANS_EQUIPE"
+    ]
+   }
+  },
+  {
+   "id": 8001,
+   "type": "CONCOURS",
+   "etape": null,
+   "titre": "Premier ruban",
+   "gabarit": "Remporter un Concours Live de rang Normal avec {espece}",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {
+    "etapeMin": 3,
+    "conditions": [
+     "CONCOURS_OUVERTS",
+     "ESPECE_CAPTUREE"
+    ]
+   }
+  },
+  {
+   "id": 8002,
+   "type": "CONCOURS",
+   "etape": null,
+   "titre": "Rang Master",
+   "gabarit": "Atteindre le rang Master avec {espece}, jamais utilisé en combat",
+   "parametres": {},
+   "difficulteMin": "DIFFICILE",
+   "deblocage": {
+    "etapeMin": 3,
+    "conditions": [
+     "CONCOURS_OUVERTS",
+     "ESPECE_CAPTUREE"
+    ]
+   }
   }
  ]
 }
