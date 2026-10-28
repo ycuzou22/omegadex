@@ -21,15 +21,17 @@ naming:
     constantPattern: '[A-Z][A-Za-z0-9_]*'
   MatchingDeclarationName:
     mustBeFirst: false
+    # Les fichiers du thème regroupent plusieurs déclarations (Couleurs.kt, Typographie.kt…).
+    excludes: ['**/ui/theme/**']
 
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
     excludes: ['**/test/**', '**/ui/theme/**']
   UnusedPrivateMember:
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
   MaxLineLength:
     maxLineLength: 120
   WildcardImport:
