@@ -9,7 +9,9 @@ sealed interface PokedexUiState {
 
     /**
      * [national] : le Pokédex national est débloqué (Ligue validée), sinon seul le régional de Hoenn est montré.
-     * [vues] et [capturees] comptent les espèces au moins vues et au moins capturées.
+     * [vues] et [capturees] comptent les espèces au moins vues et au moins capturées, sur tout le Pokédex.
+     * [resultats] : les espèces de [especes] qui répondent aux [filtres] ; c'est ce que montre la grille.
+     * [typesDisponibles] : les types présents, proposés dans le filtre par type.
      */
     data class Pret(
         val runId: Long,
@@ -17,6 +19,9 @@ sealed interface PokedexUiState {
         val especes: List<EspeceAffichee>,
         val vues: Int,
         val capturees: Int,
+        val filtres: FiltresPokedex = FiltresPokedex(),
+        val resultats: List<EspeceAffichee> = especes,
+        val typesDisponibles: List<String> = emptyList(),
     ) : PokedexUiState
 }
 
