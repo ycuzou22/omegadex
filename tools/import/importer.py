@@ -17,11 +17,13 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import creer_base_jeu  # noqa: E402
+import import_attaques  # noqa: E402
 import import_especes  # noqa: E402
 import source_pokeapi  # noqa: E402
 
 MODULES = [
     ("Espèces, talents et évolutions", import_especes.importer),
+    ("Attaques et apprentissages", import_attaques.importer),
 ]
 SOURCES = f"PokéAPI ({source_pokeapi.DEPOT}, commit {source_pokeapi.COMMIT[:7]})"
 
