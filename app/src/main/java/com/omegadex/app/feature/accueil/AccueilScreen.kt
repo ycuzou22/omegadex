@@ -15,19 +15,35 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.VarianteBouton
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 @Composable
-fun AccueilScreen(modifier: Modifier = Modifier, viewModel: AccueilViewModel = hiltViewModel()) {
+fun AccueilScreen(
+    onMesRuns: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AccueilViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AccueilContenu(uiState = uiState, onChangerDeJoueur = viewModel::changerDeJoueur, modifier = modifier)
+    AccueilContenu(
+        uiState = uiState,
+        onChangerDeJoueur = viewModel::changerDeJoueur,
+        onMesRuns = onMesRuns,
+        modifier = modifier,
+    )
 }
 
 @Composable
-private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Unit, modifier: Modifier = Modifier) {
+private fun AccueilContenu(
+    uiState: AccueilUiState,
+    onChangerDeJoueur: () -> Unit,
+    onMesRuns: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier
             .fillMaxSize()
@@ -35,7 +51,26 @@ private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Uni
         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        uiState.run?.let { run ->
+            Text(
+                stringResource(R.string.accueil_run, run.nom, stringResource(titreDifficulte(run.difficulte))),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
         Text(stringResource(R.string.accueil_bonjour, uiState.joueur), style = MaterialTheme.typography.headlineMedium)
+        uiState.run?.let { run ->
+            Text(
+                stringResource(R.string.accueil_etape, run.etapeNumero, run.totalEtapes),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(run.etapeTitre, style = MaterialTheme.typography.bodyLarge)
+            OmegaButton(
+                stringResource(R.string.accueil_changer_run),
+                onClick = onMesRuns,
+                variante = VarianteBouton.SOMBRE,
+            )
+        }
         Text(
             stringResource(R.string.accueil_version, uiState.version),
             style = MaterialTheme.typography.bodyMedium,
@@ -53,6 +88,14 @@ private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Uni
 @Composable
 private fun AccueilPreview() {
     OmegadexTheme {
-        AccueilContenu(uiState = AccueilUiState(version = "0.2.0", joueur = "Yamao"), onChangerDeJoueur = {})
+        AccueilContenu(
+            uiState = AccueilUiState(
+                version = "0.2.0",
+                joueur = "Yamao",
+                run = RunAccueil("Rubis Oméga", Difficulte.DIFFICILE, 3, "Voltère", 13),
+            ),
+            onChangerDeJoueur = {},
+            onMesRuns = {},
+        )
     }
 }
