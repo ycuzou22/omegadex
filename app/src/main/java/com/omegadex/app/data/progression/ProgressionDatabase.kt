@@ -2,6 +2,11 @@ package com.omegadex.app.data.progression
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.omegadex.app.data.progression.dao.AventureDao
+import com.omegadex.app.data.progression.dao.CompteDao
+import com.omegadex.app.data.progression.dao.DefiDao
+import com.omegadex.app.data.progression.dao.EquipeDao
+import com.omegadex.app.data.progression.dao.PokedexDao
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
@@ -29,6 +34,16 @@ import com.omegadex.app.data.progression.entity.UtilisateurEntity
     exportSchema = true,
 )
 abstract class ProgressionDatabase : RoomDatabase() {
+    abstract fun compteDao(): CompteDao
+
+    abstract fun aventureDao(): AventureDao
+
+    abstract fun pokedexDao(): PokedexDao
+
+    abstract fun equipeDao(): EquipeDao
+
+    abstract fun defiDao(): DefiDao
+
     companion object {
         const val VERSION = 1
         const val NOM_FICHIER = "omegadex_progression.db"

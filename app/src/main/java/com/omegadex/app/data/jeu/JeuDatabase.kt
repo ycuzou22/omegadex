@@ -2,6 +2,10 @@ package com.omegadex.app.data.jeu
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.omegadex.app.data.jeu.dao.AttaqueDao
+import com.omegadex.app.data.jeu.dao.EspeceDao
+import com.omegadex.app.data.jeu.dao.EtapeDao
+import com.omegadex.app.data.jeu.dao.RencontreDao
 import com.omegadex.app.data.jeu.entity.AttaqueAppriseEntity
 import com.omegadex.app.data.jeu.entity.AttaqueEntity
 import com.omegadex.app.data.jeu.entity.EspeceEntity
@@ -34,6 +38,14 @@ import com.omegadex.app.data.jeu.entity.TalentEntity
     exportSchema = true,
 )
 abstract class JeuDatabase : RoomDatabase() {
+    abstract fun etapeDao(): EtapeDao
+
+    abstract fun especeDao(): EspeceDao
+
+    abstract fun attaqueDao(): AttaqueDao
+
+    abstract fun rencontreDao(): RencontreDao
+
     companion object {
         const val VERSION = 1
         const val NOM_FICHIER = "omegadex_jeu.db"
