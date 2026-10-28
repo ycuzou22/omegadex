@@ -178,4 +178,13 @@
     <string name="type_defi_navi_dex">Navi-Dex</string>
     <string name="type_defi_mega">Méga</string>
     <string name="type_defi_concours">Concours</string>
+
+    <!-- Accueil : jauges -->
+    <string name="accueil_jauge_aventure">Aventure</string>
+    <string name="accueil_jauge_pokedex">Pokédex</string>
+    <string name="accueil_jauge_defis">Défis</string>
+    <string name="accueil_pourcentage">%1$d %%</string>
+    <string name="accueil_fraction">%1$d/%2$d</string>
+    <string name="accueil_jauge_description_pourcentage">%1$s : %2$d %%</string>
+    <string name="accueil_jauge_description_fraction">%1$s : %2$d sur %3$d</string>
 </resources>

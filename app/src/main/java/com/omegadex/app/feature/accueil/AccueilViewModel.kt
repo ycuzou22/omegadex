@@ -2,6 +2,7 @@ package com.omegadex.app.feature.accueil
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omegadex.app.domain.accueil.ObserverJaugesUseCase
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.SessionRepository
@@ -20,6 +21,7 @@ class AccueilViewModel @Inject constructor(
     comptes: CompteRepository,
     private val session: SessionRepository,
     observerRunEnCours: ObserverRunEnCoursUseCase,
+    observerJauges: ObserverJaugesUseCase,
 ) : ViewModel() {
     private val version = infosAppRepository.version()
 
@@ -27,7 +29,8 @@ class AccueilViewModel @Inject constructor(
         session.utilisateurConnecte,
         comptes.utilisateurs(),
         observerRunEnCours(),
-    ) { id, liste, enCours ->
+        observerJauges(),
+    ) { id, liste, enCours, jauges ->
         AccueilUiState(
             version = version,
             joueur = liste.firstOrNull { it.id == id }?.identifiant.orEmpty(),
@@ -40,6 +43,7 @@ class AccueilViewModel @Inject constructor(
                     totalEtapes = it.totalEtapes,
                 )
             },
+            jauges = jauges,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
 
