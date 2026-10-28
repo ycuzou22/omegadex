@@ -25,4 +25,7 @@ interface JeuRepository {
     fun lieuxDeLEspece(especeId: Int): Flow<List<Rencontre>>
     fun especesDuLieu(lieuId: Int): Flow<List<Rencontre>>
     fun especesAccessibles(etapeId: Int): Flow<Set<Int>>
+
+    /** Espèces qu'on ne peut obtenir que par échange ou transfert (mention « échange requis »). */
+    fun especesEchangeRequis(): Flow<Set<Int>>
 }
