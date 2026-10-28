@@ -42,3 +42,12 @@ jobs:
             app/build/reports/
             app/build/test-results/
           retention-days: 7
+
+  import-donnees:
+    name: import-donnees
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Tests des scripts d'import
+        run: python3 -m unittest discover -s tools/import/tests -v

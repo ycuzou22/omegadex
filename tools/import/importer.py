@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import creer_base_jeu  # noqa: E402
 import import_attaques  # noqa: E402
+import import_defis  # noqa: E402
 import import_especes  # noqa: E402
 import import_etapes  # noqa: E402
 import import_lieux  # noqa: E402
@@ -30,6 +31,7 @@ MODULES = [
     ("Attaques et apprentissages", import_attaques.importer),
     ("Lieux et rencontres", import_lieux.importer),
     ("Étapes, quêtes et plafonds", import_etapes.importer),
+    ("Modèles de défis", import_defis.importer),
 ]
 SOURCES = f"PokéAPI ({source_pokeapi.DEPOT}, commit {source_pokeapi.COMMIT[:7]}) ; Poképédia (CC BY-NC-SA 3.0)"
 
@@ -43,7 +45,10 @@ def main() -> None:
     creer_base_jeu.creer(a.sortie, a.version_donnees, SOURCES)
     con = sqlite3.connect(a.sortie)
     for nom, module in MODULES:
-        compteurs = module(con)
+        try:
+            compteurs = module(con)
+        except import_defis.ModeleInvalide as erreur:
+            raise SystemExit(f"Modèle de défi invalide : {erreur}") from None
         print(f"- {nom} : " + ", ".join(f"{k} {v}" for k, v in compteurs.items()))
     corrections = appliquer_corrections(con)
     con.commit()
