@@ -1,8 +1,11 @@
 package com.omegadex.app.feature.aventure
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +15,17 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -40,21 +48,43 @@ import com.omegadex.app.ui.theme.RubisPale
 
 /** Aventure : seule l'étape en cours de la run active est visible, avec ses quêtes. */
 @Composable
-fun AventureScreen(modifier: Modifier = Modifier, viewModel: AventureViewModel = hiltViewModel()) {
+fun AventureScreen(
+    onLieu: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AventureViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AventureContenu(uiState = uiState, onCocher = viewModel::cocher, modifier = modifier)
+    val annonces = remember { SnackbarHostState() }
+    val ressources = LocalResources.current
+    // En attendant l'animation « Étape validée » (T14.1), la validation est annoncée par un message.
+    LaunchedEffect(viewModel) {
+        viewModel.evenements.collect { evenement ->
+            annonces.showSnackbar(
+                evenement.suivante?.let { ressources.getString(R.string.aventure_etape_validee, evenement.titre, it) }
+                    ?: ressources.getString(R.string.aventure_derniere_validee, evenement.titre),
+            )
+        }
+    }
+    Box(modifier.fillMaxSize()) {
+        AventureContenu(uiState = uiState, onCocher = viewModel::cocher, onLieu = onLieu)
+        SnackbarHost(annonces, Modifier.align(Alignment.BottomCenter).padding(16.dp))
+    }
 }
 
 @Composable
 private fun AventureContenu(
     uiState: AventureUiState,
     onCocher: (Int, Boolean) -> Unit,
+    onLieu: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
         AventureUiState.Chargement -> Box(modifier.fillMaxSize())
         AventureUiState.AucuneRun -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.aventure_aucune_run), style = MaterialTheme.typography.bodyLarge)
+        }
+        AventureUiState.Terminee -> Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.aventure_terminee), style = MaterialTheme.typography.titleLarge)
         }
         is AventureUiState.EtapeEnCours -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
@@ -63,6 +93,9 @@ private fun AventureContenu(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { CarteEtape(uiState, onCocher) }
+                if (uiState.lieux.isNotEmpty()) {
+                    item { LieuxEtape(uiState.lieux, onLieu) }
+                }
                 if (uiState.annexes.isNotEmpty()) {
                     item { EnTeteAnnexes(uiState.annexes) }
                     items(uiState.annexes, key = { it.id }) { quete ->
@@ -137,6 +170,34 @@ private fun CarteEtape(etape: AventureUiState.EtapeEnCours, onCocher: (Int, Bool
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun LieuxEtape(lieux: List<LieuAffiche>, onLieu: (Int) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            stringResource(R.string.aventure_lieux),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.semantics { heading() },
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            lieux.forEach { lieu ->
+                Surface(
+                    onClick = { onLieu(lieu.id) },
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.surface,
+                    border = BorderStroke(1.dp, OmegadexTheme.couleurs.trait),
+                ) {
+                    Text(
+                        lieu.nom,
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun EnTeteAnnexes(annexes: List<QueteAffichee>) {
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -195,8 +256,10 @@ private fun AventurePreview() {
                     QueteAffichee(3, "Vaincre Voltère", "Badge Dynamo", false),
                 ),
                 annexes = listOf(QueteAffichee(4, "Capturer Dynavolt (Route 110)", null, false)),
+                lieux = listOf(LieuAffiche(1, "Lavandia"), LieuAffiche(2, "Route 110")),
             ),
             onCocher = { _, _ -> },
+            onLieu = {},
         )
     }
 }
