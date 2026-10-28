@@ -58,6 +58,21 @@
     <string name="type_plante">Plante</string>
     <string name="type_feu">Feu</string>
     <string name="type_eau">Eau</string>
+    <string name="type_normal">Normal</string>
+    <string name="type_electrik">Électrik</string>
+    <string name="type_glace">Glace</string>
+    <string name="type_combat">Combat</string>
+    <string name="type_poison">Poison</string>
+    <string name="type_sol">Sol</string>
+    <string name="type_vol">Vol</string>
+    <string name="type_psy">Psy</string>
+    <string name="type_insecte">Insecte</string>
+    <string name="type_roche">Roche</string>
+    <string name="type_spectre">Spectre</string>
+    <string name="type_dragon">Dragon</string>
+    <string name="type_tenebres">Ténèbres</string>
+    <string name="type_acier">Acier</string>
+    <string name="type_fee">Fée</string>
     <string name="difficulte_normal">Normal</string>
     <string name="difficulte_normal_description">Défis de base à chaque étape ; aucun Pokémon au-dessus du plafond.</string>
     <string name="difficulte_difficile">Difficile</string>
@@ -84,4 +99,15 @@
     <string name="mes_runs_etape">Étape %1$d · %2$s</string>
     <string name="mes_runs_progression">%1$d étapes validées sur %2$d</string>
     <string name="mes_runs_retour">Retour</string>
+    <!-- Aventure -->
+    <string name="aventure_etape">Étape %1$d sur %2$d</string>
+    <string name="aventure_plafond">%1$s · plafond</string>
+    <string name="aventure_niveau">niv. %1$d</string>
+    <string name="aventure_adversaire">Adversaire : %1$s</string>
+    <string name="aventure_principales">Quêtes principales</string>
+    <string name="aventure_annexes">Quêtes annexes</string>
+    <string name="aventure_compteur">%1$d / %2$d</string>
+    <string name="aventure_recompense">Récompense : %1$s</string>
+    <string name="aventure_annexes_info">Facultatives : elles ne bloquent pas l\'étape suivante.</string>
+    <string name="aventure_aucune_run">Aucune run en cours.</string>
 </resources>
