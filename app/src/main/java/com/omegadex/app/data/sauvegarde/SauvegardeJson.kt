@@ -109,19 +109,17 @@ object SauvegardeJson {
         return version
     }
 
-    private fun lireSauvegarde(racine: JSONObject, version: Int): Sauvegarde {
-        return try {
-            Sauvegarde(
-                version = version,
-                dateExport = racine.getLong(Cles.DATE_EXPORT),
-                identifiant = racine.getString(Cles.IDENTIFIANT),
-                runs = racine.getJSONArray(Cles.RUNS).objets().map { it.versRun() },
-            )
-        } catch (e: JSONException) {
-            throw SauvegardeInvalide("Sauvegarde incomplète ou abîmée : ${e.message}", e)
-        } catch (e: IllegalArgumentException) {
-            throw SauvegardeInvalide("Valeur inconnue dans la sauvegarde : ${e.message}", e)
-        }
+    private fun lireSauvegarde(racine: JSONObject, version: Int): Sauvegarde = try {
+        Sauvegarde(
+            version = version,
+            dateExport = racine.getLong(Cles.DATE_EXPORT),
+            identifiant = racine.getString(Cles.IDENTIFIANT),
+            runs = racine.getJSONArray(Cles.RUNS).objets().map { it.versRun() },
+        )
+    } catch (e: JSONException) {
+        throw SauvegardeInvalide("Sauvegarde incomplète ou abîmée : ${e.message}", e)
+    } catch (e: IllegalArgumentException) {
+        throw SauvegardeInvalide("Valeur inconnue dans la sauvegarde : ${e.message}", e)
     }
 
     private fun JSONObject.versRun() = RunSauvegardee(

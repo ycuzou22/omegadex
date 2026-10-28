@@ -41,10 +41,9 @@ class SauvegardeRepositoryImpl @Inject constructor(private val base: Progression
         }
     }
 
-    override suspend fun restaurer(utilisateurId: Long, runs: List<RunSauvegardee>): List<Long> =
-        base.withTransaction {
-            runs.map { run -> restaurerRun(utilisateurId, run) }
-        }
+    override suspend fun restaurer(utilisateurId: Long, runs: List<RunSauvegardee>): List<Long> = base.withTransaction {
+        runs.map { run -> restaurerRun(utilisateurId, run) }
+    }
 
     private suspend fun restaurerRun(utilisateurId: Long, run: RunSauvegardee): Long {
         val runId = dao.creerRun(
