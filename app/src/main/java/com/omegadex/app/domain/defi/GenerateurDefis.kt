@@ -77,8 +77,7 @@ object GenerateurDefis {
     private fun defiEtape(modele: ModeleDefi, contexte: ContexteDefis): DefiPropose? {
         val etapeId = contexte.etape.id
         if (dejaEngage(contexte.defisExistants, modele.id, especeId = null, etapeId = etapeId)) return null
-        val niveau = ReglesDifficulte.niveauMaximalDuDefi(contexte.etape.plafond, ecart(modele))
-        return DefiPropose(modele, null, etapeId, remplir(modele, contexte, espece = null, evolution = null, niveau))
+        return DefiPropose(modele, null, etapeId, enonce(modele, contexte.etape, contexte.starterNom))
     }
 
     private fun defisEspece(modele: ModeleDefi, contexte: ContexteDefis): List<DefiPropose> {
@@ -89,9 +88,12 @@ object GenerateurDefis {
                 espece.id !in occupees &&
                 !dejaEngage(contexte.defisExistants, modele.id, espece.id, etapeId = null)
             if (!possible) return@mapNotNull null
-            val niveau = evolution?.let { ReglesDifficulte.niveauRequis(it.condition, it.valeur) }
-                ?: ReglesDifficulte.niveauMaximalDuDefi(contexte.etape.plafond, ecart(modele))
-            DefiPropose(modele, espece.id, null, remplir(modele, contexte, espece, evolution, niveau))
+            DefiPropose(
+                modele,
+                espece.id,
+                null,
+                enonce(modele, contexte.etape, contexte.starterNom, espece.nom, evolution),
+            )
         }
     }
 
@@ -118,21 +120,27 @@ object GenerateurDefis {
 
     private fun ecart(modele: ModeleDefi) = modele.parametres["ecart"]?.toIntOrNull() ?: 0
 
-    private fun remplir(
+    /**
+     * Énoncé d'un défi : le gabarit du modèle rempli pour une étape (et une espèce pour un défi espèce).
+     * Sert aussi à réafficher les défis déjà enregistrés.
+     */
+    fun enonce(
         modele: ModeleDefi,
-        contexte: ContexteDefis,
-        espece: EspeceCandidate?,
-        evolution: EvolutionPossible?,
-        niveau: Int,
+        etape: Etape,
+        starterNom: String,
+        especeNom: String? = null,
+        evolution: EvolutionPossible? = null,
     ): String {
+        val niveau = evolution?.let { ReglesDifficulte.niveauRequis(it.condition, it.valeur) }
+            ?: ReglesDifficulte.niveauMaximalDuDefi(etape.plafond, ecart(modele))
         val valeurs = buildMap {
-            put("adversaire", contexte.etape.adversaire)
-            put("plafond", contexte.etape.plafond.toString())
-            put("lieu", contexte.etape.lieuPrincipal)
-            put("etape", contexte.etape.titre)
-            put("starter", contexte.starterNom)
+            put("adversaire", etape.adversaire)
+            put("plafond", etape.plafond.toString())
+            put("lieu", etape.lieuPrincipal)
+            put("etape", etape.titre)
+            put("starter", starterNom)
             put("niveau", niveau.toString())
-            espece?.let { put("espece", it.nom) }
+            especeNom?.let { put("espece", it) }
             evolution?.let { put("evolution", it.cibleNom) }
             modele.parametres.forEach { (cle, valeur) ->
                 put(cle, if (cle == "type") NomsTypes.liste(valeur) else valeur)
