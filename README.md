@@ -1,5 +1,7 @@
 # Omégadex
 
+[![Android CI](https://github.com/ycuzou22/omegadex/actions/workflows/android-ci.yml/badge.svg?branch=dev)](https://github.com/ycuzou22/omegadex/actions/workflows/android-ci.yml)
+
 Application Android hors-ligne qui accompagne une partie de **Pokémon Rubis Oméga** étape par étape : suivi de l'aventure badge par badge, Pokédex interactif lié à la progression et défis par Pokémon selon la difficulté choisie, sans jamais dépasser le niveau du champion d'arène.
 
 ## Fonctionnalités prévues (MVP)
