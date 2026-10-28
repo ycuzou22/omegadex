@@ -84,4 +84,26 @@ class AventureViewModelTest {
         assertEquals(listOf(1), etat.principales.map { it.id })
         assertEquals(listOf(2 to true), etat.annexes.map { it.id to it.cochee })
     }
+
+    @Test
+    fun `cocher une quete l'enregistre et met a jour l'ecran`() = runTest {
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        val creer = CreerRunUseCase(comptes, progression, session, runActive)
+        val run = (creer("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet()) as ResultatCreationRun.Creee).runId
+        val viewModel = viewModel()
+        viewModel.uiState.first { it is AventureUiState.EtapeEnCours }
+
+        viewModel.cocher(2, cochee = true)
+        val apres = viewModel.uiState.first {
+            it is AventureUiState.EtapeEnCours && it.annexes.single().cochee
+        } as AventureUiState.EtapeEnCours
+        assertEquals(listOf(false), apres.principales.map { it.cochee })
+        assertEquals(setOf(2), progression.quetesCochees(run).first())
+
+        // Un nouvel écran (redémarrage) relit l'état enregistré.
+        val relu = viewModel().uiState.first { it is AventureUiState.EtapeEnCours } as AventureUiState.EtapeEnCours
+        assertEquals(true, relu.annexes.single().cochee)
+        viewModel.cocher(2, cochee = false)
+        assertEquals(emptySet<Int>(), progression.quetesCochees(run).first { it.isEmpty() })
+    }
 }

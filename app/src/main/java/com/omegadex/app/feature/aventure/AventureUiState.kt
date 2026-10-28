@@ -6,6 +6,7 @@ sealed interface AventureUiState {
     data object AucuneRun : AventureUiState
 
     data class EtapeEnCours(
+        val runId: Long,
         val numero: Int,
         val total: Int,
         val titre: String,

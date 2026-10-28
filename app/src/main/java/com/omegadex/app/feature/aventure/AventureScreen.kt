@@ -42,7 +42,7 @@ import com.omegadex.app.ui.theme.RubisPale
 @Composable
 fun AventureScreen(modifier: Modifier = Modifier, viewModel: AventureViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AventureContenu(uiState = uiState, onCocher = { _, _ -> }, modifier = modifier)
+    AventureContenu(uiState = uiState, onCocher = viewModel::cocher, modifier = modifier)
 }
 
 @Composable
@@ -181,6 +181,7 @@ private fun AventurePreview() {
     OmegadexTheme {
         AventureContenu(
             uiState = AventureUiState.EtapeEnCours(
+                runId = 1,
                 numero = 3,
                 total = 13,
                 titre = "Voltère",

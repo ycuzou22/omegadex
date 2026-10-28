@@ -15,13 +15,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class AventureViewModel @Inject constructor(
     observerRunEnCours: ObserverRunEnCoursUseCase,
     jeu: JeuRepository,
-    progression: ProgressionRepository,
+    private val progression: ProgressionRepository,
 ) : ViewModel() {
     val uiState: StateFlow<AventureUiState> = observerRunEnCours().flatMapLatest { enCours ->
         val etape = enCours?.etape
@@ -33,6 +34,7 @@ class AventureViewModel @Inject constructor(
                     it.type to QueteAffichee(it.id, it.description, it.recompense, it.id in cochees)
                 }
                 AventureUiState.EtapeEnCours(
+                    runId = enCours.run.id,
                     numero = etape.id,
                     total = enCours.totalEtapes,
                     titre = etape.titre,
@@ -46,6 +48,12 @@ class AventureViewModel @Inject constructor(
             }
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AventureUiState.Chargement)
+
+    /** Coche ou décoche une quête de l'étape affichée ; l'état est enregistré dans la base progression. */
+    fun cocher(queteId: Int, cochee: Boolean) {
+        val etape = uiState.value as? AventureUiState.EtapeEnCours ?: return
+        viewModelScope.launch { progression.cocherQuete(etape.runId, queteId, cochee) }
+    }
 
     private companion object {
         const val ARRET_MS = 5_000L
