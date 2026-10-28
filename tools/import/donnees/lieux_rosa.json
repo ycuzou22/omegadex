@@ -1,0 +1,555 @@
+{
+ "_description": "Lieux de Rubis Oméga : type et étape de déblocage (étape où le lieu devient accessible pour la première fois). cleModule = nom du lieu dans le module de localisations de Poképédia quand il diffère. Les lieux mirages sont ajoutés automatiquement depuis ce module.",
+ "lieux": [
+  {
+   "id": 1,
+   "nom": "Bourg-en-Vol",
+   "type": "VILLE",
+   "etape": 0
+  },
+  {
+   "id": 2,
+   "nom": "Clémenti-Ville",
+   "type": "VILLE",
+   "etape": 0
+  },
+  {
+   "id": 3,
+   "nom": "Rosyères",
+   "type": "VILLE",
+   "etape": 0
+  },
+  {
+   "id": 4,
+   "nom": "Route 101",
+   "type": "ROUTE",
+   "etape": 0
+  },
+  {
+   "id": 5,
+   "nom": "Route 102",
+   "type": "ROUTE",
+   "etape": 0
+  },
+  {
+   "id": 6,
+   "nom": "Route 103",
+   "type": "ROUTE",
+   "etape": 0
+  },
+  {
+   "id": 7,
+   "nom": "Bois Clémenti",
+   "type": "GROTTE",
+   "etape": 1
+  },
+  {
+   "id": 8,
+   "nom": "Devon SARL",
+   "type": "BATIMENT",
+   "etape": 1
+  },
+  {
+   "id": 9,
+   "nom": "Mérouville",
+   "type": "VILLE",
+   "etape": 1
+  },
+  {
+   "id": 10,
+   "nom": "Route 104",
+   "type": "ROUTE",
+   "etape": 1
+  },
+  {
+   "id": 11,
+   "nom": "Route 116",
+   "type": "ROUTE",
+   "etape": 1
+  },
+  {
+   "id": 12,
+   "nom": "Tunnel Mérazon",
+   "type": "GROTTE",
+   "etape": 1
+  },
+  {
+   "id": 13,
+   "nom": "Chenal 106",
+   "type": "MER",
+   "etape": 2
+  },
+  {
+   "id": 14,
+   "nom": "Chenal 109",
+   "type": "MER",
+   "etape": 2
+  },
+  {
+   "id": 15,
+   "nom": "Grotte Granite",
+   "type": "GROTTE",
+   "etape": 2
+  },
+  {
+   "id": 16,
+   "nom": "Myokara",
+   "type": "VILLE",
+   "etape": 2
+  },
+  {
+   "id": 17,
+   "nom": "Lavandia",
+   "type": "VILLE",
+   "etape": 3
+  },
+  {
+   "id": 18,
+   "nom": "Poivressel",
+   "type": "VILLE",
+   "etape": 3
+  },
+  {
+   "id": 19,
+   "nom": "Route 110",
+   "type": "ROUTE",
+   "etape": 3
+  },
+  {
+   "id": 20,
+   "nom": "Route 117",
+   "type": "ROUTE",
+   "etape": 3
+  },
+  {
+   "id": 21,
+   "nom": "Route 118",
+   "type": "ROUTE",
+   "etape": 3
+  },
+  {
+   "id": 22,
+   "nom": "Vergazon",
+   "type": "VILLE",
+   "etape": 3
+  },
+  {
+   "id": 23,
+   "nom": "Autéquia",
+   "type": "VILLE",
+   "etape": 4
+  },
+  {
+   "id": 24,
+   "nom": "Chemin Ardent",
+   "type": "GROTTE",
+   "etape": 4
+  },
+  {
+   "id": 25,
+   "nom": "Mont Chimnée",
+   "type": "ZONE_ANNEXE",
+   "etape": 4
+  },
+  {
+   "id": 26,
+   "nom": "Route 111",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 27,
+   "nom": "Route 112",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 28,
+   "nom": "Route 113",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 29,
+   "nom": "Route 114",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 30,
+   "nom": "Route 115",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 31,
+   "nom": "Sentier Sinuroc",
+   "type": "ROUTE",
+   "etape": 4
+  },
+  {
+   "id": 32,
+   "nom": "Site Météore",
+   "type": "GROTTE",
+   "etape": 4
+  },
+  {
+   "id": 33,
+   "nom": "Vermilava",
+   "type": "VILLE",
+   "etape": 4
+  },
+  {
+   "id": 34,
+   "nom": "Ruines Désert",
+   "type": "ZONE_ANNEXE",
+   "etape": 5
+  },
+  {
+   "id": 35,
+   "nom": "Voie du Désert",
+   "type": "GROTTE",
+   "etape": 5
+  },
+  {
+   "id": 36,
+   "nom": "Centre Météo",
+   "type": "BATIMENT",
+   "etape": 6
+  },
+  {
+   "id": 37,
+   "nom": "Chenal 105",
+   "type": "MER",
+   "etape": 6
+  },
+  {
+   "id": 38,
+   "nom": "Chenal 107",
+   "type": "MER",
+   "etape": 6
+  },
+  {
+   "id": 39,
+   "nom": "Chenal 108",
+   "type": "MER",
+   "etape": 6
+  },
+  {
+   "id": 40,
+   "nom": "Cimetronelle",
+   "type": "VILLE",
+   "etape": 6
+  },
+  {
+   "id": 41,
+   "nom": "New Lavandia",
+   "type": "GROTTE",
+   "etape": 6
+  },
+  {
+   "id": 42,
+   "nom": "Route 119",
+   "type": "ROUTE",
+   "etape": 6
+  },
+  {
+   "id": 43,
+   "nom": "Épave",
+   "type": "ZONE_ANNEXE",
+   "etape": 6
+  },
+  {
+   "id": 44,
+   "nom": "Algatia",
+   "type": "VILLE",
+   "etape": 7
+  },
+  {
+   "id": 45,
+   "nom": "Chenal 122",
+   "type": "MER",
+   "etape": 7
+  },
+  {
+   "id": 46,
+   "nom": "Chenal 124",
+   "type": "MER",
+   "etape": 7
+  },
+  {
+   "id": 47,
+   "nom": "Chenal 125",
+   "type": "MER",
+   "etape": 7
+  },
+  {
+   "id": 48,
+   "nom": "Grotte Tréfonds",
+   "type": "GROTTE",
+   "etape": 7
+  },
+  {
+   "id": 49,
+   "nom": "Grotte Zénith",
+   "type": "GROTTE",
+   "etape": 7
+  },
+  {
+   "id": 50,
+   "nom": "Lavandia Sea",
+   "type": "ZONE_ANNEXE",
+   "etape": 7
+  },
+  {
+   "id": 51,
+   "nom": "Mont Mémoria",
+   "type": "ZONE_ANNEXE",
+   "etape": 7
+  },
+  {
+   "id": 52,
+   "nom": "Nénucrique",
+   "type": "VILLE",
+   "etape": 7
+  },
+  {
+   "id": 53,
+   "nom": "Parc Safari",
+   "type": "ZONE_ANNEXE",
+   "etape": 7,
+   "cleModule": "Parc Safari (Hoenn)"
+  },
+  {
+   "id": 54,
+   "nom": "Planque Aqua",
+   "type": "ZONE_ANNEXE",
+   "etape": 7
+  },
+  {
+   "id": 55,
+   "nom": "Planque Magma",
+   "type": "ZONE_ANNEXE",
+   "etape": 7
+  },
+  {
+   "id": 56,
+   "nom": "Route 120",
+   "type": "ROUTE",
+   "etape": 7
+  },
+  {
+   "id": 57,
+   "nom": "Route 121",
+   "type": "ROUTE",
+   "etape": 7
+  },
+  {
+   "id": 58,
+   "nom": "Route 123",
+   "type": "ROUTE",
+   "etape": 7
+  },
+  {
+   "id": 59,
+   "nom": "Atalanopolis",
+   "type": "VILLE",
+   "etape": 8
+  },
+  {
+   "id": 60,
+   "nom": "Caverne Fondmer",
+   "type": "GROTTE",
+   "etape": 8
+  },
+  {
+   "id": 61,
+   "nom": "Centre Spatial d'Algatia",
+   "type": "BATIMENT",
+   "etape": 8
+  },
+  {
+   "id": 62,
+   "nom": "Chenal 126",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 63,
+   "nom": "Chenal 127",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 64,
+   "nom": "Chenal 128",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 65,
+   "nom": "Chenal 129",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 66,
+   "nom": "Chenal 130",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 67,
+   "nom": "Chenal 131",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 68,
+   "nom": "Fond marin",
+   "type": "MER",
+   "etape": 8
+  },
+  {
+   "id": 69,
+   "nom": "Grotte Origine",
+   "type": "GROTTE",
+   "etape": 8
+  },
+  {
+   "id": 70,
+   "nom": "Pacifiville",
+   "type": "VILLE",
+   "etape": 8
+  },
+  {
+   "id": 71,
+   "nom": "Pilier Céleste",
+   "type": "ZONE_ANNEXE",
+   "etape": 8
+  },
+  {
+   "id": 72,
+   "nom": "Chenal 132",
+   "type": "MER",
+   "etape": 9
+  },
+  {
+   "id": 73,
+   "nom": "Chenal 133",
+   "type": "MER",
+   "etape": 9
+  },
+  {
+   "id": 74,
+   "nom": "Chenal 134",
+   "type": "MER",
+   "etape": 9
+  },
+  {
+   "id": 75,
+   "nom": "Île du Sud",
+   "type": "ZONE_ANNEXE",
+   "etape": 9
+  },
+  {
+   "id": 76,
+   "nom": "Ligue Pokémon",
+   "type": "BATIMENT",
+   "etape": 10
+  },
+  {
+   "id": 77,
+   "nom": "Route Victoire",
+   "type": "GROTTE",
+   "etape": 10,
+   "cleModule": "Route Victoire (Hoenn)"
+  },
+  {
+   "id": 78,
+   "nom": "Éternara",
+   "type": "VILLE",
+   "etape": 10
+  },
+  {
+   "id": 79,
+   "nom": "Faille Spatio-Temporelle",
+   "type": "ZONE_ANNEXE",
+   "etape": 11
+  },
+  {
+   "id": 80,
+   "nom": "Grotte de l'Îlot",
+   "type": "ZONE_ANNEXE",
+   "etape": 11
+  },
+  {
+   "id": 81,
+   "nom": "Nuages noirs",
+   "type": "ZONE_ANNEXE",
+   "etape": 11
+  },
+  {
+   "id": 82,
+   "nom": "Sanctuaire",
+   "type": "ZONE_ANNEXE",
+   "etape": 11,
+   "cleModule": "Sanctuaire (Hoenn)"
+  },
+  {
+   "id": 83,
+   "nom": "Tombeau Antique",
+   "type": "ZONE_ANNEXE",
+   "etape": 11
+  },
+  {
+   "id": 84,
+   "nom": "Atoll de Combat",
+   "type": "ZONE_ANNEXE",
+   "etape": 12
+  },
+  {
+   "id": 85,
+   "nom": "Forêt Impénétrable",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  },
+  {
+   "id": 86,
+   "nom": "Gouffre Informe",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  },
+  {
+   "id": 87,
+   "nom": "Grand Envol",
+   "type": "ZONE_ANNEXE",
+   "etape": 12,
+   "cleModule": "Grand Envol|Grand Ciel"
+  },
+  {
+   "id": 88,
+   "nom": "Grotte Oubliée",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  },
+  {
+   "id": 89,
+   "nom": "Grotte Évanescente",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  },
+  {
+   "id": 90,
+   "nom": "Plaine Sans Nom",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  },
+  {
+   "id": 91,
+   "nom": "Île de l'Arc",
+   "type": "LIEU_MIRAGE",
+   "etape": 12
+  }
+ ]
+}

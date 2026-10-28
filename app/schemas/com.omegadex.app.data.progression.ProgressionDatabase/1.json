@@ -1,0 +1,457 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "1d7e142b97b8be1ccf0738ec1474d47c",
+    "entities": [
+      {
+        "tableName": "utilisateur",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `identifiant` TEXT NOT NULL COLLATE NOCASE, `hashMotDePasse` TEXT NOT NULL, `sel` TEXT NOT NULL, `dateCreation` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identifiant",
+            "columnName": "identifiant",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hashMotDePasse",
+            "columnName": "hashMotDePasse",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sel",
+            "columnName": "sel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreation",
+            "columnName": "dateCreation",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_utilisateur_identifiant",
+            "unique": true,
+            "columnNames": [
+              "identifiant"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_utilisateur_identifiant` ON `${TABLE_NAME}` (`identifiant`)"
+          }
+        ]
+      },
+      {
+        "tableName": "run",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `utilisateurId` INTEGER NOT NULL, `nom` TEXT NOT NULL, `starterId` INTEGER NOT NULL, `difficulte` TEXT NOT NULL, `regles` TEXT NOT NULL, `dateDebut` INTEGER NOT NULL, `dateFin` INTEGER, FOREIGN KEY(`utilisateurId`) REFERENCES `utilisateur`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utilisateurId",
+            "columnName": "utilisateurId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "starterId",
+            "columnName": "starterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "difficulte",
+            "columnName": "difficulte",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "regles",
+            "columnName": "regles",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateDebut",
+            "columnName": "dateDebut",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateFin",
+            "columnName": "dateFin",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_run_utilisateurId",
+            "unique": false,
+            "columnNames": [
+              "utilisateurId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_run_utilisateurId` ON `${TABLE_NAME}` (`utilisateurId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "utilisateur",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "utilisateurId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "progression_etape",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`runId` INTEGER NOT NULL, `etapeId` INTEGER NOT NULL, `deverrouillee` INTEGER NOT NULL, `dateDeverrouillage` INTEGER, `dateValidation` INTEGER, PRIMARY KEY(`runId`, `etapeId`), FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "runId",
+            "columnName": "runId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etapeId",
+            "columnName": "etapeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deverrouillee",
+            "columnName": "deverrouillee",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateDeverrouillage",
+            "columnName": "dateDeverrouillage",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "dateValidation",
+            "columnName": "dateValidation",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "runId",
+            "etapeId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "run",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "runId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "quete_cochee",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`runId` INTEGER NOT NULL, `queteId` INTEGER NOT NULL, `dateCochage` INTEGER NOT NULL, PRIMARY KEY(`runId`, `queteId`), FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "runId",
+            "columnName": "runId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "queteId",
+            "columnName": "queteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCochage",
+            "columnName": "dateCochage",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "runId",
+            "queteId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "run",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "runId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "progression_espece",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`runId` INTEGER NOT NULL, `especeId` INTEGER NOT NULL, `statut` TEXT NOT NULL, `notes` TEXT NOT NULL, `dateMaj` INTEGER NOT NULL, PRIMARY KEY(`runId`, `especeId`), FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "runId",
+            "columnName": "runId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statut",
+            "columnName": "statut",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateMaj",
+            "columnName": "dateMaj",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "runId",
+            "especeId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "run",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "runId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "defi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `runId` INTEGER NOT NULL, `modeleId` INTEGER NOT NULL, `especeId` INTEGER, `etapeId` INTEGER, `etat` TEXT NOT NULL, `dateDebut` INTEGER NOT NULL, `dateFin` INTEGER, FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "runId",
+            "columnName": "runId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modeleId",
+            "columnName": "modeleId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "etapeId",
+            "columnName": "etapeId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "etat",
+            "columnName": "etat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateDebut",
+            "columnName": "dateDebut",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateFin",
+            "columnName": "dateFin",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_defi_runId",
+            "unique": false,
+            "columnNames": [
+              "runId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_defi_runId` ON `${TABLE_NAME}` (`runId`)"
+          },
+          {
+            "name": "index_defi_especeId",
+            "unique": false,
+            "columnNames": [
+              "especeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_defi_especeId` ON `${TABLE_NAME}` (`especeId`)"
+          },
+          {
+            "name": "index_defi_etapeId",
+            "unique": false,
+            "columnNames": [
+              "etapeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_defi_etapeId` ON `${TABLE_NAME}` (`etapeId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "run",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "runId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "membre_equipe",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`runId` INTEGER NOT NULL, `emplacement` INTEGER NOT NULL, `especeId` INTEGER NOT NULL, `surnom` TEXT, `niveau` INTEGER NOT NULL, PRIMARY KEY(`runId`, `emplacement`), FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "runId",
+            "columnName": "runId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emplacement",
+            "columnName": "emplacement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surnom",
+            "columnName": "surnom",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "niveau",
+            "columnName": "niveau",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "runId",
+            "emplacement"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "run",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "runId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1d7e142b97b8be1ccf0738ec1474d47c')"
+    ]
+  }
+}
