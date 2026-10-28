@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.Flow
 interface RencontreDao {
     @Query(
         """
-        SELECT l.*, r.especeId AS especeId, r.methode AS methode, r.niveauMin AS niveauMin, r.niveauMax AS niveauMax
+        SELECT l.*, r.especeId AS especeId, r.methode AS methode, r.niveauMin AS niveauMin, r.niveauMax AS niveauMax,
+            r.taux AS taux, r.condition AS condition
         FROM rencontre r JOIN lieu l ON l.id = r.lieuId
         WHERE r.especeId = :especeId
         ORDER BY l.etapeDeblocageId, l.nom, r.methode
@@ -22,7 +23,8 @@ interface RencontreDao {
 
     @Query(
         """
-        SELECT l.*, r.especeId AS especeId, r.methode AS methode, r.niveauMin AS niveauMin, r.niveauMax AS niveauMax
+        SELECT l.*, r.especeId AS especeId, r.methode AS methode, r.niveauMin AS niveauMin, r.niveauMax AS niveauMax,
+            r.taux AS taux, r.condition AS condition
         FROM rencontre r JOIN lieu l ON l.id = r.lieuId
         WHERE r.lieuId = :lieuId
         ORDER BY r.methode, r.especeId
@@ -46,4 +48,6 @@ data class RencontreLigne(
     val methode: MethodeRencontre,
     val niveauMin: Int?,
     val niveauMax: Int?,
+    val taux: Int?,
+    val condition: String?,
 )

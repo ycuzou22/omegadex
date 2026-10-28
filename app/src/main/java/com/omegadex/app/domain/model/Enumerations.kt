@@ -1,13 +1,29 @@
 package com.omegadex.app.domain.model
 
 /** Types de lieux de Hoenn. */
-enum class TypeLieu { ROUTE, VILLE, GROTTE, MER, ZONE_ANNEXE, LIEU_MIRAGE, BATIMENT }
+/** HORS_HOENN regroupe les espèces à obtenir par échange ou transfert depuis un autre jeu. */
+enum class TypeLieu { ROUTE, VILLE, GROTTE, MER, ZONE_ANNEXE, LIEU_MIRAGE, BATIMENT, HORS_HOENN }
 
 /** Une quête principale débloque l'étape suivante ; une quête annexe est facultative. */
 enum class TypeQuete { PRINCIPALE, ANNEXE }
 
 /** Façon d'obtenir une espèce dans un lieu. */
-enum class MethodeRencontre { HERBE, SURF, PECHE, NAVI_DEX, CADEAU, FIXE, ECHANGE_REQUIS, ROCHE_FRACASSEE, OEUF }
+enum class MethodeRencontre {
+    HERBE,
+    HORDE,
+    SURF,
+    PLONGEE,
+    PECHE,
+    NAVI_DEX,
+    ROCHE_FRACASSEE,
+    CADEAU,
+    ECHANGE_EN_JEU,
+    FIXE,
+    OEUF,
+
+    /** Espèce absente de Rubis Oméga : à obtenir par échange ou transfert. */
+    ECHANGE_REQUIS,
+}
 
 /** Condition d'une évolution (la valeur précise le niveau, la pierre, l'objet ou le lieu). */
 enum class ConditionEvolution { NIVEAU, PIERRE, BONHEUR, ECHANGE, OBJET, LIEU, AUTRE }
