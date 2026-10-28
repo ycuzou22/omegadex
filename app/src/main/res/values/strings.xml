@@ -11,4 +11,30 @@
     <!-- Écrans -->
     <string name="ecran_bientot_disponible">Bientôt disponible</string>
     <string name="accueil_version">Version %1$s</string>
+
+    <!-- Comptes -->
+    <string name="champ_identifiant">Identifiant</string>
+    <string name="champ_mot_de_passe">Mot de passe</string>
+    <string name="champ_confirmation">Confirmer le mot de passe</string>
+    <string name="champ_afficher">Afficher</string>
+    <string name="champ_masquer">Masquer</string>
+    <string name="connexion_sous_titre">Reprends ton aventure à Hoenn</string>
+    <string name="connexion_comptes">Comptes de cet appareil</string>
+    <string name="connexion_bouton">Se connecter</string>
+    <string name="connexion_en_cours">Connexion…</string>
+    <string name="connexion_vers_inscription">Créer un compte</string>
+    <string name="connexion_erreur_identifiants">Identifiant ou mot de passe incorrect.</string>
+    <string name="connexion_erreur_vide">Saisis ton identifiant et ton mot de passe.</string>
+    <string name="connexion_erreur_attente">Trop d\'essais. Réessaie dans %1$d s.</string>
+    <string name="inscription_sous_titre">Crée ton compte de dresseur</string>
+    <string name="inscription_bouton">Créer mon compte</string>
+    <string name="inscription_en_cours">Création…</string>
+    <string name="inscription_vers_connexion">J\'ai déjà un compte</string>
+    <string name="inscription_info">Ton mot de passe ne quitte jamais cet appareil et n\'est jamais enregistré en clair. %1$d caractères minimum.</string>
+    <string name="inscription_erreur_identifiant">3 à 20 caractères : lettres, chiffres, point, tiret ou tiret bas.</string>
+    <string name="inscription_erreur_pris">Cet identifiant est déjà utilisé sur cet appareil.</string>
+    <string name="inscription_erreur_court">Au moins %1$d caractères.</string>
+    <string name="inscription_erreur_confirmation">Les deux mots de passe sont différents.</string>
+    <string name="accueil_bonjour">Bonjour, %1$s</string>
+    <string name="accueil_deconnexion">Changer de joueur</string>
 </resources>
