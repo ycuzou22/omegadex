@@ -21,6 +21,13 @@ interface EtapeDao {
     )
     fun quetes(etapeId: Int): Flow<List<QueteEntity>>
 
+    /** Quêtes qui se déroulent dans un lieu (dont les objets importants qu'on y obtient). */
+    @Query(
+        "SELECT * FROM quete WHERE lieuId = :lieuId " +
+            "ORDER BY etapeId, CASE type WHEN 'PRINCIPALE' THEN 0 ELSE 1 END, ordre",
+    )
+    fun quetesDuLieu(lieuId: Int): Flow<List<QueteEntity>>
+
     @Query("SELECT * FROM lieu WHERE etapeDeblocageId = :etapeId ORDER BY nom")
     fun lieuxDebloques(etapeId: Int): Flow<List<LieuEntity>>
 
