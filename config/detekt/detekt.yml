@@ -28,10 +28,10 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
     excludes: ['**/test/**', '**/ui/theme/**']
   UnusedPrivateMember:
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
   MaxLineLength:
     maxLineLength: 120
   WildcardImport:
