@@ -61,7 +61,10 @@ def _globaux(con: sqlite3.Connection, c: Controle) -> list[str]:
 
 
 def _etapes(con: sqlite3.Connection, c: Controle) -> list[str]:
-    lignes = ["| Étape | Adversaire | Plafond | Lieux débloqués | Quêtes principales | Captures | Contrôle |", "| --- | --- | --- | --- | --- | --- | --- |"]
+    lignes = [
+        "| Étape | Adversaire | Plafond | Lieux débloqués | Quêtes principales | Captures | Défis (base / Difficile) | Contrôle |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
     etapes = con.execute("SELECT id, titre, adversaire, plafond FROM etape ORDER BY id").fetchall()
     c.exiger(len(etapes) == NOMBRE_ETAPES, f"{len(etapes)} étapes au lieu de {NOMBRE_ETAPES}")
     precedent = 0
@@ -70,13 +73,18 @@ def _etapes(con: sqlite3.Connection, c: Controle) -> list[str]:
         lieux = con.execute("SELECT COUNT(*) FROM lieu WHERE etapeDeblocageId = ?", (eid,)).fetchone()[0]
         principales = con.execute("SELECT COUNT(*) FROM quete WHERE etapeId = ? AND type = 'PRINCIPALE'", (eid,)).fetchone()[0]
         captures = con.execute("SELECT COUNT(*) FROM quete WHERE etapeId = ? AND type = 'ANNEXE'", (eid,)).fetchone()[0]
+        base, difficile = (
+            con.execute("SELECT COUNT(*) FROM modele_defi WHERE etapeId = ? AND difficulteMin = ?", (eid, d)).fetchone()[0]
+            for d in ("NORMAL", "DIFFICILE")
+        )
         c.exiger(principales >= 1, f"étape {eid} ({titre}) sans quête principale")
+        c.exiger(base >= 1 and difficile >= 1, f"étape {eid} ({titre}) sans défi de base ou sans défi Difficile")
         c.exiger(plafond and plafond > 0, f"étape {eid} ({titre}) sans plafond")
         c.signaler(plafond >= precedent, f"étape {eid} ({titre}) : plafond {plafond} inférieur à l'étape précédente ({precedent})")
         c.signaler(lieux > 0 or eid == 0, f"étape {eid} ({titre}) ne débloque aucun lieu")
         precedent = max(precedent, plafond or 0)
         statut = "erreur" if len(c.erreurs) > avant[0] else ("avertissement" if len(c.avertissements) > avant[1] else "ok")
-        lignes.append(f"| {eid} · {titre} | {adversaire} | {plafond} | {lieux} | {principales} | {captures} | {statut} |")
+        lignes.append(f"| {eid} · {titre} | {adversaire} | {plafond} | {lieux} | {principales} | {captures} | {base} / {difficile} | {statut} |")
     return lignes
 
 

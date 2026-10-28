@@ -59,6 +59,8 @@ class BaseJeuEmbarqueeTest {
                     it.especeCibleId
             },
         )
+        assertEquals(60, base.modeleDefiDao().modeles().first().size)
+        assertEquals(2, base.modeleDefiDao().modelesDeLEtape(4).first().size)
         val quetes = base.etapeDao().quetes(0).first()
         assertEquals("Choisir son Pokémon de départ et sauver le Professeur Seko", quetes.first().description)
     }
@@ -75,6 +77,6 @@ class BaseJeuEmbarqueeTest {
     }
 
     private companion object {
-        const val VERSION_EMBARQUEE = 3
+        const val VERSION_EMBARQUEE = 4
     }
 }
