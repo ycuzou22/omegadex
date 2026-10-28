@@ -39,7 +39,7 @@ class PokedexNationalTest {
         BasesDeTest.remplirJeu(jeu)
         // Bulbizarre (hors du Pokédex de Hoenn) ne s'obtient que par échange.
         jeu.openHelper.writableDatabase.apply {
-            execSQL("INSERT INTO lieu VALUES (124, 'Hors de Hoenn', 'HORS_HOENN', 10)")
+            execSQL("INSERT INTO lieu VALUES (124, 'Hors de Hoenn', 'HORS_HOENN', 1)")
             execSQL("INSERT INTO rencontre VALUES (3, 124, 1, 'ECHANGE_REQUIS', NULL, NULL, NULL, NULL)")
         }
         base = BasesDeTest.progression()
