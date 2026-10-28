@@ -314,7 +314,7 @@ private val NOMS_TYPES_DEFIS = mapOf(
 )
 
 @StringRes
-private fun nomTypeDefi(type: TypeDefi): Int = NOMS_TYPES_DEFIS.getValue(type)
+internal fun nomTypeDefi(type: TypeDefi): Int = NOMS_TYPES_DEFIS.getValue(type)
 
 private const val POURCENT = 100
 

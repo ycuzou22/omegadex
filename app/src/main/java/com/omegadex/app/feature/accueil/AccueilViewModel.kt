@@ -2,7 +2,10 @@ package com.omegadex.app.feature.accueil
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omegadex.app.domain.accueil.DefiDuJourUseCase
 import com.omegadex.app.domain.accueil.ObserverJaugesUseCase
+import com.omegadex.app.domain.defi.AccepterDefiUseCase
+import com.omegadex.app.domain.defi.DefiPropose
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.SessionRepository
@@ -12,6 +15,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -20,9 +24,13 @@ class AccueilViewModel @Inject constructor(
     infosAppRepository: InfosAppRepository,
     comptes: CompteRepository,
     private val session: SessionRepository,
-    observerRunEnCours: ObserverRunEnCoursUseCase,
     observerJauges: ObserverJaugesUseCase,
+    defiDuJour: DefiDuJourUseCase,
+    private val observerRunEnCours: ObserverRunEnCoursUseCase,
+    private val accepterDefi: AccepterDefiUseCase,
 ) : ViewModel() {
+    private var defiPropose: DefiPropose? = null
+
     private val version = infosAppRepository.version()
 
     val uiState: StateFlow<AccueilUiState> = combine(
@@ -30,7 +38,9 @@ class AccueilViewModel @Inject constructor(
         comptes.utilisateurs(),
         observerRunEnCours(),
         observerJauges(),
-    ) { id, liste, enCours, jauges ->
+        defiDuJour(),
+    ) { id, liste, enCours, jauges, defi ->
+        defiPropose = defi
         AccueilUiState(
             version = version,
             joueur = liste.firstOrNull { it.id == id }?.identifiant.orEmpty(),
@@ -44,8 +54,18 @@ class AccueilViewModel @Inject constructor(
                 )
             },
             jauges = jauges,
+            defiDuJour = defi?.let { DefiDuJour(it.modele.type, it.modele.titre, it.enonce) },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
+
+    /** Relève le défi du jour : il devient actif dans l'espace Défis et un autre défi du jour est proposé. */
+    fun releverDefiDuJour() {
+        val defi = defiPropose ?: return
+        viewModelScope.launch {
+            val runId = observerRunEnCours().first()?.run?.id ?: return@launch
+            accepterDefi(runId, defi)
+        }
+    }
 
     /** Ferme la session : l'app revient à l'écran de connexion et à la liste des comptes. */
     fun changerDeJoueur() {

@@ -187,4 +187,5 @@
     <string name="accueil_fraction">%1$d/%2$d</string>
     <string name="accueil_jauge_description_pourcentage">%1$s : %2$d %%</string>
     <string name="accueil_jauge_description_fraction">%1$s : %2$d sur %3$d</string>
+    <string name="accueil_defi_du_jour">Défi du jour · %1$s</string>
 </resources>

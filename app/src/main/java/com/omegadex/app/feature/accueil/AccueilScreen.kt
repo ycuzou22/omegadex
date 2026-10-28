@@ -13,12 +13,17 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -31,6 +36,11 @@ import com.omegadex.app.R
 import com.omegadex.app.domain.accueil.Jauge
 import com.omegadex.app.domain.accueil.JaugesAccueil
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.TypeDefi
+import com.omegadex.app.feature.aventure.AventureUiState
+import com.omegadex.app.feature.aventure.AventureViewModel
+import com.omegadex.app.feature.aventure.CarteEtape
+import com.omegadex.app.feature.defis.nomTypeDefi
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.VarianteBouton
@@ -42,21 +52,41 @@ fun AccueilScreen(
     onMesRuns: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AccueilViewModel = hiltViewModel(),
+    aventureViewModel: AventureViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AccueilContenu(
-        uiState = uiState,
-        onChangerDeJoueur = viewModel::changerDeJoueur,
-        onMesRuns = onMesRuns,
-        modifier = modifier,
-    )
+    val aventure by aventureViewModel.uiState.collectAsStateWithLifecycle()
+    val annonces = remember { SnackbarHostState() }
+    val ressources = LocalResources.current
+    // Les quêtes cochées depuis l'accueil valident l'étape comme dans l'Aventure.
+    LaunchedEffect(aventureViewModel) {
+        aventureViewModel.evenements.collect { evenement ->
+            annonces.showSnackbar(
+                evenement.suivante?.let { ressources.getString(R.string.aventure_etape_validee, evenement.titre, it) }
+                    ?: ressources.getString(R.string.aventure_derniere_validee, evenement.titre),
+            )
+        }
+    }
+    Box(modifier.fillMaxSize()) {
+        AccueilContenu(
+            uiState = uiState,
+            etape = aventure as? AventureUiState.EtapeEnCours,
+            actions = ActionsAccueil(
+                onChangerDeJoueur = viewModel::changerDeJoueur,
+                onMesRuns = onMesRuns,
+                onCocher = aventureViewModel::cocher,
+                onRelever = viewModel::releverDefiDuJour,
+            ),
+        )
+        SnackbarHost(annonces, Modifier.align(Alignment.BottomCenter).padding(16.dp))
+    }
 }
 
 @Composable
 private fun AccueilContenu(
     uiState: AccueilUiState,
-    onChangerDeJoueur: () -> Unit,
-    onMesRuns: () -> Unit,
+    etape: AventureUiState.EtapeEnCours?,
+    actions: ActionsAccueil,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -67,17 +97,13 @@ private fun AccueilContenu(
                 .padding(horizontal = 20.dp, vertical = 22.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            EnTeteAccueil(uiState, onChangerDeJoueur, onMesRuns)
-            uiState.run?.let { run ->
-                Text(
-                    stringResource(R.string.accueil_etape, run.etapeNumero, run.totalEtapes) + " · " + run.etapeTitre,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
+            EnTeteAccueil(uiState, actions.onChangerDeJoueur, actions.onMesRuns)
+            etape?.let { CarteEtape(it, actions.onCocher) }
             uiState.jauges?.let { RangeeJauges(it) }
+            uiState.defiDuJour?.let { CarteDefiDuJour(it, actions.onRelever) }
             OmegaButton(
                 stringResource(R.string.accueil_changer_run),
-                onClick = onMesRuns,
+                onClick = actions.onMesRuns,
                 variante = VarianteBouton.CONTOUR,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -87,6 +113,28 @@ private fun AccueilContenu(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
+        }
+    }
+}
+
+/** Carte « Défi du jour · type » de la maquette, avec le bouton « Relever ». */
+@Composable
+private fun CarteDefiDuJour(defi: DefiDuJour, onRelever: () -> Unit) {
+    Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surface) {
+        Row(
+            Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    stringResource(R.string.accueil_defi_du_jour, stringResource(nomTypeDefi(defi.type))).uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(defi.enonce, style = MaterialTheme.typography.bodyMedium)
+            }
+            OmegaButton(stringResource(R.string.defis_relever), onClick = onRelever, variante = VarianteBouton.SOMBRE)
         }
     }
 }
@@ -141,9 +189,14 @@ private fun AccueilPreview() {
                 joueur = "Yamao",
                 run = RunAccueil("Rubis Oméga", Difficulte.DIFFICILE, 3, "Voltère", 13),
                 jauges = JaugesAccueil(Jauge(3, 13), Jauge(41, 211), Jauge(12, 40)),
+                defiDuJour = DefiDuJour(
+                    TypeDefi.EVOLUTION,
+                    "Évolution sous le plafond",
+                    "Faire évoluer Gobou en Flobio avant Voltère, sans dépasser le niveau 21",
+                ),
             ),
-            onChangerDeJoueur = {},
-            onMesRuns = {},
+            etape = null,
+            actions = ActionsAccueil({}, {}, { _, _ -> }, {}),
         )
     }
 }
