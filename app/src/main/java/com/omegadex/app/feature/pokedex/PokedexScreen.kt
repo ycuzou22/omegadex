@@ -100,7 +100,8 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
 }
 
 /**
- * Case d'une espèce. Une espèce jamais vue apparaît en silhouette (fond éteint, nom estompé, sans types) ;
+ * Case d'une espèce. Une espèce jamais vue apparaît en silhouette : fond éteint, nom estompé,
+ * ni types ni rubis ;
  * une espèce à portée et pas encore capturée a une bordure rubis.
  */
 @Composable
@@ -136,7 +137,7 @@ private fun CaseEspece(espece: EspeceAffichee, national: Boolean) {
                 overflow = TextOverflow.Ellipsis,
             )
             if (!silhouette) PastillesTypes(espece.types)
-            RubisStatut(espece.statut)
+            if (!silhouette) RubisStatut(espece.statut)
             if (espece.echangeRequis && national) {
                 Text(echange, style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
             }
@@ -189,7 +190,7 @@ fun libelleStatut(statut: StatutEspece): Int = when (statut) {
 }
 
 private val LARGEUR_CASE = 104.dp
-private val HAUTEUR_CASE = 112.dp
+private val HAUTEUR_CASE = 100.dp
 
 @ApercusClairSombre
 @Composable
