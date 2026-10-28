@@ -1,6 +1,8 @@
 package com.omegadex.app.data.progression.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
@@ -9,7 +11,7 @@ import com.omegadex.app.data.progression.entity.ProgressionEtapeEntity
 import com.omegadex.app.data.progression.entity.QueteCocheeEntity
 import com.omegadex.app.data.progression.entity.RunEntity
 
-/** Lectures ponctuelles de toute la progression d'un compte (export de sauvegarde). */
+/** Lectures et écritures en bloc de toute la progression d'un compte (export et import de sauvegarde). */
 @Dao
 interface SauvegardeDao {
     @Query("SELECT * FROM run WHERE utilisateurId = :utilisateurId ORDER BY dateDebut, id")
@@ -29,4 +31,23 @@ interface SauvegardeDao {
 
     @Query("SELECT * FROM defi WHERE runId = :runId ORDER BY id")
     suspend fun defis(runId: Long): List<DefiEntity>
+
+    @Insert
+    suspend fun creerRun(run: RunEntity): Long
+
+    /** Les insertions d'import échouent sur un doublon plutôt que de remplacer une ligne en silence. */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterEtapes(etapes: List<ProgressionEtapeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterQuetes(quetes: List<QueteCocheeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterEspeces(especes: List<ProgressionEspeceEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterMembres(membres: List<MembreEquipeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterDefis(defis: List<DefiEntity>)
 }

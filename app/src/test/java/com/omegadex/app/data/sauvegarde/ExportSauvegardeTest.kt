@@ -39,6 +39,9 @@ class ExportSauvegardeTest {
             if (enPanne) throw IOException("stockage plein")
             ecrits[destination] = SauvegardeJson.encoder(sauvegarde)
         }
+
+        override suspend fun lire(source: String) =
+            SauvegardeJson.decoder(ecrits[source] ?: throw IOException("fichier absent"))
     }
 
     private lateinit var base: ProgressionDatabase

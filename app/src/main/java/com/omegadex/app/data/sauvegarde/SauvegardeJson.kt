@@ -1,13 +1,18 @@
 package com.omegadex.app.data.sauvegarde
 
+import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.ProgressionEtape
+import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.sauvegarde.DefiSauvegarde
 import com.omegadex.app.domain.sauvegarde.EspeceSuivie
 import com.omegadex.app.domain.sauvegarde.QueteCochee
 import com.omegadex.app.domain.sauvegarde.RunSauvegardee
 import com.omegadex.app.domain.sauvegarde.Sauvegarde
+import com.omegadex.app.domain.sauvegarde.SauvegardeInvalide
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -72,6 +77,114 @@ object SauvegardeJson {
 
     private fun <T> List<T>.versJson(element: (T) -> JSONObject) = JSONArray().also { tableau ->
         forEach { tableau.put(element(it)) }
+    }
+
+    /**
+     * Relit un fichier exporté. Lève [SauvegardeInvalide] si ce n'est pas du JSON, pas une sauvegarde
+     * Omégadex, une version plus récente que l'application, ou si un champ manque ou est mal typé.
+     * La cohérence des valeurs est contrôlée ensuite par le domaine (ControleSauvegarde).
+     */
+    fun decoder(texte: String): Sauvegarde {
+        val racine = lireJson(texte)
+        return lireSauvegarde(racine, verifierEntete(racine))
+    }
+
+    private fun lireJson(texte: String) = try {
+        JSONObject(texte)
+    } catch (e: JSONException) {
+        throw SauvegardeInvalide("Ce fichier n'est pas un fichier JSON", e)
+    }
+
+    /** Vérifie la marque du format et retourne la version du fichier. */
+    private fun verifierEntete(racine: JSONObject): Int {
+        if (racine.optString(Cles.FORMAT) != FORMAT) {
+            throw SauvegardeInvalide("Ce fichier n'est pas une sauvegarde Omégadex")
+        }
+        val version = racine.optInt(Cles.VERSION, 0)
+        if (version !in 1..Sauvegarde.VERSION_FORMAT) {
+            throw SauvegardeInvalide(
+                "Version $version non prise en charge : mettez à jour l'application pour importer ce fichier",
+            )
+        }
+        return version
+    }
+
+    private fun lireSauvegarde(racine: JSONObject, version: Int): Sauvegarde = try {
+        Sauvegarde(
+            version = version,
+            dateExport = racine.getLong(Cles.DATE_EXPORT),
+            identifiant = racine.getString(Cles.IDENTIFIANT),
+            runs = racine.getJSONArray(Cles.RUNS).objets().map { it.versRun() },
+        )
+    } catch (e: JSONException) {
+        throw SauvegardeInvalide("Sauvegarde incomplète ou abîmée : ${e.message}", e)
+    } catch (e: IllegalArgumentException) {
+        throw SauvegardeInvalide("Valeur inconnue dans la sauvegarde : ${e.message}", e)
+    }
+
+    private fun JSONObject.versRun() = RunSauvegardee(
+        nom = getString(Cles.NOM),
+        starterId = getInt(Cles.STARTER_ID),
+        difficulte = Difficulte.valueOf(getString(Cles.DIFFICULTE)),
+        regles = getJSONArray(Cles.REGLES).let { tableau -> List(tableau.length()) { tableau.getString(it) } },
+        dateDebut = getLong(Cles.DATE_DEBUT),
+        dateFin = longOuNull(Cles.DATE_FIN),
+        etapes = getJSONArray(Cles.ETAPES).objets().map {
+            ProgressionEtape(
+                etapeId = it.getInt(Cles.ETAPE_ID),
+                deverrouillee = it.getBoolean(Cles.DEVERROUILLEE),
+                dateDeverrouillage = it.longOuNull(Cles.DATE_DEVERROUILLAGE),
+                dateValidation = it.longOuNull(Cles.DATE_VALIDATION),
+            )
+        },
+        quetesCochees = getJSONArray(Cles.QUETES_COCHEES).objets().map {
+            QueteCochee(it.getInt(Cles.QUETE_ID), it.getLong(Cles.DATE_COCHAGE))
+        },
+        especes = getJSONArray(Cles.ESPECES).objets().map {
+            EspeceSuivie(
+                especeId = it.getInt(Cles.ESPECE_ID),
+                statut = StatutEspece.valueOf(it.getString(Cles.STATUT)),
+                notes = it.getString(Cles.NOTES),
+                dateMaj = it.getLong(Cles.DATE_MAJ),
+            )
+        },
+        equipe = getJSONArray(Cles.EQUIPE).objets().map {
+            MembreEquipe(
+                emplacement = it.getInt(Cles.EMPLACEMENT),
+                especeId = it.getInt(Cles.ESPECE_ID),
+                surnom = it.stringOuNull(Cles.SURNOM),
+                niveau = it.getInt(Cles.NIVEAU),
+            )
+        },
+        defis = getJSONArray(Cles.DEFIS).objets().map {
+            DefiSauvegarde(
+                modeleId = it.getInt(Cles.MODELE_ID),
+                especeId = it.intOuNull(Cles.ESPECE_ID),
+                etapeId = it.intOuNull(Cles.ETAPE_ID),
+                etat = EtatDefi.valueOf(it.getString(Cles.ETAT)),
+                dateDebut = it.getLong(Cles.DATE_DEBUT),
+                dateFin = it.longOuNull(Cles.DATE_FIN),
+            )
+        },
+    )
+
+    private fun JSONArray.objets(): List<JSONObject> = List(length()) { getJSONObject(it) }
+
+    /** Une clé absente est une erreur ; seule une valeur `null` explicite donne null. */
+    private fun JSONObject.exigerCle(cle: String) {
+        if (!has(cle)) throw JSONException("champ « $cle » manquant")
+    }
+
+    private fun JSONObject.longOuNull(cle: String): Long? = also { it.exigerCle(cle) }.let {
+        if (it.isNull(cle)) null else it.getLong(cle)
+    }
+
+    private fun JSONObject.intOuNull(cle: String): Int? = also { it.exigerCle(cle) }.let {
+        if (it.isNull(cle)) null else it.getInt(cle)
+    }
+
+    private fun JSONObject.stringOuNull(cle: String): String? = also { it.exigerCle(cle) }.let {
+        if (it.isNull(cle)) null else it.getString(cle)
     }
 
     /** `put(cle, null)` retirerait la clé : on écrit un null JSON explicite. */
