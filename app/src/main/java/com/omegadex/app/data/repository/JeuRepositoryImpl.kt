@@ -11,6 +11,7 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
     private val especes = base.especeDao()
     private val attaques = base.attaqueDao()
     private val rencontres = base.rencontreDao()
+    private val modeles = base.modeleDefiDao()
 
     override fun etapes() = etapes.etapes().map { liste -> liste.map { it.versDomaine() } }
 
@@ -25,6 +26,8 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
     override fun lieu(id: Int) = etapes.lieu(id).map { it?.versDomaine() }
 
     override fun quetesDuLieu(lieuId: Int) = etapes.quetesDuLieu(lieuId).map { liste -> liste.map { it.versDomaine() } }
+
+    override fun modelesDefis() = modeles.modeles().map { liste -> liste.map { it.versDomaine() } }
 
     override fun pokedexHoenn() = especes.pokedexHoenn().map { liste -> liste.map { it.versDomaine() } }
 
@@ -47,4 +50,6 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
     }
 
     override fun especesAccessibles(etapeId: Int) = rencontres.especesAccessibles(etapeId).map { it.toSet() }
+
+    override fun especesEchangeRequis() = rencontres.especesEchangeRequis().map { it.toSet() }
 }

@@ -5,6 +5,7 @@ import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.Evolution
 import com.omegadex.app.domain.model.Lieu
+import com.omegadex.app.domain.model.ModeleDefi
 import com.omegadex.app.domain.model.Quete
 import com.omegadex.app.domain.model.Rencontre
 import com.omegadex.app.domain.model.TalentEspece
@@ -18,6 +19,9 @@ interface JeuRepository {
     fun lieuxDebloques(etapeId: Int): Flow<List<Lieu>>
     fun lieu(id: Int): Flow<Lieu?>
     fun quetesDuLieu(lieuId: Int): Flow<List<Quete>>
+
+    /** Modèles de défis de la base jeu (moteur de défis, T11). */
+    fun modelesDefis(): Flow<List<ModeleDefi>>
     fun pokedexHoenn(): Flow<List<Espece>>
     fun pokedexNational(): Flow<List<Espece>>
     fun espece(id: Int): Flow<Espece?>
@@ -27,4 +31,7 @@ interface JeuRepository {
     fun lieuxDeLEspece(especeId: Int): Flow<List<Rencontre>>
     fun especesDuLieu(lieuId: Int): Flow<List<Rencontre>>
     fun especesAccessibles(etapeId: Int): Flow<Set<Int>>
+
+    /** Espèces qu'on ne peut obtenir que par échange ou transfert (mention « échange requis »). */
+    fun especesEchangeRequis(): Flow<Set<Int>>
 }

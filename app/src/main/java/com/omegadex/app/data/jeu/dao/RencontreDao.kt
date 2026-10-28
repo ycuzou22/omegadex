@@ -40,6 +40,10 @@ interface RencontreDao {
         """,
     )
     fun especesAccessibles(etapeId: Int): Flow<List<Int>>
+
+    /** Espèces absentes de Rubis Oméga, à obtenir par échange ou transfert depuis un autre jeu. */
+    @Query("SELECT DISTINCT especeId FROM rencontre WHERE methode = 'ECHANGE_REQUIS' ORDER BY especeId")
+    fun especesEchangeRequis(): Flow<List<Int>>
 }
 
 data class RencontreLigne(
