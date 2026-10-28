@@ -12,6 +12,7 @@ import com.omegadex.app.R
 import com.omegadex.app.feature.accueil.AccueilScreen
 import com.omegadex.app.feature.aventure.AventureScreen
 import com.omegadex.app.feature.defis.DefisScreen
+import com.omegadex.app.feature.defis.DefisViewModel
 import com.omegadex.app.feature.equipe.EquipeScreen
 import com.omegadex.app.feature.lieu.FicheLieuScreen
 import com.omegadex.app.feature.lieu.FicheLieuViewModel
@@ -25,6 +26,7 @@ private const val ROUTE_MES_RUNS = "mes-runs"
 private const val ROUTE_NOUVELLE_RUN = "nouvelle-run"
 private const val ROUTE_LIEU = "lieu"
 private const val ROUTE_ESPECE = "espece"
+private const val ROUTE_DEFIS_ESPECE = "defis-espece"
 
 @Composable
 fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -40,7 +42,18 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
             AventureScreen(onLieu = { navController.navigate("$ROUTE_LIEU/$it") })
         }
         composable(Destination.POKEDEX.route) { PokedexScreen() }
-        composable(Destination.DEFIS.route) { DefisScreen() }
+        composable(Destination.DEFIS.route) {
+            DefisScreen(onEspece = { navController.navigate("$ROUTE_DEFIS_ESPECE/$it") })
+        }
+        composable(
+            "$ROUTE_DEFIS_ESPECE/{${DefisViewModel.ARGUMENT_ESPECE}}",
+            arguments = listOf(navArgument(DefisViewModel.ARGUMENT_ESPECE) { type = NavType.IntType }),
+        ) {
+            DefisScreen(
+                onEspece = {},
+                onRetour = { navController.popBackStack() },
+            )
+        }
         composable(Destination.EQUIPE.route) { EquipeScreen() }
         composable(
             "$ROUTE_LIEU/{${FicheLieuViewModel.ARGUMENT_LIEU}}",
