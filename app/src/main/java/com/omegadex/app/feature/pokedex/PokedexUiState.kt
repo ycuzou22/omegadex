@@ -11,12 +11,8 @@ sealed interface PokedexUiState {
      * [national] : le Pokédex national est débloqué (Ligue validée), sinon seul le régional de Hoenn est montré.
      * [vues] et [capturees] comptent les espèces au moins vues et au moins capturées.
      */
-    data class Pret(
-        val national: Boolean,
-        val especes: List<EspeceAffichee>,
-        val vues: Int,
-        val capturees: Int,
-    ) : PokedexUiState
+    data class Pret(val national: Boolean, val especes: List<EspeceAffichee>, val vues: Int, val capturees: Int) :
+        PokedexUiState
 }
 
 /**
