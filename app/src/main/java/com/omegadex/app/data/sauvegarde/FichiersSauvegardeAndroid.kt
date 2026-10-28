@@ -11,8 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Écrit les sauvegardes dans le fichier choisi par le joueur avec le sélecteur de fichiers Android
- * (`ActivityResultContracts.CreateDocument("application/json")`), via le ContentResolver.
+ * Écrit et relit les sauvegardes dans les fichiers choisis par le joueur avec le sélecteur de fichiers
+ * Android (`ActivityResultContracts.CreateDocument("application/json")` pour l'export), via le ContentResolver.
  */
 class FichiersSauvegardeAndroid @Inject constructor(@ApplicationContext private val context: Context) :
     FichiersSauvegarde {
@@ -22,5 +22,13 @@ class FichiersSauvegardeAndroid @Inject constructor(@ApplicationContext private 
         val flux = context.contentResolver.openOutputStream(Uri.parse(destination), "wt")
             ?: throw IOException("Impossible d'ouvrir $destination en écriture")
         flux.bufferedWriter(Charsets.UTF_8).use { it.write(contenu) }
+    }
+
+    /** Fichier choisi avec `ActivityResultContracts.OpenDocument()`. */
+    override suspend fun lire(source: String): Sauvegarde = withContext(Dispatchers.IO) {
+        val flux = context.contentResolver.openInputStream(Uri.parse(source))
+            ?: throw IOException("Impossible d'ouvrir $source en lecture")
+        val texte = flux.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        SauvegardeJson.decoder(texte)
     }
 }
