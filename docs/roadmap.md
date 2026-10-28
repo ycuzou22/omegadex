@@ -8,11 +8,11 @@ Les tâches se traitent dans l'ordre `T01` → `T21`, une sous-tâche à la fois
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | T01 · Initialiser le projet Android | #1 | M0 · Initialisation | P0 critique | backend | 5 | — |
 | 2 | T02 · Implémenter la direction artistique Épuré Oméga | #7 | M0 · Initialisation | P1 haute | frontend | 3 | T01 (#1) |
-| — | **R0 · Release v0.1.0 : dev → main** | #88 | M0 · Initialisation | P1 haute | — | — | toutes les tâches du milestone |
+| — | **[V0.1.0] Release v0.1.0 : fusionner dev dans main (M0)** | #88 | M0 · Initialisation | P1 haute | — | — | toutes les tâches du milestone |
 | 3 | T03 · Créer le modèle de données et les bases Room | #11 | M1 · Données du jeu | P0 critique | backend | 4 | T01 (#1) |
 | 4 | T04 · Écrire le script d'import des données du jeu | #16 | M1 · Données du jeu | P0 critique | backend | 6 | T03 (#11) |
 | 5 | T05 · Écrire les modèles de défis | #23 | M1 · Données du jeu | P1 haute | backend | 3 | T03 (#11) |
-| — | **R1 · Release v0.2.0 : dev → main** | #89 | M1 · Données du jeu | P1 haute | — | — | toutes les tâches du milestone |
+| — | **[V0.2.0] Release v0.2.0 : fusionner dev dans main (M1)** | #89 | M1 · Données du jeu | P1 haute | — | — | toutes les tâches du milestone |
 | 6 | T06 · Mettre en place les comptes locaux sécurisés | #27 | M2 · MVP | P0 critique | backend + frontend | 4 | T03 (#11) |
 | 7 | T07 · Créer les runs et le choix de difficulté | #32 | M2 · MVP | P0 critique | frontend | 2 | T06 (#27) |
 | 8 | T08 · Construire l'Aventure (étape en cours) | #35 | M2 · MVP | P0 critique | backend + frontend | 4 | T04 (#16), T07 (#32) |
@@ -24,14 +24,14 @@ Les tâches se traitent dans l'ordre `T01` → `T21`, une sous-tâche à la fois
 | 14 | T14 · Intégrer les animations de la DA | #63 | M2 · MVP | P2 moyenne | frontend | 4 | T02 (#7), T08 (#35), T09 (#40), T12 (#56) |
 | 15 | T15 · Ajouter la sauvegarde locale (export / import JSON) | #68 | M2 · MVP | P1 haute | backend | 2 | T07 (#32) |
 | 16 | T16 · Recette du MVP | #71 | M2 · MVP | P0 critique | backend | 3 | T06 (#27), T07 (#32), T08 (#35), T09 (#40), T10 (#45), T11 (#51), T12 (#56), T13 (#60), T14 (#63), T15 (#68) |
-| — | **R2 · Release v1.0.0 : dev → main** | #90 | M2 · MVP | P1 haute | — | — | toutes les tâches du milestone |
+| — | **[V1.0.0] Release v1.0.0 : fusionner dev dans main (M2)** | #90 | M2 · MVP | P1 haute | — | — | toutes les tâches du milestone |
 | 17 | T17 · Ajouter la rotation d'équipe (F10) | #75 | M3 · V2 | P2 moyenne | backend + frontend | 2 | T16 (#71) |
 | 18 | T18 · Ajouter les succès in-app (F11) | #78 | M3 · V2 | P3 basse | backend + frontend | 2 | T16 (#71) |
 | 19 | T19 · Ajouter les filtres avancés du Pokédex (F12) | #81 | M3 · V2 | P3 basse | backend + frontend | 2 | T16 (#71) |
 | 20 | T20 · Ajouter les statistiques de run (F13) | #84 | M3 · V2 | P3 basse | backend + frontend | 2 | T16 (#71) |
-| — | **R3 · Release v1.1.0 : dev → main** | #91 | M3 · V2 | P1 haute | — | — | toutes les tâches du milestone |
+| — | **[V1.1.0] Release v1.1.0 : fusionner dev dans main (M3)** | #91 | M3 · V2 | P1 haute | — | — | toutes les tâches du milestone |
 | 21 | T21 · Étudier la prise en charge de Saphir Alpha | #87 | M4 · V3 (option) | P3 basse | backend | 0 | T20 (#84) |
-| — | **R4 · Release v2.0.0 : dev → main** | #92 | M4 · V3 (option) | P1 haute | — | — | toutes les tâches du milestone |
+| — | **[V2.0.0] Release v2.0.0 : fusionner dev dans main (M4)** | #92 | M4 · V3 (option) | P1 haute | — | — | toutes les tâches du milestone |
 
 ## Dépendances entre tâches
 
