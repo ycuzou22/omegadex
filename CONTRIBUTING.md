@@ -1,16 +1,28 @@
 # Contribuer à Omégadex
 
-Ce document fixe les règles du dépôt : branches, commits, pull requests et nommage des fichiers. Les contrôles automatiques de `.github/workflows/pr-conventions.yml` refusent toute pull request qui ne les respecte pas.
+Ce document fixe les règles du dépôt : branches, commits, pull requests, nommage des fichiers et qualité du code. Les contrôles automatiques de `.github/workflows/pr-conventions.yml` refusent toute pull request qui ne les respecte pas.
 
 ## 1. Branches
 
+```
+main ◄── dev ◄── dev-frontend ◄── feature/…, fix/…  (écrans, thème, composants, animations)
+              ◄── dev-backend  ◄── feature/…, fix/…  (données, domaine, import, sécurité, CI)
+```
+
 | Branche | Rôle | Règles |
 | --- | --- | --- |
-| `main` | Version stable, publiée | Aucun push direct, aucun push forcé, suppression interdite. Reçoit uniquement des pull requests de release venant de `dev`. |
-| `dev` | Branche d'intégration | Aucun push direct, aucun push forcé, suppression interdite. Reçoit les pull requests des branches éphémères. |
-| Branches éphémères | Une par sous-tâche | Créées depuis `dev`, fusionnées dans `dev` par pull request, **supprimées automatiquement** après la fusion. |
+| `main` | Version stable | Aucun push direct, aucun push forcé, suppression interdite. Reçoit **une pull request de release depuis `dev` à chaque milestone entièrement validé**. |
+| `dev` | Branche par défaut, intégration générale | Aucun push direct, aucun push forcé, suppression interdite. Reçoit uniquement les pull requests de `dev-frontend` et `dev-backend`. |
+| `dev-frontend` | Intégration de l'interface | Aucun push direct, aucun push forcé, suppression interdite. Reçoit les branches éphémères des sous-tâches `couche: frontend`. |
+| `dev-backend` | Intégration des données et de la logique | Aucun push direct, aucun push forcé, suppression interdite. Reçoit les branches éphémères des sous-tâches `couche: backend`. |
+| Branches éphémères | Une par sous-tâche | Créées depuis `dev-frontend` ou `dev-backend` selon le label `couche` de la sous-tâche, fusionnées par pull request, **supprimées automatiquement** après la fusion. |
 
-On ne code jamais directement sur `main` ni sur `dev`.
+On ne code jamais directement sur `main`, `dev`, `dev-frontend` ni `dev-backend`.
+
+| Couche | Contenu | Paquets concernés |
+| --- | --- | --- |
+| `couche: frontend` | Écrans Compose, navigation, thème, composants, animations | `ui/`, `feature/*/` (écrans et ViewModels) |
+| `couche: backend` | Room, DAO, repositories, cas d'usage, moteur de défis, import des données, sécurité, CI | `data/`, `domain/`, `di/`, `tools/import/`, `.github/` |
 
 ### Nommage des branches éphémères
 
@@ -52,8 +64,8 @@ Expression vérifiée par la CI : `^(feature|fix|docs|test|refactor|chore|ci)/[0
 | `[DOCS]` | Documentation |
 | `[CONFIG]` | Configuration, dépendances, Gradle, outillage |
 | `[CI]` | Workflows GitHub Actions |
-| `[MERGE]` | Résolution de conflits lors d'une fusion |
-| `[RELEASE]` | Publication d'une version (`dev` vers `main`) |
+| `[MERGE]` | Fusion d'une branche d'intégration dans `dev`, ou résolution de conflits |
+| `[RELEASE]` | Publication d'une version (`dev` vers `main`) à la fin d'un milestone |
 
 Règles :
 
@@ -65,24 +77,50 @@ Règles :
 
 ## 3. Pull requests
 
-- **Une pull request par sous-tâche**, de la branche éphémère vers `dev`.
-- **Titre** : même format qu'un commit, par exemple `[ADD] écran de l'étape en cours (#42)`. Il devient le message du commit de fusion.
-- **Corps** : suivre le modèle proposé et écrire `Closes #<numéro>` pour fermer la sous-tâche à la fusion.
+Trois niveaux de pull request, chacun contrôlé par `pr-conventions.yml` :
+
+| PR | Source → cible | Titre | Fusion |
+| --- | --- | --- | --- |
+| Sous-tâche | branche éphémère → `dev-frontend` ou `dev-backend` | `[TAG] description (#numéro)` | *Squash and merge*, branche supprimée automatiquement |
+| Intégration | `dev-frontend` ou `dev-backend` → `dev` | `[MERGE] dev-frontend vers dev` ou `[MERGE] dev-backend vers dev` | *Merge commit* |
+| Release | `dev` → `main` | `[RELEASE] vX.Y.Z` | *Merge commit*, puis tag `vX.Y.Z` |
+
+- **Une pull request par sous-tâche.** Corps : modèle proposé avec `Closes #<numéro>` ; le workflow `close-issues.yml` ferme la sous-tâche dès la fusion dans `dev-frontend` ou `dev-backend`.
 - **Assignée** à son auteur, avec les labels et le milestone de la sous-tâche.
 - **Vérifications obligatoires** : contrôle des conventions et CI Android au vert.
-- **Fusion** dans `dev` : *Squash and merge* uniquement. La branche est ensuite supprimée automatiquement.
-- **Release** : une pull request de `dev` vers `main`, titrée `[RELEASE] vX.Y.Z`, fusionnée par *Merge commit*. C'est le seul chemin vers `main`.
+- **Intégration** : dès qu'une tâche parente est terminée, sa branche d'intégration est fusionnée dans `dev`.
+- **Release à chaque milestone** : quand **toutes** les tâches d'un milestone sont fermées et intégrées dans `dev`, l'issue de release du milestone est traitée : pull request `dev` → `main`, fusion, tag et fermeture du milestone. C'est le seul chemin vers `main`.
+
+| Milestone | Version publiée sur `main` |
+| --- | --- |
+| M0 · Initialisation | `v0.1.0` |
+| M1 · Données du jeu | `v0.2.0` |
+| M2 · MVP | `v1.0.0` |
+| M3 · V2 | `v1.1.0` |
+| M4 · V3 (option) | `v2.0.0` |
 
 ## 4. Déroulé type d'une sous-tâche
 
+Exemple pour une sous-tâche `couche: frontend` (remplacer par `dev-backend` pour le backend) :
+
 ```bash
-git switch dev && git pull
+git switch dev-frontend && git pull
 git switch -c feature/42-ecran-etape-en-cours
 # … développer, commiter …
 git commit -m "[ADD] écran de l'étape en cours (#42)"
 git push -u origin feature/42-ecran-etape-en-cours
-# ouvrir la pull request vers dev, attendre la CI, squash and merge
-git switch dev && git pull && git branch -d feature/42-ecran-etape-en-cours
+# ouvrir la pull request vers dev-frontend, attendre la CI, squash and merge
+git switch dev-frontend && git pull && git branch -d feature/42-ecran-etape-en-cours
+```
+
+Fin de milestone :
+
+```bash
+# 1. intégrer les deux branches dans dev (pull requests [MERGE] … vers dev)
+# 2. ouvrir la pull request dev → main titrée [RELEASE] vX.Y.Z et la fusionner
+git switch main && git pull
+git tag -a vX.Y.Z -m "[RELEASE] vX.Y.Z" && git push origin vX.Y.Z
+# 3. remettre dev-frontend et dev-backend à jour depuis dev (pull request [MERGE] dev vers …)
 ```
 
 ## 5. Nommage des fichiers et dossiers
@@ -131,7 +169,34 @@ app/src/main/java/com/omegadex/app/
     └── theme/       # couleurs, typographies, formes
 ```
 
-## 6. Tâches GitHub
+## 6. Qualité du code
+
+Trois outils vérifient le code Kotlin. Ils doivent passer avant d'ouvrir une pull request :
+
+```bash
+./gradlew ktlintFormat          # corrige automatiquement la mise en forme
+./gradlew ktlintCheck detekt lint
+```
+
+| Outil | Rôle | Configuration |
+| --- | --- | --- |
+| `.editorconfig` | Base commune à l'IDE et à ktlint : UTF-8, fin de ligne LF, indentation 4 espaces (2 pour YAML et JSON), lignes de 120 caractères maximum | `.editorconfig` |
+| ktlint (`ktlintCheck`, `ktlintFormat`) | Mise en forme Kotlin, style `android_studio`, virgules finales autorisées, imports triés | section `[*.{kt,kts}]` de `.editorconfig` |
+| detekt (`detekt`) | Analyse statique : complexité, nommage, code mort, nombres magiques | `config/detekt/detekt.yml` |
+| Android Lint (`lint`) | Erreurs propres à Android : ressources, manifeste, API | bloc `lint` de `app/build.gradle.kts` |
+
+Règles adaptées à Jetpack Compose :
+
+- les fonctions `@Composable` sont en PascalCase et peuvent avoir plus de paramètres et de lignes que les autres ;
+- les aperçus `@Preview` sont privés et ne sont pas signalés comme inutilisés ;
+- les nombres magiques sont tolérés dans `ui/theme/` (couleurs, dimensions) et dans les tests ;
+- les imports avec `*` sont interdits.
+
+La CI `.github/workflows/android-ci.yml` (contrôle obligatoire `build`) lance `./gradlew build lint ktlintCheck detekt test` sur chaque pull request vers `dev-frontend`, `dev-backend`, `dev` et `main` : une pull request qui casse le build, le lint ou les tests ne peut pas être fusionnée.
+
+Une règle ne se désactive pas dans le code (`@Suppress`) sans justification en commentaire.
+
+## 7. Tâches GitHub
 
 - Les tâches parentes portent le label `type: tâche`, les sous-tâches `type: sous-tâche`, et sont liées entre elles.
 - L'ordre d'exécution est donné par le numéro `T01`, `T02`… et détaillé dans `docs/roadmap.md` et dans chaque issue.

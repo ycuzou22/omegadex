@@ -1,0 +1,40 @@
+# Règles detekt d'Omégadex, appliquées par-dessus la configuration par défaut.
+# Adaptations pour Jetpack Compose : les composables sont en PascalCase,
+# acceptent beaucoup de paramètres et les aperçus @Preview sont privés et non appelés.
+
+complexity:
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 8
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Composable']
+  LongMethod:
+    threshold: 80
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    ignorePrivate: true
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
+  MatchingDeclarationName:
+    mustBeFirst: false
+    # Les fichiers du thème regroupent plusieurs déclarations (Couleurs.kt, Typographie.kt…).
+    excludes: ['**/ui/theme/**']
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
+    excludes: ['**/test/**', '**/ui/theme/**']
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview', 'ApercusClairSombre']
+  MaxLineLength:
+    maxLineLength: 120
+  WildcardImport:
+    active: true
+  ForbiddenComment:
+    active: false
