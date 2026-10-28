@@ -45,3 +45,9 @@ enum class StatutEspece { NON_VUE, VUE, CAPTUREE, ENTRAINEE, EVOLUEE, MAITRISEE 
 
 /** État d'un défi d'une run. */
 enum class EtatDefi { ACTIF, REUSSI, RATE }
+
+/**
+ * Types de défis du cahier des charges. [ETAPE] regroupe les défis propres à une étape
+ * (défi de base et défi Difficile de chaque arène).
+ */
+enum class TypeDefi { ETAPE, ESPECE, EVOLUTION, ROTATION, MONOTYPE, NAVI_DEX, MEGA, CONCOURS }

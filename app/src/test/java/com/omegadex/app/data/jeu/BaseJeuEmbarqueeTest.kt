@@ -75,6 +75,6 @@ class BaseJeuEmbarqueeTest {
     }
 
     private companion object {
-        const val VERSION_EMBARQUEE = 2
+        const val VERSION_EMBARQUEE = 3
     }
 }

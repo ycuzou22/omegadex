@@ -1,0 +1,25 @@
+{
+ "_description": "Modèles de défis (seule saisie manuelle). Format : docs/modeles-defis.md.",
+ "modeles": [
+  {
+   "id": 1,
+   "type": "ETAPE",
+   "etape": 1,
+   "titre": "Sans le starter",
+   "gabarit": "Battre {adversaire} sans utiliser {starter}",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {"etapeMin": 1, "conditions": []}
+  },
+  {
+   "id": 1001,
+   "type": "ESPECE",
+   "etape": null,
+   "titre": "Seul en équipe",
+   "gabarit": "Gagner un combat de dresseur avec {espece} seul dans l'équipe",
+   "parametres": {},
+   "difficulteMin": "NORMAL",
+   "deblocage": {"etapeMin": 0, "conditions": ["ESPECE_DANS_EQUIPE"]}
+  }
+ ]
+}
