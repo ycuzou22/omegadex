@@ -68,6 +68,9 @@ def valider(modele: dict, position: int) -> None:
         for t in str(modele["parametres"]["type"]).split(","):
             if t not in types_pokemon.PAR_IDENTIFIANT_POKEAPI.values():
                 erreur(f"type Pokémon « {t} » inconnu dans « parametres »")
+    ecart = modele["parametres"].get("ecart", 0)
+    if not isinstance(ecart, int) or ecart < 0:
+        erreur("« parametres.ecart » doit être un entier positif : un défi ne vise jamais au-dessus du plafond")
     deblocage = modele["deblocage"]
     if set(deblocage) - {"etapeMin", "conditions"}:
         erreur("« deblocage » n'accepte que « etapeMin » et « conditions »")
