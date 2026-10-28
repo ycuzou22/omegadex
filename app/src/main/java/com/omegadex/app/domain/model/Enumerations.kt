@@ -17,3 +17,15 @@ enum class CategorieAttaque { PHYSIQUE, SPECIALE, STATUT }
 
 /** Façon dont une espèce apprend une attaque dans Rubis Oméga. */
 enum class MethodeApprentissage { NIVEAU, CT_CS, REPRODUCTION, DONNEUR }
+
+/** Difficulté choisie à la création d'une run ; chaque niveau ajoute des défis au précédent. */
+enum class Difficulte { NORMAL, DIFFICILE, HARDCORE }
+
+/**
+ * Statut d'entraînement d'une espèce, dans l'ordre de progression.
+ * Le rang (0 à 5) sert aux jauges et aux 5 rubis de statut.
+ */
+enum class StatutEspece { NON_VUE, VUE, CAPTUREE, ENTRAINEE, EVOLUEE, MAITRISEE }
+
+/** État d'un défi d'une run. */
+enum class EtatDefi { ACTIF, REUSSI, RATE }
