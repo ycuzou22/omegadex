@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Écran Pokédex (T09). Fichier séparé de strings.xml pour limiter les conflits entre branches. -->
+<resources>
+    <string name="pokedex_titre_hoenn">Pokédex de Hoenn</string>
+    <string name="pokedex_titre_national">Pokédex national</string>
+    <string name="pokedex_compteur">Vus %1$d · Capturés %2$d sur %3$d</string>
+    <string name="pokedex_legende_portee">Bordure rubis : à trouver dans les zones déjà débloquées</string>
+    <string name="pokedex_aucune_run">Crée ou choisis une run pour remplir ton Pokédex.</string>
+    <string name="pokedex_numero">N°%1$03d</string>
+    <string name="pokedex_echange">Échange requis</string>
+    <string name="pokedex_a_portee">à portée</string>
+
+    <string name="statut_non_vue">Non vu</string>
+    <string name="statut_vue">Vu</string>
+    <string name="statut_capturee">Capturé</string>
+    <string name="statut_entrainee">Entraîné</string>
+    <string name="statut_evoluee">Évolué</string>
+    <string name="statut_maitrisee">Maîtrisé</string>
+</resources>
