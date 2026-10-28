@@ -24,9 +24,11 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 
 ## Publier de nouvelles données
 
-1. Augmenter `JeuDatabase.VERSION` (même si seul le contenu change) : à l'ouverture, Room recopiera la base embarquée.
-2. Compiler pour exporter le schéma de la nouvelle version.
-3. Régénérer la base avec `--version-donnees` augmenté de 1, puis lancer l'import (T04).
+1. Si une version de l'app contenant la base a déjà été publiée, augmenter `JeuDatabase.VERSION` (même si seul le contenu change) : à l'ouverture, Room recopiera la base embarquée. Compiler pour exporter le schéma de la nouvelle version.
+2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
+3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
+
+Version actuelle des données : **2** (première base complète, schéma Room v3).
 
 ## Attention aux schémas exportés
 
