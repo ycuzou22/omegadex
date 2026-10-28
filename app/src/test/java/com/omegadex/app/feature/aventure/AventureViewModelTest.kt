@@ -7,6 +7,7 @@ import com.omegadex.app.data.progression.ProgressionDatabase
 import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
+import com.omegadex.app.domain.aventure.CocherQueteUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -62,6 +63,7 @@ class AventureViewModelTest {
         ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu),
         jeu,
         progression,
+        CocherQueteUseCase(jeu, progression),
     )
 
     @Test
@@ -105,5 +107,28 @@ class AventureViewModelTest {
         assertEquals(true, relu.annexes.single().cochee)
         viewModel.cocher(2, cochee = false)
         assertEquals(emptySet<Int>(), progression.quetesCochees(run).first { it.isEmpty() })
+    }
+
+    @Test
+    fun `la derniere quete principale valide l'etape et affiche la suivante`() = runTest {
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        val creer = CreerRunUseCase(comptes, progression, session, runActive)
+        creer("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet())
+        val viewModel = viewModel()
+        val depart = viewModel.uiState.first { it is AventureUiState.EtapeEnCours } as AventureUiState.EtapeEnCours
+        assertEquals(listOf("Route 101"), depart.lieux.map { it.nom })
+
+        viewModel.cocher(1, cochee = true)
+
+        assertEquals(EtapeValidee("Départ", "Roxanne"), viewModel.evenements.first())
+        val suivante = viewModel.uiState.first {
+            it is AventureUiState.EtapeEnCours && it.numero == 1
+        } as AventureUiState.EtapeEnCours
+        assertEquals("Roxanne", suivante.titre)
+        assertEquals(listOf(3), suivante.principales.map { it.id })
+
+        viewModel.cocher(3, cochee = true)
+        assertEquals(EtapeValidee("Roxanne", null), viewModel.evenements.first())
+        assertEquals(AventureUiState.Terminee, viewModel.uiState.first { it == AventureUiState.Terminee })
     }
 }

@@ -110,4 +110,40 @@
     <string name="aventure_recompense">Récompense : %1$s</string>
     <string name="aventure_annexes_info">Facultatives : elles ne bloquent pas l\'étape suivante.</string>
     <string name="aventure_aucune_run">Aucune run en cours.</string>
+    <string name="aventure_lieux">Lieux de l\'étape</string>
+    <string name="aventure_etape_validee">Étape « %1$s » validée ! Place à « %2$s ».</string>
+    <string name="aventure_derniere_validee">Étape « %1$s » validée : l\'aventure est terminée !</string>
+    <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
+
+    <!-- Fiche de lieu -->
+    <string name="lieu_retour">Retour</string>
+    <string name="lieu_introuvable">Lieu introuvable.</string>
+    <string name="lieu_rencontres">Rencontres</string>
+    <string name="lieu_aucune_rencontre">Aucun Pokémon sauvage ici.</string>
+    <string name="lieu_objets">Objets importants</string>
+    <string name="lieu_niveau">niv. %1$d</string>
+    <string name="lieu_niveaux">niv. %1$d–%2$d</string>
+    <string name="lieu_taux">%1$d %%</string>
+    <string name="lieu_ouvrir_espece">Ouvrir la fiche de %1$s</string>
+    <string name="lieu_type_route">Route</string>
+    <string name="lieu_type_ville">Ville</string>
+    <string name="lieu_type_grotte">Grotte</string>
+    <string name="lieu_type_mer">Mer</string>
+    <string name="lieu_type_zone_annexe">Zone annexe</string>
+    <string name="lieu_type_lieu_mirage">Lieu mirage</string>
+    <string name="lieu_type_batiment">Bâtiment</string>
+    <string name="lieu_type_hors_hoenn">Hors de Hoenn</string>
+    <string name="methode_herbe">Hautes herbes</string>
+    <string name="methode_horde">Hordes</string>
+    <string name="methode_surf">Surf</string>
+    <string name="methode_plongee">Plongée</string>
+    <string name="methode_peche">Pêche</string>
+    <string name="methode_navi_dex">Navi-Dex (Pokémon cachés)</string>
+    <string name="methode_roche_fracassee">Éclate-Roc</string>
+    <string name="methode_cadeau">Cadeau</string>
+    <string name="methode_echange_en_jeu">Échange en jeu</string>
+    <string name="methode_fixe">Rencontre fixe</string>
+    <string name="methode_oeuf">Œuf</string>
+    <string name="methode_echange_requis">Échange requis</string>
+    <string name="espece_fiche_titre">Fiche Pokémon</string>
 </resources>

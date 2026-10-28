@@ -22,6 +22,10 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
         liste.map { it.versDomaine() }
     }
 
+    override fun lieu(id: Int) = etapes.lieu(id).map { it?.versDomaine() }
+
+    override fun quetesDuLieu(lieuId: Int) = etapes.quetesDuLieu(lieuId).map { liste -> liste.map { it.versDomaine() } }
+
     override fun pokedexHoenn() = especes.pokedexHoenn().map { liste -> liste.map { it.versDomaine() } }
 
     override fun pokedexNational() = especes.pokedexNational().map { liste -> liste.map { it.versDomaine() } }

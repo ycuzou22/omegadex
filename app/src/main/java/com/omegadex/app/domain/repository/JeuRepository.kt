@@ -16,6 +16,8 @@ interface JeuRepository {
     fun etape(id: Int): Flow<Etape?>
     fun quetes(etapeId: Int): Flow<List<Quete>>
     fun lieuxDebloques(etapeId: Int): Flow<List<Lieu>>
+    fun lieu(id: Int): Flow<Lieu?>
+    fun quetesDuLieu(lieuId: Int): Flow<List<Quete>>
     fun pokedexHoenn(): Flow<List<Espece>>
     fun pokedexNational(): Flow<List<Espece>>
     fun espece(id: Int): Flow<Espece?>
