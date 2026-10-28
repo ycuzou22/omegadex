@@ -1,35 +1,58 @@
 package com.omegadex.app.feature.accueil
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
-import com.omegadex.app.ui.components.EcranEnConstruction
+import com.omegadex.app.ui.components.OmegaButton
+import com.omegadex.app.ui.components.VarianteBouton
+import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 @Composable
 fun AccueilScreen(modifier: Modifier = Modifier, viewModel: AccueilViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    AccueilContenu(uiState = uiState, modifier = modifier)
+    AccueilContenu(uiState = uiState, onChangerDeJoueur = viewModel::changerDeJoueur, modifier = modifier)
 }
 
 @Composable
-private fun AccueilContenu(uiState: AccueilUiState, modifier: Modifier = Modifier) {
-    EcranEnConstruction(
-        titre = stringResource(R.string.app_nom),
-        detail = stringResource(R.string.accueil_version, uiState.version),
-        modifier = modifier,
-    )
+private fun AccueilContenu(uiState: AccueilUiState, onChangerDeJoueur: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(stringResource(R.string.accueil_bonjour, uiState.joueur), style = MaterialTheme.typography.headlineMedium)
+        Text(
+            stringResource(R.string.accueil_version, uiState.version),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        OmegaButton(
+            stringResource(R.string.accueil_deconnexion),
+            onClick = onChangerDeJoueur,
+            variante = VarianteBouton.CONTOUR,
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@ApercusClairSombre
 @Composable
 private fun AccueilPreview() {
     OmegadexTheme {
-        AccueilContenu(uiState = AccueilUiState(version = "0.1.0"))
+        AccueilContenu(uiState = AccueilUiState(version = "0.2.0", joueur = "Yamao"), onChangerDeJoueur = {})
     }
 }
