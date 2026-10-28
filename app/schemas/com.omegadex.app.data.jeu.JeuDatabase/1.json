@@ -1,0 +1,787 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "c417328061903999e5c4b6a7328ab2f2",
+    "entities": [
+      {
+        "tableName": "etape",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `titre` TEXT NOT NULL, `adversaire` TEXT NOT NULL, `typeDominant` TEXT, `plafond` INTEGER NOT NULL, `lieuPrincipal` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titre",
+            "columnName": "titre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "adversaire",
+            "columnName": "adversaire",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "typeDominant",
+            "columnName": "typeDominant",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "plafond",
+            "columnName": "plafond",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lieuPrincipal",
+            "columnName": "lieuPrincipal",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "lieu",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nom` TEXT NOT NULL, `type` TEXT NOT NULL, `etapeDeblocageId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`etapeDeblocageId`) REFERENCES `etape`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etapeDeblocageId",
+            "columnName": "etapeDeblocageId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_lieu_etapeDeblocageId",
+            "unique": false,
+            "columnNames": [
+              "etapeDeblocageId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_lieu_etapeDeblocageId` ON `${TABLE_NAME}` (`etapeDeblocageId`)"
+          },
+          {
+            "name": "index_lieu_nom",
+            "unique": false,
+            "columnNames": [
+              "nom"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_lieu_nom` ON `${TABLE_NAME}` (`nom`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "etape",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "etapeDeblocageId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "quete",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `etapeId` INTEGER NOT NULL, `lieuId` INTEGER, `type` TEXT NOT NULL, `ordre` INTEGER NOT NULL, `description` TEXT NOT NULL, `recompense` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`etapeId`) REFERENCES `etape`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`lieuId`) REFERENCES `lieu`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etapeId",
+            "columnName": "etapeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lieuId",
+            "columnName": "lieuId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordre",
+            "columnName": "ordre",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recompense",
+            "columnName": "recompense",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_quete_etapeId",
+            "unique": false,
+            "columnNames": [
+              "etapeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_quete_etapeId` ON `${TABLE_NAME}` (`etapeId`)"
+          },
+          {
+            "name": "index_quete_lieuId",
+            "unique": false,
+            "columnNames": [
+              "lieuId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_quete_lieuId` ON `${TABLE_NAME}` (`lieuId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "etape",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "etapeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "lieu",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "lieuId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "espece",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `numeroHoenn` INTEGER, `nom` TEXT NOT NULL, `type1` TEXT NOT NULL, `type2` TEXT, `categorie` TEXT NOT NULL, `tailleM` REAL NOT NULL, `poidsKg` REAL NOT NULL, `pv` INTEGER NOT NULL, `attaque` INTEGER NOT NULL, `defense` INTEGER NOT NULL, `attaqueSpeciale` INTEGER NOT NULL, `defenseSpeciale` INTEGER NOT NULL, `vitesse` INTEGER NOT NULL, `evDonnes` TEXT NOT NULL, `tauxCapture` INTEGER NOT NULL, `ratioMale` REAL, `groupesOeufs` TEXT NOT NULL, `aUneMega` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numeroHoenn",
+            "columnName": "numeroHoenn",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type1",
+            "columnName": "type1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type2",
+            "columnName": "type2",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "categorie",
+            "columnName": "categorie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tailleM",
+            "columnName": "tailleM",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "poidsKg",
+            "columnName": "poidsKg",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pv",
+            "columnName": "pv",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attaque",
+            "columnName": "attaque",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defense",
+            "columnName": "defense",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attaqueSpeciale",
+            "columnName": "attaqueSpeciale",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defenseSpeciale",
+            "columnName": "defenseSpeciale",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vitesse",
+            "columnName": "vitesse",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "evDonnes",
+            "columnName": "evDonnes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tauxCapture",
+            "columnName": "tauxCapture",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ratioMale",
+            "columnName": "ratioMale",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "groupesOeufs",
+            "columnName": "groupesOeufs",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aUneMega",
+            "columnName": "aUneMega",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_espece_numeroHoenn",
+            "unique": false,
+            "columnNames": [
+              "numeroHoenn"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_espece_numeroHoenn` ON `${TABLE_NAME}` (`numeroHoenn`)"
+          },
+          {
+            "name": "index_espece_nom",
+            "unique": false,
+            "columnNames": [
+              "nom"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_espece_nom` ON `${TABLE_NAME}` (`nom`)"
+          }
+        ]
+      },
+      {
+        "tableName": "talent",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nom` TEXT NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "espece_talent",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`especeId` INTEGER NOT NULL, `talentId` INTEGER NOT NULL, `cache` INTEGER NOT NULL, PRIMARY KEY(`especeId`, `talentId`), FOREIGN KEY(`especeId`) REFERENCES `espece`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`talentId`) REFERENCES `talent`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "talentId",
+            "columnName": "talentId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cache",
+            "columnName": "cache",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "especeId",
+            "talentId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_espece_talent_talentId",
+            "unique": false,
+            "columnNames": [
+              "talentId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_espece_talent_talentId` ON `${TABLE_NAME}` (`talentId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "espece",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "especeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "talent",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "talentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "evolution",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `especeSourceId` INTEGER NOT NULL, `especeCibleId` INTEGER NOT NULL, `condition` TEXT NOT NULL, `valeur` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`especeSourceId`) REFERENCES `espece`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`especeCibleId`) REFERENCES `espece`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeSourceId",
+            "columnName": "especeSourceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeCibleId",
+            "columnName": "especeCibleId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "condition",
+            "columnName": "condition",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "valeur",
+            "columnName": "valeur",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_evolution_especeSourceId",
+            "unique": false,
+            "columnNames": [
+              "especeSourceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_especeSourceId` ON `${TABLE_NAME}` (`especeSourceId`)"
+          },
+          {
+            "name": "index_evolution_especeCibleId",
+            "unique": false,
+            "columnNames": [
+              "especeCibleId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_especeCibleId` ON `${TABLE_NAME}` (`especeCibleId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "espece",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "especeSourceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "espece",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "especeCibleId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "rencontre",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `lieuId` INTEGER NOT NULL, `especeId` INTEGER NOT NULL, `methode` TEXT NOT NULL, `niveauMin` INTEGER, `niveauMax` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`lieuId`) REFERENCES `lieu`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`especeId`) REFERENCES `espece`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lieuId",
+            "columnName": "lieuId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "methode",
+            "columnName": "methode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "niveauMin",
+            "columnName": "niveauMin",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "niveauMax",
+            "columnName": "niveauMax",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_rencontre_lieuId",
+            "unique": false,
+            "columnNames": [
+              "lieuId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_rencontre_lieuId` ON `${TABLE_NAME}` (`lieuId`)"
+          },
+          {
+            "name": "index_rencontre_especeId",
+            "unique": false,
+            "columnNames": [
+              "especeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_rencontre_especeId` ON `${TABLE_NAME}` (`especeId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "lieu",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "lieuId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "espece",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "especeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "attaque",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nom` TEXT NOT NULL, `type` TEXT NOT NULL, `categorie` TEXT NOT NULL, `puissance` INTEGER, `precision` INTEGER, `pp` INTEGER NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categorie",
+            "columnName": "categorie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "puissance",
+            "columnName": "puissance",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "precision",
+            "columnName": "precision",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "pp",
+            "columnName": "pp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_attaque_nom",
+            "unique": false,
+            "columnNames": [
+              "nom"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attaque_nom` ON `${TABLE_NAME}` (`nom`)"
+          }
+        ]
+      },
+      {
+        "tableName": "attaque_apprise",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`especeId` INTEGER NOT NULL, `attaqueId` INTEGER NOT NULL, `methode` TEXT NOT NULL, `niveau` INTEGER NOT NULL, `numeroCt` TEXT, PRIMARY KEY(`especeId`, `attaqueId`, `methode`, `niveau`), FOREIGN KEY(`especeId`) REFERENCES `espece`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`attaqueId`) REFERENCES `attaque`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "especeId",
+            "columnName": "especeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attaqueId",
+            "columnName": "attaqueId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "methode",
+            "columnName": "methode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "niveau",
+            "columnName": "niveau",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numeroCt",
+            "columnName": "numeroCt",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "especeId",
+            "attaqueId",
+            "methode",
+            "niveau"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_attaque_apprise_attaqueId",
+            "unique": false,
+            "columnNames": [
+              "attaqueId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attaque_apprise_attaqueId` ON `${TABLE_NAME}` (`attaqueId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "espece",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "especeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "attaque",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "attaqueId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c417328061903999e5c4b6a7328ab2f2')"
+    ]
+  }
+}

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
 }
@@ -39,12 +40,22 @@ android {
         compose = true
     }
 
+    testOptions {
+        // Robolectric : tests Room et Android sur la JVM, sans émulateur.
+        unitTests.isIncludeAndroidResources = true
+    }
+
     lint {
         abortOnError = true
         checkDependencies = true
         // Les mises à jour de dépendances sont suivies à part, elles ne bloquent pas le build.
         disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
     }
+}
+
+room {
+    // Schémas exportés et versionnés : ils servent aux tests de migration.
+    schemaDirectory("$projectDir/schemas")
 }
 
 ktlint {
@@ -84,6 +95,10 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -93,4 +108,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.room.testing)
 }
