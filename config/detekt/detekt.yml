@@ -21,6 +21,8 @@ naming:
     constantPattern: '[A-Z][A-Za-z0-9_]*'
   MatchingDeclarationName:
     mustBeFirst: false
+    # Les fichiers du thème regroupent plusieurs déclarations (Couleurs.kt, Typographie.kt…).
+    excludes: ['**/ui/theme/**']
 
 style:
   MagicNumber:

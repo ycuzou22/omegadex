@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_fond">#B3122E</color>
+    <color name="ic_launcher_fond">#A80F2C</color>
+    <!-- Fond de la fenêtre avant le premier rendu Compose, identique au fond du thème. -->
+    <color name="fenetre_fond">#F6F3F3</color>
 </resources>
