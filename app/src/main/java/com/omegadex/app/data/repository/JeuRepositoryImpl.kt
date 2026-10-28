@@ -43,4 +43,6 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
     }
 
     override fun especesAccessibles(etapeId: Int) = rencontres.especesAccessibles(etapeId).map { it.toSet() }
+
+    override fun especesEchangeRequis() = rencontres.especesEchangeRequis().map { it.toSet() }
 }
