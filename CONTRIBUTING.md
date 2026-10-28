@@ -192,6 +192,8 @@ Règles adaptées à Jetpack Compose :
 - les nombres magiques sont tolérés dans `ui/theme/` (couleurs, dimensions) et dans les tests ;
 - les imports avec `*` sont interdits.
 
+La CI `.github/workflows/android-ci.yml` (contrôle obligatoire `build`) lance `./gradlew build lint ktlintCheck detekt test` sur chaque pull request vers `dev-frontend`, `dev-backend`, `dev` et `main` : une pull request qui casse le build, le lint ou les tests ne peut pas être fusionnée.
+
 Une règle ne se désactive pas dans le code (`@Suppress`) sans justification en commentaire.
 
 ## 7. Tâches GitHub
