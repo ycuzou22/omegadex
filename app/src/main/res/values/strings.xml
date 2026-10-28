@@ -76,4 +76,12 @@
     <string name="regle_surnoms_description">Chaque Pokémon capturé reçoit un surnom.</string>
     <string name="accueil_run">Run %1$s · %2$s</string>
     <string name="accueil_etape">Étape %1$d sur %2$d</string>
+    <string name="accueil_changer_run">Changer de run</string>
+    <string name="mes_runs_titre">Mes runs</string>
+    <string name="mes_runs_nouvelle">Nouvelle run</string>
+    <string name="mes_runs_active">En cours</string>
+    <string name="mes_runs_debut">Commencée le %1$s</string>
+    <string name="mes_runs_etape">Étape %1$d · %2$s</string>
+    <string name="mes_runs_progression">%1$d étapes validées sur %2$d</string>
+    <string name="mes_runs_retour">Retour</string>
 </resources>

@@ -266,7 +266,7 @@ private fun bordureChoix(choisi: Boolean) = if (choisi) {
 }
 
 @StringRes
-private fun nomStarter(starter: Starter) = when (starter) {
+internal fun nomStarter(starter: Starter) = when (starter) {
     Starter.ARCKO -> R.string.starter_arcko
     Starter.POUSSIFEU -> R.string.starter_poussifeu
     Starter.GOBOU -> R.string.starter_gobou
