@@ -6,10 +6,14 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
+import com.omegadex.app.data.repository.SessionEnMemoire
+import com.omegadex.app.data.securite.HacheurArgon2
+import com.omegadex.app.domain.compte.HacheurMotDePasse
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
+import com.omegadex.app.domain.repository.SessionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,4 +42,10 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindHorloge(impl: HorlogeSysteme): Horloge
+
+    @Binds
+    abstract fun bindHacheur(impl: HacheurArgon2): HacheurMotDePasse
+
+    @Binds
+    abstract fun bindSession(impl: SessionEnMemoire): SessionRepository
 }
