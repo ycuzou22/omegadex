@@ -1,0 +1,366 @@
+{
+ "_description": "Les 13 étapes de l'aventure (cahier des charges) et leurs quêtes principales, d'après la progression de Rubis Oméga. page + selection : page Poképédia du champion d'où est calculé le plafond (niveau du Pokémon le plus fort ; « premier » = premier combat dans Rubis Oméga, « max » = plus haut niveau de tous ses combats). section : ne retenir que les combats placés sous ce titre de la page.",
+ "etapes": [
+  {
+   "id": 0,
+   "titre": "Départ",
+   "adversaire": "Rival (Brice ou Flora)",
+   "typeDominant": null,
+   "lieuPrincipal": "Bourg-en-Vol",
+   "page": "Flora (Hoenn)",
+   "selection": "premier",
+   "section": "Route 103",
+   "quetes": [
+    {
+     "description": "Choisir son Pokémon de départ et sauver le Professeur Seko",
+     "lieu": "Route 101",
+     "recompense": null
+    },
+    {
+     "description": "Battre le rival sur la Route 103",
+     "lieu": "Route 103",
+     "recompense": null
+    },
+    {
+     "description": "Recevoir le Pokédex et le Navi-Dex à Bourg-en-Vol",
+     "lieu": "Bourg-en-Vol",
+     "recompense": "Pokédex, Navi-Dex"
+    },
+    {
+     "description": "Rendre visite à Norman à Clémenti-Ville et aider Timmy à capturer un Pokémon",
+     "lieu": "Route 102",
+     "recompense": null
+    }
+   ]
+  },
+  {
+   "id": 1,
+   "titre": "Roxanne",
+   "adversaire": "Roxanne",
+   "typeDominant": "roche",
+   "lieuPrincipal": "Mérouville",
+   "page": "Roxanne",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Traverser le Bois Clémenti et défendre le chercheur de Devon",
+     "lieu": "Bois Clémenti",
+     "recompense": null
+    },
+    {
+     "description": "Atteindre Mérouville",
+     "lieu": "Mérouville",
+     "recompense": null
+    },
+    {
+     "description": "Battre Roxanne et obtenir le Badge Roche",
+     "lieu": "Mérouville",
+     "recompense": "Badge Roche, CT39 Tomberoche"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "titre": "Bastien",
+   "adversaire": "Bastien",
+   "typeDominant": "combat",
+   "lieuPrincipal": "Myokara",
+   "page": "Bastien (Champion)",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Récupérer les pièces Devon volées dans le Tunnel Mérazon",
+     "lieu": "Tunnel Mérazon",
+     "recompense": null
+    },
+    {
+     "description": "Rejoindre Myokara en bateau depuis la Route 104",
+     "lieu": "Myokara",
+     "recompense": null
+    },
+    {
+     "description": "Remettre la lettre de Devon à Pierre Rochard dans la Grotte Granite",
+     "lieu": "Grotte Granite",
+     "recompense": null
+    },
+    {
+     "description": "Battre Bastien et obtenir le Badge Poing",
+     "lieu": "Myokara",
+     "recompense": "Badge Poing"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "titre": "Voltère",
+   "adversaire": "Voltère",
+   "typeDominant": "electrik",
+   "lieuPrincipal": "Lavandia",
+   "page": "Voltère",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Livrer les pièces Devon au chantier naval de Poivressel",
+     "lieu": "Poivressel",
+     "recompense": null
+    },
+    {
+     "description": "Repousser la Team Magma au Musée Océanographique de Poivressel",
+     "lieu": "Poivressel",
+     "recompense": null
+    },
+    {
+     "description": "Battre le rival sur la Route 110",
+     "lieu": "Route 110",
+     "recompense": null
+    },
+    {
+     "description": "Battre Voltère et obtenir le Badge Dynamo",
+     "lieu": "Lavandia",
+     "recompense": "Badge Dynamo"
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "titre": "Adriane",
+   "adversaire": "Adriane",
+   "typeDominant": "feu",
+   "lieuPrincipal": "Vermilava",
+   "page": "Adriane",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Rejoindre Autéquia par le Chemin Ardent et la Route 113",
+     "lieu": "Autéquia",
+     "recompense": null
+    },
+    {
+     "description": "Poursuivre la Team Magma au Site Météore",
+     "lieu": "Site Météore",
+     "recompense": null
+    },
+    {
+     "description": "Arrêter la Team Magma au sommet du Mont Chimnée",
+     "lieu": "Mont Chimnée",
+     "recompense": null
+    },
+    {
+     "description": "Descendre le Sentier Sinuroc jusqu'à Vermilava",
+     "lieu": "Sentier Sinuroc",
+     "recompense": null
+    },
+    {
+     "description": "Battre Adriane et obtenir le Badge Chaleur",
+     "lieu": "Vermilava",
+     "recompense": "Badge Chaleur"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "titre": "Norman",
+   "adversaire": "Norman",
+   "typeDominant": "normal",
+   "lieuPrincipal": "Clémenti-Ville",
+   "page": "Norman",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Revenir à Clémenti-Ville",
+     "lieu": "Clémenti-Ville",
+     "recompense": null
+    },
+    {
+     "description": "Battre Norman et obtenir le Badge Balance",
+     "lieu": "Clémenti-Ville",
+     "recompense": "Badge Balance"
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "titre": "Alizée",
+   "adversaire": "Alizée",
+   "typeDominant": "vol",
+   "lieuPrincipal": "Cimetronelle",
+   "page": "Alizée",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Recevoir la CS Surf et franchir la Route 118",
+     "lieu": "Route 118",
+     "recompense": "CS03 Surf"
+    },
+    {
+     "description": "Libérer le Centre Météo de la Team Magma",
+     "lieu": "Centre Météo",
+     "recompense": null
+    },
+    {
+     "description": "Battre le rival sur la Route 119",
+     "lieu": "Route 119",
+     "recompense": null
+    },
+    {
+     "description": "Battre Alizée et obtenir le Badge Plume",
+     "lieu": "Cimetronelle",
+     "recompense": "Badge Plume"
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "titre": "Lévy et Tatia",
+   "adversaire": "Lévy et Tatia",
+   "typeDominant": "psy",
+   "lieuPrincipal": "Algatia",
+   "page": "Lévy et Tatia",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Obtenir le Devon Scope sur la Route 120",
+     "lieu": "Route 120",
+     "recompense": "Devon Scope"
+    },
+    {
+     "description": "Empêcher le vol de l'Orbe au Mont Mémoria",
+     "lieu": "Mont Mémoria",
+     "recompense": null
+    },
+    {
+     "description": "Infiltrer la planque de la Team Magma",
+     "lieu": "Planque Magma",
+     "recompense": null
+    },
+    {
+     "description": "Battre Lévy et Tatia et obtenir le Badge Esprit",
+     "lieu": "Algatia",
+     "recompense": "Badge Esprit"
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "titre": "Groudon et Team Magma",
+   "adversaire": "Max (Team Magma)",
+   "typeDominant": "sol",
+   "lieuPrincipal": "Grotte Origine",
+   "page": "Max (Team Magma)",
+   "selection": "max",
+   "section": "Caverne Fondmer",
+   "quetes": [
+    {
+     "description": "Défendre le Centre Spatial d'Algatia",
+     "lieu": "Centre Spatial d'Algatia",
+     "recompense": null
+    },
+    {
+     "description": "Poursuivre la Team Magma dans la Caverne Fondmer",
+     "lieu": "Caverne Fondmer",
+     "recompense": null
+    },
+    {
+     "description": "Calmer Groudon dans la Grotte Origine",
+     "lieu": "Grotte Origine",
+     "recompense": null
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "titre": "Marc",
+   "adversaire": "Marc",
+   "typeDominant": "eau",
+   "lieuPrincipal": "Atalanopolis",
+   "page": "Marc (Hoenn)",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Battre Marc et obtenir le Badge Pluie",
+     "lieu": "Atalanopolis",
+     "recompense": "Badge Pluie"
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "titre": "Ligue Pokémon",
+   "adversaire": "Pierre Rochard",
+   "typeDominant": null,
+   "lieuPrincipal": "Éternara",
+   "page": "Pierre Rochard",
+   "selection": "premier",
+   "quetes": [
+    {
+     "description": "Traverser la Route Victoire et battre Timmy",
+     "lieu": "Route Victoire",
+     "recompense": null
+    },
+    {
+     "description": "Battre le Conseil 4 : Damien, Spectra, Glacia et Aragon",
+     "lieu": "Ligue Pokémon",
+     "recompense": null
+    },
+    {
+     "description": "Battre le Maître Pierre Rochard",
+     "lieu": "Ligue Pokémon",
+     "recompense": null
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "titre": "Épisode Delta",
+   "adversaire": "Amaryllis",
+   "typeDominant": "dragon",
+   "lieuPrincipal": "Hoenn",
+   "page": "Amaryllis",
+   "selection": "max",
+   "section": "Pilier Céleste",
+   "quetes": [
+    {
+     "description": "Suivre Amaryllis jusqu'au Centre Spatial d'Algatia",
+     "lieu": "Centre Spatial d'Algatia",
+     "recompense": null
+    },
+    {
+     "description": "Réveiller Rayquaza au sommet du Pilier Céleste",
+     "lieu": "Pilier Céleste",
+     "recompense": null
+    },
+    {
+     "description": "Arrêter la météorite en Grand Envol",
+     "lieu": "Grand Envol",
+     "recompense": null
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "titre": "Post-game",
+   "adversaire": "Pierre Rochard (revanche)",
+   "typeDominant": null,
+   "lieuPrincipal": "Lieux mirages, Hoenn",
+   "page": "Pierre Rochard",
+   "selection": "max",
+   "quetes": [
+    {
+     "description": "Explorer les lieux mirages",
+     "lieu": "Forêt Impénétrable",
+     "recompense": null
+    },
+    {
+     "description": "Visiter l'Atoll de Combat",
+     "lieu": "Atoll de Combat",
+     "recompense": null
+    },
+    {
+     "description": "Battre de nouveau la Ligue Pokémon",
+     "lieu": "Ligue Pokémon",
+     "recompense": null
+    }
+   ]
+  }
+ ]
+}

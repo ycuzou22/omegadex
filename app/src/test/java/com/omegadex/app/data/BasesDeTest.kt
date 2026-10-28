@@ -48,8 +48,8 @@ object BasesDeTest {
             "INSERT INTO evolution VALUES (2, 253, 254, 'NIVEAU', '36')",
             "INSERT INTO attaque VALUES (1, 'Écras''Face', 'Normal', 'PHYSIQUE', 40, 100, 35, 'Frappe.')",
             "INSERT INTO attaque_apprise VALUES (252, 1, 'NIVEAU', 1, NULL)",
-            "INSERT INTO rencontre VALUES (1, 1, 252, 'CADEAU', 5, 5)",
-            "INSERT INTO rencontre VALUES (2, 2, 253, 'HERBE', 12, 14)",
+            "INSERT INTO rencontre VALUES (1, 1, 252, 'CADEAU', 5, 5, NULL, 'Pokémon de départ')",
+            "INSERT INTO rencontre VALUES (2, 2, 253, 'HERBE', 12, 14, 20, NULL)",
         ).forEach { sql.execSQL(it) }
     }
 }

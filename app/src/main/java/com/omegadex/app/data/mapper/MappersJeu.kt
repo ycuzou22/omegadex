@@ -50,4 +50,5 @@ fun AttaqueEntity.versDomaine() = Attaque(id, nom, type, categorie, puissance, p
 
 fun AttaqueAppriseLigne.versDomaine() = AttaqueApprise(attaque.versDomaine(), methode, niveau, numeroCt)
 
-fun RencontreLigne.versDomaine() = Rencontre(lieu.versDomaine(), especeId, methode, niveauMin, niveauMax)
+fun RencontreLigne.versDomaine() =
+    Rencontre(lieu.versDomaine(), especeId, methode, niveauMin, niveauMax, taux, condition)
