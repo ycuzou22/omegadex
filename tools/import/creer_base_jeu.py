@@ -48,7 +48,7 @@ def creer(sortie: pathlib.Path, version_donnees: int, sources: str) -> None:
     con.commit()
     con.execute("VACUUM")
     con.close()
-    print(f"Base jeu créée : {sortie.relative_to(RACINE)} (schéma v{version}, données v{version_donnees})")
+    print(f"Base jeu créée : {sortie} (schéma v{version}, données v{version_donnees})")
 
 
 if __name__ == "__main__":
