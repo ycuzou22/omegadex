@@ -65,6 +65,18 @@ def main():
             echec = True
             continue
         taux = pourcentage(*paquets[nom])
+        detail = {}
+        for paquet in racine.iter("package"):
+            if paquet.get("name") == nom:
+                for classe in paquet.findall("class"):
+                    fichier = classe.get("sourcefilename") or classe.get("name")
+                    couvertes, manquees = lignes(classe)
+                    avant = detail.get(fichier, (0, 0))
+                    detail[fichier] = (avant[0] + couvertes, avant[1] + manquees)
+        resume = ", ".join(
+            f"{fichier} {pourcentage(*compte):.0f} %" for fichier, compte in sorted(detail.items())
+        )
+        print(f"::notice::{nom.replace('/', '.')} {taux:.1f} % : {resume}")
         if taux < seuil:
             print(f"::error::Couverture de {nom.replace('/', '.')} : {taux:.1f} % < {seuil:.0f} %.")
             echec = True

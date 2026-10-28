@@ -1,3 +1,5 @@
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -55,6 +57,15 @@ android {
         checkDependencies = true
         // Les mises à jour de dépendances sont suivies à part, elles ne bloquent pas le build.
         disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
+    }
+}
+
+// Robolectric charge les classes dans son propre chargeur : sans ces réglages, JaCoCo ne compte pas
+// les lignes exécutées par les tests Robolectric.
+tasks.withType<Test>().configureEach {
+    extensions.findByType(JacocoTaskExtension::class.java)?.apply {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
     }
 }
 
