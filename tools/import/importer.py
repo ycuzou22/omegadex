@@ -10,6 +10,7 @@ Chaque module renvoie ses compteurs, affichés à la fin.
 from __future__ import annotations
 
 import argparse
+import json
 import pathlib
 import sqlite3
 import sys
@@ -22,6 +23,7 @@ import import_especes  # noqa: E402
 import import_etapes  # noqa: E402
 import import_lieux  # noqa: E402
 import source_pokeapi  # noqa: E402
+import verifier  # noqa: E402
 
 MODULES = [
     ("Espèces, talents et évolutions", import_especes.importer),
@@ -43,15 +45,25 @@ def main() -> None:
     for nom, module in MODULES:
         compteurs = module(con)
         print(f"- {nom} : " + ", ".join(f"{k} {v}" for k, v in compteurs.items()))
+    corrections = appliquer_corrections(con)
     con.commit()
-    probleme = con.execute("PRAGMA foreign_key_check").fetchall()
-    sans_etapes = con.execute("SELECT COUNT(*) FROM etape").fetchone()[0] == 0
-    if sans_etapes:
-        probleme = [p for p in probleme if p[2] != "etape"]  # les étapes ne sont pas encore importées
-    if probleme:
-        raise SystemExit(f"Clés étrangères invalides : {probleme[:10]}")
+    controle = verifier.verifier(con, corrections)
+    print(f"Rapport : {verifier.RAPPORT.name} ({len(controle.erreurs)} erreurs bloquantes, {len(controle.avertissements)} avertissements)")
+    if controle.erreurs:
+        con.close()
+        raise SystemExit("Import refusé : " + " ; ".join(controle.erreurs))
     con.execute("VACUUM")
     con.close()
+
+
+def appliquer_corrections(con: sqlite3.Connection) -> int:
+    """Corrections manuelles de dernier recours (corrections.json), chacune justifiée et sourcée."""
+    corrections = json.loads((pathlib.Path(__file__).resolve().parent / "corrections.json").read_text(encoding="utf-8"))["corrections"]
+    for c in corrections:
+        if not c.get("justification") or not c.get("source"):
+            raise SystemExit(f"Correction sans justification ni source : {c}")
+        con.execute(c["sql"])
+    return len(corrections)
 
 
 if __name__ == "__main__":

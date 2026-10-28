@@ -2,6 +2,18 @@
 
 La base jeu `app/src/main/assets/database/omegadex_jeu.db` est générée par ces scripts, jamais modifiée à la main.
 
+## Importer toutes les données
+
+```bash
+python3 tools/import/importer.py --version-donnees N
+```
+
+La commande crée la base vide, importe espèces, attaques, lieux, rencontres, étapes et quêtes, applique les corrections manuelles (`corrections.json`), puis écrit le rapport de contrôle `rapport_controle.md`. Une erreur bloquante interrompt l'import.
+
+## Corrections manuelles
+
+En dernier recours seulement, quand aucune source ne couvre une donnée : ajouter dans `corrections.json` une entrée `{"sql": …, "justification": …, "source": …}`. Une correction sans justification ni source est refusée.
+
 ## Créer la base vide
 
 ```bash
