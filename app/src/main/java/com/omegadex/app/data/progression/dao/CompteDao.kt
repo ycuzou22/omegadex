@@ -31,6 +31,10 @@ interface CompteDao {
     @Query("SELECT * FROM run WHERE id = :runId AND utilisateurId = :utilisateurId")
     fun run(utilisateurId: Long, runId: Long): Flow<RunEntity?>
 
+    /** Vrai tant que la run existe et appartient à cet utilisateur. */
+    @Query("SELECT EXISTS(SELECT 1 FROM run WHERE id = :runId AND utilisateurId = :utilisateurId)")
+    fun runAppartient(utilisateurId: Long, runId: Long): Flow<Boolean>
+
     @Insert
     suspend fun creerRun(run: RunEntity): Long
 

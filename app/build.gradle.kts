@@ -18,6 +18,7 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -70,7 +71,7 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
-    source.setFrom("src/main/java", "src/test/java")
+    source.setFrom("src/main/java", "src/test/java", "src/androidTest/java")
 }
 
 // detekt 1.23 embarque son propre compilateur Kotlin : on évite qu'il soit aligné sur la version du projet.
@@ -102,6 +103,9 @@ dependencies {
     // Argon2id (hachage des mots de passe), en Java pur
     implementation(libs.bouncycastle)
     implementation(libs.androidx.datastore.preferences)
+    // Chiffrement de la base progression (SQLCipher, AES-256)
+    implementation(libs.sqlcipher)
+    implementation(libs.androidx.sqlite)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -115,4 +119,9 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.room.testing)
+
+    // Tests instrumentés (émulateur ou appareil) : chiffrement réel avec l'Android Keystore
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.core)
 }
