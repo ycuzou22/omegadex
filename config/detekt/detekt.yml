@@ -13,6 +13,9 @@ complexity:
     ignoreAnnotated: ['Composable']
   TooManyFunctions:
     ignorePrivate: true
+    # Les repositories et DAO exposent une fonction par besoin d'écran.
+    thresholdInInterfaces: 20
+    thresholdInClasses: 20
 
 naming:
   FunctionNaming:
@@ -37,4 +40,9 @@ style:
   WildcardImport:
     active: true
   ForbiddenComment:
+    active: false
+
+performance:
+  # Les API Room (addMigrations…) prennent des varargs : l'étalement d'un tableau est attendu.
+  SpreadOperator:
     active: false

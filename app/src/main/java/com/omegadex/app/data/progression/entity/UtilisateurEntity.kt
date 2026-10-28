@@ -1,5 +1,6 @@
 package com.omegadex.app.data.progression.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -11,7 +12,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "utilisateur", indices = [Index(value = ["identifiant"], unique = true)])
 data class UtilisateurEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val identifiant: String,
+    /** Unique sans tenir compte de la casse : « Yamao » et « yamao » sont le même compte. */
+    @ColumnInfo(collate = ColumnInfo.NOCASE) val identifiant: String,
     val hashMotDePasse: String,
     val sel: String,
     val dateCreation: Long,
