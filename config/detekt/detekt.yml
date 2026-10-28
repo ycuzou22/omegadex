@@ -28,6 +28,10 @@ naming:
     excludes: ['**/ui/theme/**']
 
 style:
+  ReturnCount:
+    # Les cas d'usage valident leurs entrées par des retours anticipés.
+    max: 4
+    excludeGuardClauses: true
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
