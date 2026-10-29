@@ -74,8 +74,8 @@ fun EquipeScreen(
     }
     enCours?.let {
         EvolutionPleinEcran(
-            avant = EspeceAnimee(it.avant.nom, it.avant.types),
-            apres = EspeceAnimee(it.apres.nom, it.apres.types),
+            avant = EspeceAnimee(it.avant.id, it.avant.nom, it.avant.types),
+            apres = EspeceAnimee(it.apres.id, it.apres.nom, it.apres.types),
             onFin = viewModel::finirAnimation,
         )
     }
