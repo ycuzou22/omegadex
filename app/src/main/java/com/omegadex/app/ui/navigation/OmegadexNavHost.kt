@@ -11,6 +11,8 @@ import com.omegadex.app.feature.accueil.AccueilScreen
 import com.omegadex.app.feature.aventure.AventureScreen
 import com.omegadex.app.feature.defis.DefisScreen
 import com.omegadex.app.feature.defis.DefisViewModel
+import com.omegadex.app.feature.equipe.AjoutMembreScreen
+import com.omegadex.app.feature.equipe.AjoutMembreViewModel
 import com.omegadex.app.feature.equipe.EquipeScreen
 import com.omegadex.app.feature.fiche.FichePokemonScreen
 import com.omegadex.app.feature.fiche.FichePokemonViewModel
@@ -26,6 +28,7 @@ private const val ROUTE_NOUVELLE_RUN = "nouvelle-run"
 private const val ROUTE_LIEU = "lieu"
 private const val ROUTE_ESPECE = "espece"
 private const val ROUTE_DEFIS_ESPECE = "defis-espece"
+private const val ROUTE_AJOUT_MEMBRE = "equipe-ajout"
 
 @Composable
 fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -56,7 +59,16 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
             )
         }
         composable(Destination.EQUIPE.route) {
-            EquipeScreen(onEspece = { navController.navigate("$ROUTE_ESPECE/$it") })
+            EquipeScreen(
+                onEspece = { navController.navigate("$ROUTE_ESPECE/$it") },
+                onChoisir = { navController.navigate("$ROUTE_AJOUT_MEMBRE/$it") },
+            )
+        }
+        composable(
+            "$ROUTE_AJOUT_MEMBRE/{${AjoutMembreViewModel.ARGUMENT_EMPLACEMENT}}",
+            arguments = listOf(navArgument(AjoutMembreViewModel.ARGUMENT_EMPLACEMENT) { type = NavType.IntType }),
+        ) {
+            AjoutMembreScreen(onRetour = { navController.popBackStack() })
         }
         composable(
             "$ROUTE_LIEU/{${FicheLieuViewModel.ARGUMENT_LIEU}}",

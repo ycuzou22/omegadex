@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +54,7 @@ import com.omegadex.app.ui.theme.OmegadexTheme
 @Composable
 fun EquipeScreen(
     onEspece: (Int) -> Unit,
+    onChoisir: (emplacement: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EquipeViewModel = hiltViewModel(),
 ) {
@@ -59,7 +63,12 @@ fun EquipeScreen(
     val enCours by viewModel.evolutionEnCours.collectAsStateWithLifecycle()
     EquipeContenu(
         uiState,
-        ActionsEquipe(onEspece = onEspece, onNiveau = viewModel::changerNiveau),
+        ActionsEquipe(
+            onEspece = onEspece,
+            onNiveau = viewModel::changerNiveau,
+            onChoisir = onChoisir,
+            onRetirer = viewModel::retirer,
+        ),
         modifier,
     )
     proposee?.let {
@@ -92,7 +101,7 @@ internal fun EquipeContenu(uiState: EquipeUiState, actions: ActionsEquipe, modif
                 items(uiState.emplacements, key = { it.numero }) { emplacement ->
                     val membre = emplacement.membre
                     if (membre == null) {
-                        EmplacementLibre(emplacement.numero)
+                        EmplacementLibre(emplacement.numero) { actions.onChoisir(emplacement.numero) }
                     } else {
                         CarteMembre(emplacement.numero, membre, uiState.plafond, actions)
                     }
@@ -159,40 +168,76 @@ private fun CarteMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
         onClick = { actions.onEspece(membre.especeId) },
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Row(
-            Modifier.padding(start = 14.dp, top = 12.dp, bottom = 12.dp, end = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Box(
-                Modifier
-                    .size(width = 44.dp, height = 41.dp)
-                    .clip(FormeGemme)
-                    .background(brosseGemmeEspece(membre.types)),
-            )
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    membre.surnom?.let { stringResource(R.string.equipe_surnom, it, membre.nom) } ?: membre.nom,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    membre.types.forEach { type ->
-                        TypeChip(type = type, libelle = nomDuType(type)?.let { stringResource(it) } ?: type)
-                    }
-                }
-                Text(
-                    membre.defiActif?.let { stringResource(R.string.equipe_defi_actif, it) }
-                        ?: stringResource(R.string.equipe_aucun_defi, numero),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = membre.defiActif?.let { couleurs.magma } ?: MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            ReglageNiveau(numero, membre, plafond, actions.onNiveau)
+        Column(Modifier.padding(start = 14.dp, top = 12.dp, bottom = 4.dp, end = 6.dp)) {
+            LigneMembre(numero, membre, plafond, actions)
+            ActionsMembre(numero, membre, actions)
         }
+    }
+}
+
+@Composable
+private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: ActionsEquipe) {
+    val couleurs = OmegadexTheme.couleurs
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(
+            Modifier
+                .size(width = 44.dp, height = 41.dp)
+                .clip(FormeGemme)
+                .background(brosseGemmeEspece(membre.types)),
+        )
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                membre.surnom?.let { stringResource(R.string.equipe_surnom, it, membre.nom) } ?: membre.nom,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                membre.types.forEach { type ->
+                    TypeChip(type = type, libelle = nomDuType(type)?.let { stringResource(it) } ?: type)
+                }
+            }
+            Text(
+                membre.defiActif?.let { stringResource(R.string.equipe_defi_actif, it) }
+                    ?: stringResource(R.string.equipe_aucun_defi, numero),
+                style = MaterialTheme.typography.bodySmall,
+                color = membre.defiActif?.let { couleurs.magma } ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        ReglageNiveau(numero, membre, plafond, actions.onNiveau)
+    }
+}
+
+/** Échanger le membre contre une autre capture, ou le retirer (après confirmation). */
+@Composable
+private fun ActionsMembre(numero: Int, membre: MembreVue, actions: ActionsEquipe) {
+    var confirmer by rememberSaveable { mutableStateOf(false) }
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        TextButton(onClick = { actions.onChoisir(numero) }) { Text(stringResource(R.string.equipe_echanger)) }
+        TextButton(onClick = { confirmer = true }) {
+            Text(stringResource(R.string.equipe_retirer), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+    if (confirmer) {
+        AlertDialog(
+            onDismissRequest = { confirmer = false },
+            title = { Text(stringResource(R.string.equipe_retirer_titre, membre.surnom ?: membre.nom)) },
+            text = { Text(stringResource(R.string.equipe_retirer_detail, numero)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmer = false
+                    actions.onRetirer(numero)
+                }) { Text(stringResource(R.string.equipe_retirer)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmer = false }) { Text(stringResource(R.string.equipe_annuler)) }
+            },
+        )
     }
 }
 
@@ -243,19 +288,30 @@ private fun BoutonNiveau(symbole: String, description: String, actif: Boolean, o
 }
 
 @Composable
-private fun EmplacementLibre(numero: Int) {
+private fun EmplacementLibre(numero: Int, onAjouter: () -> Unit) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.background,
         border = BorderStroke(1.dp, OmegadexTheme.couleurs.trait),
+        onClick = onAjouter,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Text(
-            stringResource(R.string.equipe_emplacement_libre, numero),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 18.dp),
-        )
+        Row(
+            Modifier.padding(horizontal = 14.dp, vertical = 18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(R.string.equipe_emplacement_libre, numero),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                stringResource(R.string.equipe_ajouter_capture),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
     }
 }
 

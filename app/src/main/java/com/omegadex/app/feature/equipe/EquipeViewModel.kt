@@ -7,6 +7,7 @@ import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
 import com.omegadex.app.domain.equipe.ResultatEvolution
 import com.omegadex.app.domain.equipe.ResultatNiveau
+import com.omegadex.app.domain.equipe.RetirerMembreUseCase
 import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
@@ -24,6 +25,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Écran Équipe : les 6 emplacements de la run active, chaque niveau comparé au plafond de l'étape en cours,
@@ -38,7 +41,10 @@ class EquipeViewModel @Inject constructor(
     observerDefis: ObserverDefisUseCase,
     private val changerNiveau: ChangerNiveauUseCase,
     private val faireEvoluer: FaireEvoluerUseCase,
+    private val retirerMembre: RetirerMembreUseCase,
 ) : ViewModel() {
+    private val ecritures = Mutex()
+
     private val _evolutionProposee = MutableStateFlow<EvolutionProposee?>(null)
     val evolutionProposee: StateFlow<EvolutionProposee?> = _evolutionProposee.asStateFlow()
 
@@ -110,6 +116,9 @@ class EquipeViewModel @Inject constructor(
         }
     }
 
+    /** Retire le membre de l'[emplacement], qui redevient libre. */
+    fun retirer(emplacement: Int) = surLaRun { runId -> retirerMembre(runId, emplacement) }
+
     fun reporterEvolution() {
         _evolutionProposee.value = null
     }
@@ -121,10 +130,13 @@ class EquipeViewModel @Inject constructor(
     private fun vue(especes: Map<Int, Espece>, id: Int) =
         EspeceVue(id, especes[id]?.nom ?: "#$id", especes[id]?.types.orEmpty())
 
+    /** Les écritures passent une à une : deux « + » rapides montent bien de deux niveaux. */
     private fun surLaRun(action: suspend (Long) -> Unit) {
         viewModelScope.launch {
-            val runId = observerRunEnCours().first()?.run?.id ?: return@launch
-            action(runId)
+            ecritures.withLock {
+                val runId = observerRunEnCours().first()?.run?.id ?: return@launch
+                action(runId)
+            }
         }
     }
 
