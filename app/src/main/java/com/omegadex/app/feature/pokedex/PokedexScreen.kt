@@ -57,9 +57,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.ui.components.ChampTexte
+import com.omegadex.app.ui.components.IconeType
+import com.omegadex.app.ui.components.IconesTypes
+import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.ApercusClairSombre
-import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.OmegadexTheme
 import com.omegadex.app.ui.theme.texteLisibleSur
 
@@ -208,8 +210,10 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
     val actionAvancer = stringResource(R.string.pokedex_action_avancer)
     val actionReculer = stringResource(R.string.pokedex_action_reculer)
     val forme = RoundedCornerShape(14.dp)
+    val nomsTypes = espece.types.map { type -> nomDuType(cleType(type))?.let { stringResource(it) } ?: type }
     val description = buildList {
         add("$numero ${espece.nom}")
+        if (!silhouette) addAll(nomsTypes)
         add(statut)
         if (espece.aPortee) add(portee)
         if (espece.echangeRequis) add(echange)
@@ -251,7 +255,7 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                if (!silhouette) PastillesTypes(espece.types)
+                if (!silhouette) IconesTypes(espece.types)
                 if (espece.echangeRequis) {
                     Text(echange, style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
                 }
@@ -288,22 +292,6 @@ private fun BandeStatut(statut: StatutEspece, onAvancer: () -> Unit, onReculer: 
         }
         if (statut != StatutEspece.MAITRISEE) {
             Text("+", style = MaterialTheme.typography.labelLarge, color = couleurs.gemme)
-        }
-    }
-}
-
-/** Les types en pastilles de couleur (la case est trop étroite pour les puces complètes). */
-@Composable
-private fun PastillesTypes(types: List<String>) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-        types.forEach { type ->
-            Box(Modifier.size(10.dp).background(CouleursTypes.de(type), CircleShape))
-            Text(
-                nomDuType(type)?.let { stringResource(it) } ?: type,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-            )
         }
     }
 }
@@ -354,11 +342,11 @@ private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
         }
         LigneFiltres {
             etat.typesDisponibles.forEach { type ->
-                PuceFiltre(
-                    libelle = nomDuType(type)?.let { stringResource(it) } ?: type,
+                PuceType(
+                    type = type,
+                    nom = nomDuType(cleType(type))?.let { stringResource(it) } ?: type,
                     choisie = type == filtres.type,
                     onBascule = { actions.onType(type) },
-                    couleur = CouleursTypes.de(type),
                 )
             }
             if (filtres.actifs) {
@@ -401,6 +389,27 @@ private fun PuceFiltre(libelle: String, choisie: Boolean, onBascule: () -> Unit,
     )
 }
 
+/** Filtre par type : le logo du type seul ; TalkBack lit son nom et l'annonce comme une case cochée ou non. */
+@Composable
+private fun PuceType(type: String, nom: String, choisie: Boolean, onBascule: () -> Unit) {
+    val couleurs = OmegadexTheme.couleurs
+    val forme = RoundedCornerShape(14.dp)
+    Box(
+        Modifier
+            .size(TAILLE_PUCE_TYPE)
+            .clip(forme)
+            .background(
+                if (choisie) couleurs.gemme.copy(alpha = OPACITE_PUCE_CHOISIE) else MaterialTheme.colorScheme.surface,
+            )
+            .border(if (choisie) 2.dp else 1.dp, if (choisie) couleurs.gemme else couleurs.trait, forme)
+            .toggleable(value = choisie, role = Role.Checkbox, onValueChange = { onBascule() })
+            .semantics { contentDescription = nom },
+        contentAlignment = Alignment.Center,
+    ) {
+        IconeType(type, taille = 28.dp)
+    }
+}
+
 /** Libellé d'un statut, partagé avec la fiche Pokémon (T10) : chaînes `statut_*` de `strings_pokedex.xml`. */
 @StringRes
 fun libelleStatut(statut: StatutEspece): Int = when (statut) {
@@ -417,6 +426,10 @@ private val HAUTEUR_CASE = 100.dp
 
 /** Cible tactile minimale d'une puce de filtre (48 dp moins le texte, centré par le padding). */
 private val HAUTEUR_PUCE = 32.dp
+
+/** Puce de filtre par type : cible tactile de 48 dp. */
+private val TAILLE_PUCE_TYPE = 48.dp
+private const val OPACITE_PUCE_CHOISIE = 0.12f
 
 @ApercusClairSombre
 @Composable
