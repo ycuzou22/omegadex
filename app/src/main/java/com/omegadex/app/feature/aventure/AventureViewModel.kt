@@ -76,12 +76,18 @@ class AventureViewModel @Inject constructor(
             val resultat = cocherQuete(etape.runId, etape.numero, queteId, cochee)
             if (resultat is ResultatCochage.EtapeValidee) {
                 val suivante = resultat.etapeSuivanteId?.let { jeu.etape(it).first()?.titre }
-                evenementsInternes.send(EtapeValidee(etape.titre, suivante))
+                val badge = jeu.quetes(etape.numero).first()
+                    .filter { it.type == TypeQuete.PRINCIPALE }
+                    .flatMap { it.recompense.orEmpty().split(",") }
+                    .map { it.trim() }
+                    .firstOrNull { it.startsWith(PREFIXE_BADGE) }
+                evenementsInternes.send(EtapeValidee(etape.numero, etape.titre, badge, suivante))
             }
         }
     }
 
     private companion object {
         const val ARRET_MS = 5_000L
+        const val PREFIXE_BADGE = "Badge"
     }
 }

@@ -8,9 +8,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 val SchemaClair = lightColorScheme(
     primary = Rubis,
@@ -88,8 +87,7 @@ val SchemaSombre = darkColorScheme(
 @Composable
 fun OmegadexTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val couleurs = if (darkTheme) CouleursOmegadexSombres else CouleursOmegadexClaires
-    val context = LocalContext.current
-    val reduites = remember(context) { animationsReduites(context) }
+    val reduites by animationsReduitesEnDirect()
     CompositionLocalProvider(
         LocalCouleursOmegadex provides couleurs,
         LocalChiffresOmegadex provides ChiffresOmegadex,
