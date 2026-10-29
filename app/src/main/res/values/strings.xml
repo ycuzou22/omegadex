@@ -111,8 +111,6 @@
     <string name="aventure_annexes_info">Facultatives : elles ne bloquent pas l\'étape suivante.</string>
     <string name="aventure_aucune_run">Aucune run en cours.</string>
     <string name="aventure_lieux">Lieux de l\'étape</string>
-    <string name="aventure_etape_validee">Étape « %1$s » validée ! Place à « %2$s ».</string>
-    <string name="aventure_derniere_validee">Étape « %1$s » validée : l\'aventure est terminée !</string>
     <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
 
     <!-- Fiche de lieu -->
@@ -178,4 +176,29 @@
     <string name="type_defi_navi_dex">Navi-Dex</string>
     <string name="type_defi_mega">Méga</string>
     <string name="type_defi_concours">Concours</string>
+
+    <!-- Accueil : jauges -->
+    <string name="accueil_jauge_aventure">Aventure</string>
+    <string name="accueil_jauge_pokedex">Pokédex</string>
+    <string name="accueil_jauge_defis">Défis</string>
+    <string name="accueil_pourcentage">%1$d %%</string>
+    <string name="accueil_fraction">%1$d/%2$d</string>
+    <string name="accueil_jauge_description_pourcentage">%1$s : %2$d %%</string>
+    <string name="accueil_jauge_description_fraction">%1$s : %2$d sur %3$d</string>
+    <string name="accueil_defi_du_jour">Défi du jour · %1$s</string>
+
+    <!-- Animation « Étape validée » -->
+    <string name="anim_etape_validee">Étape %1$d validée</string>
+    <string name="anim_prochaine_etape">Prochaine étape débloquée : %1$s</string>
+    <string name="anim_aventure_terminee">L\'aventure est terminée !</string>
+    <string name="aventure_resume_titre">Étape %1$d · %2$s</string>
+    <string name="aventure_resume_badge">Validée · %1$s obtenu</string>
+    <string name="aventure_resume_valide">Validée</string>
+    <string name="aventure_debloquee">débloquée</string>
+
+    <!-- Animation « Évolution » -->
+    <string name="anim_evolution_intro">Hein ? %1$s évolue !</string>
+    <string name="anim_evolution_surtitre">Évolution réussie</string>
+    <string name="anim_evolution_titre">%1$s a évolué\nen %2$s !</string>
+    <string name="anim_continuer">Continuer</string>
 </resources>
