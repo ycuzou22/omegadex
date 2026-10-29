@@ -9,6 +9,8 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.MembreEquipe
+import com.omegadex.app.domain.model.MethodeApprentissage
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -102,5 +104,24 @@ class FichePokemonViewModelTest {
         assertEquals(0.875, arcko.espece.ratioMale ?: 0.0, 0.0)
         assertEquals("Jungko", fiche(254).fiche().stadeMega)
         assertNull(fiche(1).fiche().stadeMega)
+    }
+
+    @Test
+    fun `les attaques viennent de la base jeu et le niveau actuel de l'equipe`() = runTest {
+        val sansRun = fiche(252).fiche()
+        assertEquals(
+            listOf("Écras'Face" to MethodeApprentissage.NIVEAU),
+            sansRun.attaques.map { it.attaque.nom to it.methode },
+        )
+        assertEquals(1, sansRun.attaques.single().niveau)
+        assertNull(sansRun.niveauActuel)
+
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        CreerRunUseCase(comptes, progression, session, runActive)("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet())
+        val run = requireNotNull(runActive.runActive(1).first())
+        progression.placerMembre(run, MembreEquipe(2, 252, null, 14))
+        val vm = fiche(252)
+        vm.uiState.first { (it as? FichePokemonUiState.Fiche)?.niveauActuel == 14 }
+        assertNull(fiche(253).fiche().niveauActuel)
     }
 }
