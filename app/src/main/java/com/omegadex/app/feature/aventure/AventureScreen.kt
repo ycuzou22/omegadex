@@ -87,7 +87,12 @@ fun AventureScreen(
         )
         // « Capture → Pokédex » se joue par-dessus l'Aventure, la barre de navigation reste visible.
         capture?.let { enCours ->
-            AnimationCapture(enCours, rubis[enCours.especeId], onFin = { capture = null }, Modifier.matchParentSize())
+            AnimationCapture(
+                capture = enCours,
+                origine = { rubis[enCours.especeId] },
+                onFin = { capture = null },
+                modifier = Modifier.matchParentSize(),
+            )
         }
     }
     // Après l'animation « Étape validée », l'étape validée se résume en haut et la nouvelle étape s'illumine.

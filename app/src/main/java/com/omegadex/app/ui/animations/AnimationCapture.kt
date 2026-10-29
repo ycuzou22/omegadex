@@ -155,12 +155,18 @@ private fun phase(t: Float, debut: Float, duree: Float, easing: Easing = EASE_OU
     easing.transform(((t - debut) / duree).coerceIn(0f, 1f))
 
 /**
- * Animation de capture par-dessus l'écran Aventure. [origine] est le centre du rubis apparu à côté de la ligne
- * de rencontre (repère de la racine), d'où part l'onde. Toucher passe à l'image finale, un second toucher ferme.
+ * Animation de capture par-dessus l'écran Aventure. [origine] donne le centre du rubis apparu à côté de la ligne
+ * de rencontre (repère de la fenêtre), d'où part l'onde ; il est relu à chaque image, la ligne se réorganisant
+ * quand le bouton « Attraper » laisse place au rubis. Toucher passe à l'image finale, un second toucher ferme.
  * Avec les animations réduites, l'image finale s'affiche sans mouvement. Appelle [onFin] une seule fois.
  */
 @Composable
-fun AnimationCapture(capture: CaptureAnimee, origine: Offset?, onFin: () -> Unit, modifier: Modifier = Modifier) {
+fun AnimationCapture(
+    capture: CaptureAnimee,
+    origine: () -> Offset?,
+    onFin: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val reduites = OmegadexTheme.animationsReduites
     val temps = remember(capture) { Animatable(0f) }
     var passe by remember(capture) { mutableStateOf(reduites) }
@@ -218,7 +224,7 @@ private class ViseeCase {
 @Composable
 private fun ContenuCapture(
     capture: CaptureAnimee,
-    origine: Offset?,
+    origine: () -> Offset?,
     t: Float,
     onToucher: () -> Unit,
     modifier: Modifier = Modifier,
@@ -267,7 +273,7 @@ private fun ContenuCapture(
                 GrilleCapture(capture, t) { visee.case = it }
             }
         }
-        OndeEtRubis(t) { visee.versScene(origine) }
+        OndeEtRubis(t) { visee.versScene(origine()) }
         TextesCapture(capture.nom, t)
     }
 }
@@ -584,6 +590,6 @@ private fun AnimationCaptureFinPreview() {
         CaseCapture(266, 15, "Armulys", listOf("insecte"), StatutEspece.NON_VUE, StatutEspece.NON_VUE),
     )
     OmegadexTheme {
-        ContenuCapture(CaptureAnimee(265, "Chenipotte", false, cases, 13, 211), null, ChronoCapture.FIN, onToucher = {})
+        ContenuCapture(CaptureAnimee(265, "Chenipotte", false, cases, 13, 211), { null }, ChronoCapture.FIN, onToucher = {})
     }
 }
