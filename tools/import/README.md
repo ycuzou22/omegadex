@@ -28,7 +28,15 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
 3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
 
-Version actuelle des données : **5** (schéma Room v4, 60 modèles de défis, quêtes d'échange pour les exclusivités Saphir Alpha).
+Version actuelle des données : **6** (schéma Room v5, 60 modèles de défis, quêtes d'échange pour les exclusivités Saphir Alpha, 240 quêtes d'objets).
+
+## Quêtes d'objets
+
+Les objets utiles (`donnees/objets_rosa.json`) deviennent des quêtes annexes « Récupérer / Acheter / Recevoir / Gagner X (lieu) », placées à l'étape où l'objet est accessible : lieu débloqué, capacité de terrain utilisable (`CS_ETAPE`) et condition d'histoire (`CONDITIONS_OBJET`). Les récompenses déjà listées dans une quête principale et les objets sans lieu (lieux mirages) sont ignorés. Pour rejouer seulement ces quêtes sur la base embarquée, sans réseau :
+
+```bash
+python3 tools/import/import_etapes.py --objets
+```
 
 ## Attention aux schémas exportés
 
