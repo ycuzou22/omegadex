@@ -56,8 +56,10 @@ import com.omegadex.app.feature.pokedex.libelleStatut
 import com.omegadex.app.ui.components.GemStatus
 import com.omegadex.app.ui.components.NIVEAUX_STATUT
 import com.omegadex.app.ui.components.OmegaButton
+import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.brosseGemmeEspece
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.components.rememberSprite
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.FormeGemme
@@ -123,7 +125,7 @@ private fun FicheContenu(
     val fond = lerp(CouleursTypes.de(type), Color.Black, ASSOMBRISSEMENT_EN_TETE)
     // Le fond de la colonne est celui du panneau : le chevauchement de 20 dp ne laisse pas de bande en bas.
     Column(modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
-        EnTeteFiche(fiche.espece, fond, actions.onRetour)
+        EnTeteFiche(fiche.espece, fiche.statut, fond, actions.onRetour)
         Surface(
             shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
             color = MaterialTheme.colorScheme.surface,
@@ -194,7 +196,7 @@ private fun OngletsEtPages(modifier: Modifier, onglet: @Composable (OngletFiche)
 }
 
 @Composable
-private fun EnTeteFiche(espece: Espece, fond: Color, onRetour: () -> Unit) {
+private fun EnTeteFiche(espece: Espece, statut: StatutEspece?, fond: Color, onRetour: () -> Unit) {
     val texte = texteLisibleSur(fond)
     Box(Modifier.fillMaxWidth().background(fond)) {
         Canvas(Modifier.matchParentSize()) { dessinerOmegaFiligrane(texte) }
@@ -243,7 +245,7 @@ private fun EnTeteFiche(espece: Espece, fond: Color, onRetour: () -> Unit) {
                         texte,
                     )
                 }
-                Ecrin(espece, texte)
+                Ecrin(espece, statut, texte)
             }
         }
     }
@@ -277,7 +279,10 @@ private fun Pastille(texte: String, fond: Color, couleur: Color) {
 
 /** Écrin en joyau : la gemme aux couleurs de l'espèce, et une étincelle qui brille de temps en temps. */
 @Composable
-private fun Ecrin(espece: Espece, texte: Color) {
+private fun Ecrin(espece: Espece, statut: StatutEspece?, texte: Color) {
+    // Image de l'espèce fournie localement (assets/sprites) : elle remplace le rubis, en ombre si l'espèce
+    // n'a jamais été vue. Sans fichier, le rubis aux couleurs des types reste.
+    val image = rememberSprite(espece.id)
     val reduites = OmegadexTheme.animationsReduites
     val brillance by rememberInfiniteTransition(label = "etincelle").animateFloat(
         initialValue = 0f,
@@ -295,14 +300,23 @@ private fun Ecrin(espece: Espece, texte: Color) {
     )
     Box(Modifier.size(width = 120.dp, height = 112.dp).clearAndSetSemantics {}) {
         Box(Modifier.fillMaxSize().clip(FormeGemme).background(texte.copy(alpha = OPACITE_ECRIN)))
-        Box(
-            Modifier
-                .align(Alignment.Center)
-                .offset(y = (-6).dp)
-                .size(width = 64.dp, height = 58.dp)
-                .clip(FormeGemme)
-                .background(brosseGemmeEspece(espece.types)),
-        )
+        if (image != null) {
+            SpriteEspece(
+                especeId = espece.id,
+                decouverte = if (statut == null || statut == StatutEspece.NON_VUE) 0f else 1f,
+                modifier = Modifier.align(Alignment.Center).offset(y = (-4).dp),
+                taille = 92.dp,
+            )
+        } else {
+            Box(
+                Modifier
+                    .align(Alignment.Center)
+                    .offset(y = (-6).dp)
+                    .size(width = 64.dp, height = 58.dp)
+                    .clip(FormeGemme)
+                    .background(brosseGemmeEspece(espece.types)),
+            )
+        }
         Canvas(
             Modifier
                 .align(Alignment.TopEnd)
