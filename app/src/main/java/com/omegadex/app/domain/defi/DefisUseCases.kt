@@ -1,6 +1,8 @@
 package com.omegadex.app.domain.defi
 
+import com.omegadex.app.domain.model.Defi
 import com.omegadex.app.domain.model.Espece
+import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.pokedex.RegleNational
 import com.omegadex.app.domain.repository.JeuRepository
@@ -19,7 +21,13 @@ import kotlinx.coroutines.flow.mapLatest
 private val STATUTS_CAPTURE =
     setOf(StatutEspece.CAPTUREE, StatutEspece.ENTRAINEE, StatutEspece.EVOLUEE, StatutEspece.MAITRISEE)
 
-/** Défis disponibles pour l'étape en cours de la run active, recalculés à chaque changement de progression. */
+/**
+ * Défis disponibles pour l'étape en cours de la run active, recalculés à chaque changement de progression.
+ *
+ * Défis d'étape : tous ceux des modèles saisis à la main. Défis espèce : pour chaque Pokémon de l'équipe dont la
+ * famille a une banque (`BanqueDefis`), **un seul défi tiré au sort** dans cette banque ; pour les autres
+ * Pokémon capturés, les modèles espèce saisis à la main.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProposerDefisUseCase @Inject constructor(
     private val observerRunEnCours: ObserverRunEnCoursUseCase,
@@ -54,9 +62,23 @@ class ProposerDefisUseCase @Inject constructor(
                 defisExistants = defis,
                 nationalObtenu = RegleNational.debloque(etapes),
             )
-            GenerateurDefis.generer(contexte, modeles)
+            val tirages = tirer(contexte, runId, defis)
+            GenerateurDefis.generer(contexte, modeles).filterNot {
+                it.modele.type in GenerateurDefis.TYPES_ESPECE && it.especeId?.let { id -> id in tirages } == true
+            } + tirages.values.filterNotNull()
         }
     }
+
+    /** Défi tiré dans la banque de chaque membre de l'équipe ; seuls les membres dont la famille a une banque. */
+    private suspend fun tirer(contexte: ContexteDefis, runId: Long, defis: List<Defi>): Map<Int, DefiPropose?> =
+        contexte.especes.filter { it.dansEquipe }.mapNotNull { espece ->
+            val racine = BanqueDefis.racine(espece.id, jeu.famille(espece.id).first())
+            val banque = jeu.banqueDefis(racine).first()
+            if (banque.isEmpty()) return@mapNotNull null
+            val termines = defis.count { it.especeId == espece.id && it.etat != EtatDefi.ACTIF }
+            val graine = BanqueDefis.graine(runId, espece.id, contexte.etape.id, termines)
+            espece.id to BanqueDefis.tirer(banque, espece, contexte, graine)
+        }.toMap()
 
     private suspend fun candidate(espece: Espece, dansEquipe: Boolean, capturee: Boolean, parId: Map<Int, Espece>) =
         EspeceCandidate(

@@ -17,6 +17,7 @@ import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.ModeleDefi
+import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.model.TypeDefi
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -151,7 +152,8 @@ class MoteurDefisEmbarqueTest {
         session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
         val creerRun = CreerRunUseCase(comptes, progression, session, runActive)
         val run = (creerRun("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet()) as ResultatCreationRun.Creee).runId
-        progression.placerMembre(run, MembreEquipe(1, 252, null, 5))
+        // Capturé mais hors de l'équipe : Arcko reçoit les modèles espèce saisis à la main (pas de tirage).
+        progression.definirStatut(run, 252, StatutEspece.CAPTUREE)
 
         fun evolutionArcko(defis: List<DefiPropose>) =
             defis.filter { it.modele.type == TypeDefi.EVOLUTION && it.especeId == 252 }

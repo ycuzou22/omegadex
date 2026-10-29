@@ -71,4 +71,11 @@ En plus des 60 modèles saisis à la main, la table `modele_defi` contient une *
 
 Quelques familles ont moins de 200 défis parce que leurs espèces ont peu d'attaques ou de talents : Métamorph et Zarbi (113), et une douzaine de légendaires ou d'espèces sans évolution entre 177 et 198 (Raikou, Entei, Suicune, Cresselia, Kyogre, Heatran, Coquiperl…).
 
-L'app lit les modèles saisis à la main par `ModeleDefiDao.modeles()` (identifiants sous 100000). La banque se lit à part, famille par famille.
+### Tirage au sort dans l'app
+
+L'app lit les modèles saisis à la main par `ModeleDefiDao.modeles()` (identifiants sous 100000) et la banque famille par famille (`ModeleDefiDao.banque(racine)`). Dans l'onglet Défis (`ProposerDefisUseCase`, `BanqueDefis`) :
+
+- chaque Pokémon **de l'équipe** reçoit **un seul défi tiré au sort** dans la banque de sa famille, parmi les défis qui le visent, débloqués à l'étape en cours, de la difficulté de la run et jamais relevés dans cette run ;
+- le tirage est stable : il dépend de la run, du Pokémon, de l'étape et du nombre de défis que ce Pokémon a déjà terminés. Il change donc à chaque nouvelle étape et après chaque défi réussi ou raté ;
+- tant qu'un Pokémon relève un défi espèce, il n'en reçoit pas d'autre ; un défi raté se reprend avec « Retenter » ;
+- les Pokémon capturés hors de l'équipe, et ceux dont la famille n'a pas de banque, gardent les modèles espèce saisis à la main ; les défis d'étape ne changent pas.
