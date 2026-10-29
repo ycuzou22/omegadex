@@ -273,9 +273,8 @@ private fun ContenuCapture(
 }
 
 /** 0 → 1 quand la caméra avance vers la case, 1 pendant que la case se complète, puis retour à 0. */
-private fun zoomCamera(t: Float): Float =
-    phase(t, ChronoCapture.CAMERA, ChronoCapture.CAMERA_DUREE, EASE_CAMERA) -
-        phase(t, ChronoCapture.CAMERA_RETOUR, ChronoCapture.CAMERA_RETOUR_DUREE, EASE_CAMERA)
+private fun zoomCamera(t: Float): Float = phase(t, ChronoCapture.CAMERA, ChronoCapture.CAMERA_DUREE, EASE_CAMERA) -
+    phase(t, ChronoCapture.CAMERA_RETOUR, ChronoCapture.CAMERA_RETOUR_DUREE, EASE_CAMERA)
 
 /** Le rubis de la ligne pulse, puis son onde s'élargit jusqu'à couvrir l'écran. */
 @Composable
@@ -517,7 +516,7 @@ private fun RubisCase(case: CaseCapture, statut: StatutEspece, t: Float?) {
             val p = if (gagne) {
                 val rang = index - case.avant.ordinal
                 val debut = ChronoCapture.RUBIS + rang * ChronoCapture.RUBIS_ECART
-                phase(t ?: 0f, debut, ChronoCapture.RUBIS_DUREE, LinearEasing)
+                phase(t, debut, ChronoCapture.RUBIS_DUREE, LinearEasing)
             } else {
                 1f
             }
