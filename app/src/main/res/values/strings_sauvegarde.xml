@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Export et import de la sauvegarde (T15, #199). Fichier séparé de strings.xml pour limiter les conflits. -->
+<resources>
+    <string name="sauvegarde_titre">Sauvegarde</string>
+    <string name="sauvegarde_explication">Exporte la progression de ton compte dans un fichier JSON, sans mot de passe, ou importe une sauvegarde dans ce compte. L\'import ajoute les runs : il ne remplace jamais celles qui existent.</string>
+    <string name="sauvegarde_exporter">Exporter ma progression</string>
+    <string name="sauvegarde_importer">Importer une sauvegarde</string>
+    <plurals name="sauvegarde_exportee">
+        <item quantity="one">Sauvegarde enregistrée : %1$d run.</item>
+        <item quantity="many">Sauvegarde enregistrée : %1$d runs.</item>
+        <item quantity="other">Sauvegarde enregistrée : %1$d runs.</item>
+    </plurals>
+    <plurals name="sauvegarde_importee">
+        <item quantity="one">%1$d run importée.</item>
+        <item quantity="many">%1$d runs importées.</item>
+        <item quantity="other">%1$d runs importées.</item>
+    </plurals>
+    <string name="sauvegarde_rien_importe">Aucune nouvelle run importée.</string>
+    <plurals name="sauvegarde_ignorees">
+        <item quantity="one">%1$d run était déjà dans ce compte.</item>
+        <item quantity="many">%1$d runs étaient déjà dans ce compte.</item>
+        <item quantity="other">%1$d runs étaient déjà dans ce compte.</item>
+    </plurals>
+    <string name="sauvegarde_fichier_invalide">Sauvegarde refusée : %1$s. Rien n\'a été importé.</string>
+    <string name="sauvegarde_echec_ecriture">Impossible d\'écrire le fichier choisi. Réessaie à un autre emplacement.</string>
+    <string name="sauvegarde_echec_lecture">Impossible de lire le fichier choisi.</string>
+    <string name="sauvegarde_non_connecte">Connecte-toi pour exporter ou importer une sauvegarde.</string>
+</resources>
