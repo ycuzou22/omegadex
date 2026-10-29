@@ -198,6 +198,10 @@ Règles adaptées à Jetpack Compose :
 
 La CI `.github/workflows/android-ci.yml` (contrôle obligatoire `build`) lance `./gradlew build lint ktlintCheck detekt test` sur chaque pull request vers `dev-frontend`, `dev-backend`, `dev` et `main` : une pull request qui casse le build, le lint ou les tests ne peut pas être fusionnée.
 
+La CI produit aussi le rapport de couverture JaCoCo des tests JVM (`createDebugUnitTestCoverageReport`) et
+`tools/couverture/verifier_couverture.py` refuse la pull request si le moteur de défis (`domain/defi`) passe sous
+70 % de lignes couvertes. Le script affiche au passage la couverture de chaque paquet du domaine.
+
 Une règle ne se désactive pas dans le code (`@Suppress`) sans justification en commentaire.
 
 ## 7. Tâches GitHub
