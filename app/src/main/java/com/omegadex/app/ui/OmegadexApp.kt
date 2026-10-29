@@ -1,5 +1,6 @@
 package com.omegadex.app.ui
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -42,6 +43,11 @@ fun OmegadexApp(modifier: Modifier = Modifier) {
             }
         },
     ) { padding ->
-        OmegadexNavHost(navController = navController, modifier = Modifier.padding(padding))
+        // Les marges du Scaffold couvrent déjà les barres système : elles sont consommées pour que les écrans
+        // qui gèrent eux-mêmes les marges (création de run) ne les ajoutent pas une seconde fois.
+        OmegadexNavHost(
+            navController = navController,
+            modifier = Modifier.padding(padding).consumeWindowInsets(padding),
+        )
     }
 }
