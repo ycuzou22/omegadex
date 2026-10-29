@@ -62,7 +62,8 @@ class AccueilViewModel @Inject constructor(
             jauges = jauges,
             defiDuJour = defi?.let { DefiDuJour(it.modele.type, it.modele.titre, it.enonce) },
         )
-    }.combine(badgesDeLaRun(observerBadges)) { etat, badges -> etat.copy(badges = badges) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
+    }.combine(badgesDeLaRun(observerBadges)) { etat, badges -> etat.copy(badges = badges) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
 
     private fun badgesDeLaRun(observerBadges: ObserverBadgesUseCase) = observerRunEnCours().flatMapLatest { enCours ->
         enCours?.let { observerBadges(it.run.id) } ?: flowOf(null)
