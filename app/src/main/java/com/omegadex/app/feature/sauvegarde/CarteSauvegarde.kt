@@ -119,11 +119,11 @@ private fun texteMessage(message: MessageSauvegarde): String = when (message) {
     is MessageSauvegarde.Exportee ->
         pluralStringResource(R.plurals.sauvegarde_exportee, message.nombreRuns, message.nombreRuns)
     is MessageSauvegarde.Importee -> {
-        val importees = pluralStringResource(
-            R.plurals.sauvegarde_importee,
-            message.runsImportees,
-            message.runsImportees,
-        )
+        val importees = if (message.runsImportees == 0) {
+            stringResource(R.string.sauvegarde_rien_importe)
+        } else {
+            pluralStringResource(R.plurals.sauvegarde_importee, message.runsImportees, message.runsImportees)
+        }
         if (message.runsIgnorees == 0) {
             importees
         } else {

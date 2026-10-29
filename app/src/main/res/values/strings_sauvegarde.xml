@@ -15,6 +15,7 @@
         <item quantity="many">%1$d runs importées.</item>
         <item quantity="other">%1$d runs importées.</item>
     </plurals>
+    <string name="sauvegarde_rien_importe">Aucune nouvelle run importée.</string>
     <plurals name="sauvegarde_ignorees">
         <item quantity="one">%1$d run était déjà dans ce compte.</item>
         <item quantity="many">%1$d runs étaient déjà dans ce compte.</item>
