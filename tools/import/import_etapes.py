@@ -213,7 +213,7 @@ def etape_objet(etape_lieu: int, cs: str | None, condition: str | None) -> int:
 def description_objet(objet: dict) -> str:
     """« Récupérer CT39 Tomberoche (Mérouville) », « Acheter … », avec la capacité de terrain requise."""
     verbe = VERBES_OBJET.get(objet.get("methode") or "SOL", "Récupérer")
-    texte = f"{verbe} {objet['nom']} ({objet['lieu']})"
+    texte = f"{verbe} {objet['nom']} ({objet.get('lieu') or objet['lieuLibre']})"
     if objet.get("cs"):
         texte += f" · {NOMS_CS[objet['cs']]}"
     return texte
@@ -236,18 +236,26 @@ def generer_quetes_objets(con: sqlite3.Connection, fichier: pathlib.Path | None 
     }
     quetes = []
     for rang, objet in enumerate(objets):
-        if not objet.get("lieu") or objet["nom"] in deja_donnes:
+        if objet["nom"] in deja_donnes:
+            continue
+        # Exception fixée à la main : « etape » impose l'étape ; « lieuLibre » nomme un lieu absent de la base
+        # (lieu mirage), la quête n'est alors rattachée à aucun lieu.
+        if not objet.get("lieu"):
+            if objet.get("lieuLibre") and objet.get("etape") is not None:
+                quetes.append((objet["etape"], rang, None, description_objet(objet), objet["nom"]))
             continue
         if objet["lieu"] not in lieux:
             raise ValueError(f"Objet « {objet['nom']} » : lieu inconnu « {objet['lieu']} »")
         if objet.get("cs") and objet["cs"] not in CS_ETAPE:
             raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {objet['cs']} »")
         lieu_id, etape_lieu = lieux[objet["lieu"]]
-        etape = etape_objet(etape_lieu, objet.get("cs"), objet.get("condition"))
+        etape = objet.get("etape")
+        if etape is None:
+            etape = etape_objet(etape_lieu, objet.get("cs"), objet.get("condition"))
         quetes.append((etape, rang, lieu_id, description_objet(objet), objet["nom"]))
     numero = con.execute("SELECT COALESCE(MAX(id), 0) FROM quete").fetchone()[0] + 1
     ordres = dict(con.execute("SELECT etapeId, MAX(ordre) FROM quete WHERE type = 'ANNEXE' GROUP BY etapeId"))
-    for etape, _, lieu_id, description, nom in sorted(quetes):
+    for etape, _, lieu_id, description, nom in sorted(quetes, key=lambda q: q[:2]):
         ordres[etape] = ordres.get(etape, 0) + 1
         con.execute(
             "INSERT INTO quete VALUES (?,?,?,?,?,?,?)",
