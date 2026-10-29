@@ -26,6 +26,12 @@ sealed interface AventureUiState {
 data class LieuAffiche(val id: Int, val nom: String)
 
 /** Évènement ponctuel : l'étape vient d'être validée (déclencheur de l'animation « Étape validée », T14.1). */
-data class EtapeValidee(val titre: String, val suivante: String?)
+data class EtapeValidee(
+    val numero: Int,
+    val titre: String,
+    /** Badge obtenu (récompense « Badge … » d'une quête principale), s'il y en a un. */
+    val badge: String?,
+    val suivante: String?,
+)
 
 data class QueteAffichee(val id: Int, val description: String, val recompense: String?, val cochee: Boolean)

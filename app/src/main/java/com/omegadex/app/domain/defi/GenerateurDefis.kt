@@ -34,7 +34,13 @@ data class ContexteDefis(
 )
 
 /** Défi proposé au joueur, pas encore accepté. [enonce] est le gabarit rempli. */
-data class DefiPropose(val modele: ModeleDefi, val especeId: Int?, val etapeId: Int?, val enonce: String)
+data class DefiPropose(
+    val modele: ModeleDefi,
+    val especeId: Int?,
+    val etapeId: Int?,
+    val enonce: String,
+    val especeNom: String? = null,
+)
 
 /**
  * Moteur de défis (T11) : instancie les modèles pour l'étape en cours d'une run.
@@ -93,6 +99,7 @@ object GenerateurDefis {
                 espece.id,
                 null,
                 enonce(modele, contexte.etape, contexte.starterNom, espece.nom, evolution),
+                espece.nom,
             )
         }
     }

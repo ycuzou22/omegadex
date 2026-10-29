@@ -1,6 +1,10 @@
 package com.omegadex.app.feature.aventure
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,21 +15,26 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -42,6 +51,7 @@ import com.omegadex.app.ui.components.TypeChip
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
+import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.OmegadexTheme
 import com.omegadex.app.ui.theme.PlexMono
 import com.omegadex.app.ui.theme.RubisPale
@@ -54,20 +64,22 @@ fun AventureScreen(
     viewModel: AventureViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val annonces = remember { SnackbarHostState() }
-    val ressources = LocalResources.current
-    // En attendant l'animation « Étape validée » (T14.1), la validation est annoncée par un message.
-    LaunchedEffect(viewModel) {
-        viewModel.evenements.collect { evenement ->
-            annonces.showSnackbar(
-                evenement.suivante?.let { ressources.getString(R.string.aventure_etape_validee, evenement.titre, it) }
-                    ?: ressources.getString(R.string.aventure_derniere_validee, evenement.titre),
-            )
+    var celebration by remember { mutableStateOf<EtapeValidee?>(null) }
+    var derniereValidee by remember { mutableStateOf<EtapeValidee?>(null) }
+    LaunchedEffect(viewModel) { viewModel.evenements.collect { celebration = it } }
+    AventureContenu(
+        uiState = uiState,
+        onCocher = viewModel::cocher,
+        onLieu = onLieu,
+        derniereValidee = derniereValidee,
+        modifier = modifier,
+    )
+    // Après l'animation « Étape validée », l'étape validée se résume en haut et la nouvelle étape s'illumine.
+    celebration?.let { evenement ->
+        CelebrationEtape(evenement) {
+            derniereValidee = evenement
+            celebration = null
         }
-    }
-    Box(modifier.fillMaxSize()) {
-        AventureContenu(uiState = uiState, onCocher = viewModel::cocher, onLieu = onLieu)
-        SnackbarHost(annonces, Modifier.align(Alignment.BottomCenter).padding(16.dp))
     }
 }
 
@@ -77,6 +89,7 @@ private fun AventureContenu(
     onCocher: (Int, Boolean) -> Unit,
     onLieu: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    derniereValidee: EtapeValidee? = null,
 ) {
     when (uiState) {
         AventureUiState.Chargement -> Box(modifier.fillMaxSize())
@@ -92,7 +105,10 @@ private fun AventureContenu(
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 22.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item { CarteEtape(uiState, onCocher) }
+                derniereValidee?.let { validee ->
+                    item(key = "validee-${validee.numero}") { ResumeEtapeValidee(validee) }
+                }
+                item { LueurDeblocage(derniereValidee) { CarteEtape(uiState, onCocher) } }
                 if (uiState.lieux.isNotEmpty()) {
                     item { LieuxEtape(uiState.lieux, onLieu) }
                 }
@@ -108,8 +124,12 @@ private fun AventureContenu(
 }
 
 @Composable
-private fun CarteEtape(etape: AventureUiState.EtapeEnCours, onCocher: (Int, Boolean) -> Unit) {
-    CarteRubis(Modifier.fillMaxWidth()) {
+internal fun CarteEtape(
+    etape: AventureUiState.EtapeEnCours,
+    onCocher: (Int, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    CarteRubis(modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.aventure_etape, etape.numero, etape.total).uppercase(),
@@ -169,6 +189,85 @@ private fun CarteEtape(etape: AventureUiState.EtapeEnCours, onCocher: (Int, Bool
         }
     }
 }
+
+/** Carte « Étape n · Titre — Validée · Badge obtenu » qui monte en place (maquette : `unlock`). */
+@Composable
+private fun ResumeEtapeValidee(validee: EtapeValidee) {
+    val apparition = remember(validee) { Animatable(0f) }
+    val reduites = OmegadexTheme.animationsReduites
+    LaunchedEffect(validee) {
+        if (reduites) {
+            apparition.snapTo(1f)
+        } else {
+            apparition.animateTo(1f, tween(DUREE_MONTEE_MS, easing = EASE_MONTEE))
+        }
+    }
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surface,
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                alpha = apparition.value
+                translationY = (1f - apparition.value) * 12.dp.toPx()
+            },
+    ) {
+        Row(
+            Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(Modifier.size(width = 34.dp, height = 30.dp).background(MaterialTheme.colorScheme.primary, FormeGemme))
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    stringResource(R.string.aventure_resume_titre, validee.numero, validee.titre),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    validee.badge?.let { stringResource(R.string.aventure_resume_badge, it) }
+                        ?: stringResource(R.string.aventure_resume_valide),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+/** Halo magma qui pulse deux fois autour de l'étape qui vient d'être débloquée (maquette : `glow`). */
+@Composable
+private fun LueurDeblocage(cle: EtapeValidee?, contenu: @Composable () -> Unit) {
+    val reduites = OmegadexTheme.animationsReduites
+    val intensite = remember { Animatable(0f) }
+    LaunchedEffect(cle) {
+        if (cle != null && !reduites) {
+            repeat(PULSATIONS) {
+                intensite.animateTo(1f, tween(DUREE_PULSATION_MS / 2))
+                intensite.animateTo(0f, tween(DUREE_PULSATION_MS / 2))
+            }
+        }
+    }
+    val magma = OmegadexTheme.couleurs.magma
+    Box(
+        Modifier.drawBehind {
+            if (intensite.value > 0f) {
+                val marge = 6.dp.toPx()
+                drawRoundRect(
+                    magma.copy(alpha = OPACITE_LUEUR * intensite.value),
+                    topLeft = Offset(-marge, -marge),
+                    size = Size(size.width + 2 * marge, size.height + 2 * marge),
+                    cornerRadius = CornerRadius(26.dp.toPx() + marge),
+                )
+            }
+        },
+    ) { contenu() }
+}
+
+private const val DUREE_MONTEE_MS = 600
+private val EASE_MONTEE = CubicBezierEasing(0.2f, 0.8f, 0.2f, 1f)
+private const val PULSATIONS = 2
+private const val DUREE_PULSATION_MS = 1_600
+private const val OPACITE_LUEUR = 0.25f
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
