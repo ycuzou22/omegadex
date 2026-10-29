@@ -23,5 +23,11 @@ sealed interface FichePokemonUiState {
         val attaques: List<AttaqueApprise> = emptyList(),
         /** Niveau du Pokémon de l'équipe de cette espèce (le plus haut s'il y en a plusieurs). */
         val niveauActuel: Int? = null,
+        val lieux: List<LieuFiche> = emptyList(),
+        /** L'espèce ne s'obtient que par échange ou transfert. */
+        val echangeRequis: Boolean = false,
+        /** Défis de l'espèce dans la run active ; null sans run. */
+        val defis: DefisFiche? = null,
+        val notes: String = "",
     ) : FichePokemonUiState
 }

@@ -93,18 +93,22 @@ fun FichePokemonScreen(
         FichePokemonUiState.Introuvable -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.fiche_introuvable), style = MaterialTheme.typography.bodyLarge)
         }
-        is FichePokemonUiState.Fiche -> FicheContenu(
-            fiche = etat,
-            actions = ActionsFiche(
+        is FichePokemonUiState.Fiche -> {
+            val actions = ActionsFiche(
                 onRetour = onRetour,
                 onDefis = { onDefis(etat.espece.id) },
                 onAvancerStatut = viewModel::avancerStatut,
                 onReculerStatut = viewModel::reculerStatut,
                 onEspece = onEspece,
-            ),
-            modifier = modifier,
-            onglet = { onglet -> ContenuOnglet(onglet, etat, onEspece) },
-        )
+                onNotes = viewModel::modifierNotes,
+            )
+            FicheContenu(
+                fiche = etat,
+                actions = actions,
+                modifier = modifier,
+                onglet = { onglet -> ContenuOnglet(onglet, etat, actions) },
+            )
+        }
     }
 }
 
@@ -345,26 +349,17 @@ private fun PiedFiche(fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
     }
 }
 
-/** Contenu d'un onglet ; chaque rubrique est remplie par sa sous-tâche (T10.2 à T10.5). */
+/** Contenu d'un onglet de la fiche. */
 @Composable
-private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche, onEspece: (Int) -> Unit) {
+private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
     when (onglet) {
         OngletFiche.INFOS -> OngletInfos(fiche)
         OngletFiche.STATS -> OngletStats(fiche)
-        OngletFiche.EVOLUTION -> OngletEvolution(fiche, onEspece)
+        OngletFiche.EVOLUTION -> OngletEvolution(fiche, actions.onEspece)
         OngletFiche.ATTAQUES -> OngletAttaques(fiche)
-        else -> OngletABientot(onglet)
+        OngletFiche.LIEUX -> OngletLieux(fiche)
+        OngletFiche.DEFIS -> OngletDefis(fiche, actions.onNotes)
     }
-}
-
-@Composable
-private fun OngletABientot(onglet: OngletFiche) {
-    Text(
-        stringResource(libelleOnglet(onglet)) + " · " + stringResource(R.string.ecran_bientot_disponible),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(top = 8.dp),
-    )
 }
 
 @StringRes
@@ -395,10 +390,9 @@ private fun FichePreview() {
         groupesOeufs = listOf("Monstrueux", "Aquatique 1"),
         aUneMega = false,
     )
+    val actions = ActionsFiche({}, {}, {}, {}, {}, {})
+    val fiche = FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE)
     OmegadexTheme {
-        FicheContenu(
-            FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE),
-            ActionsFiche({}, {}, {}, {}, {}),
-        ) { ContenuOnglet(it, FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE)) {} }
+        FicheContenu(fiche, actions) { ContenuOnglet(it, fiche, actions) }
     }
 }

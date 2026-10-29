@@ -269,4 +269,15 @@
     <string name="categorie_physique">Physique</string>
     <string name="categorie_speciale">Spéciale</string>
     <string name="categorie_statut">Statut</string>
+    <string name="fiche_lieux_aucun">Aucun lieu de capture connu dans Rubis Oméga.</string>
+    <string name="fiche_lieux_echange_explication">Ce Pokémon ne s\'obtient pas dans Rubis Oméga : il faut l\'échanger ou le transférer.</string>
+    <string name="fiche_lieux_taux">%1$d %%</string>
+    <string name="fiche_lieux_niveaux">niv. %1$d–%2$d</string>
+    <string name="fiche_lieux_etape">Étape %1$d · %2$s</string>
+    <string name="fiche_lieux_etape_a_venir">Débloqué à l\'étape %1$d · %2$s</string>
+    <string name="fiche_defis_sans_run">Lance une run pour suivre les défis de ce Pokémon.</string>
+    <string name="fiche_defis_difficulte">Difficulté de la run : %1$s</string>
+    <string name="fiche_defis_aucun">Aucun défi pour ce Pokémon à cette étape.</string>
+    <string name="fiche_defis_notes">Notes</string>
+    <string name="fiche_defis_notes_aide">Nature, talent, attaques à garder…</string>
 </resources>

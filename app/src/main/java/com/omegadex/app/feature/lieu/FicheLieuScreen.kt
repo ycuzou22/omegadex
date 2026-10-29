@@ -112,7 +112,7 @@ private fun LazyListScope.fiche(fiche: FicheLieuUiState.Fiche, onEspece: (Int) -
     fiche.rencontres.forEach { groupe ->
         item(key = "methode-${groupe.methode}") {
             Text(
-                stringResource(nomMethode(groupe.methode)),
+                stringResource(nomMethodeRencontre(groupe.methode)),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp),
@@ -213,7 +213,7 @@ private val NOMS_METHODES = mapOf(
 )
 
 @StringRes
-private fun nomMethode(methode: MethodeRencontre): Int = NOMS_METHODES.getValue(methode)
+internal fun nomMethodeRencontre(methode: MethodeRencontre): Int = NOMS_METHODES.getValue(methode)
 
 @ApercusClairSombre
 @Composable

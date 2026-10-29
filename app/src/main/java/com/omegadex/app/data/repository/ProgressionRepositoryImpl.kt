@@ -87,6 +87,15 @@ class ProgressionRepositoryImpl @Inject constructor(
         pokedex.enregistrer(ProgressionEspeceEntity(runId, especeId, statut, notes, horloge.maintenant()))
     }
 
+    override fun notes(runId: Long, especeId: Int) =
+        duJoueur(runId, null) { pokedex.statut(runId, especeId) }.map { it?.notes.orEmpty() }
+
+    override suspend fun definirNotes(runId: Long, especeId: Int, notes: String) = base.withTransaction {
+        verifierProprietaire(runId)
+        val statut = pokedex.statut(runId, especeId).first()?.statut ?: StatutEspece.NON_VUE
+        pokedex.enregistrer(ProgressionEspeceEntity(runId, especeId, statut, notes, horloge.maintenant()))
+    }
+
     override fun equipe(runId: Long) = duJoueur(runId, emptyList()) {
         equipe.equipe(runId)
     }.map { liste -> liste.map { it.versDomaine() } }
