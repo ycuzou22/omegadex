@@ -195,4 +195,10 @@
     <string name="aventure_resume_badge">Validée · %1$s obtenu</string>
     <string name="aventure_resume_valide">Validée</string>
     <string name="aventure_debloquee">débloquée</string>
+
+    <!-- Animation « Évolution » -->
+    <string name="anim_evolution_intro">Hein ? %1$s évolue !</string>
+    <string name="anim_evolution_surtitre">Évolution réussie</string>
+    <string name="anim_evolution_titre">%1$s a évolué\nen %2$s !</string>
+    <string name="anim_continuer">Continuer</string>
 </resources>
