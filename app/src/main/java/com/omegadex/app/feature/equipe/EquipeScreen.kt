@@ -41,7 +41,7 @@ import com.omegadex.app.ui.animations.EspeceAnimee
 import com.omegadex.app.ui.animations.EvolutionPleinEcran
 import com.omegadex.app.ui.components.IconeType
 import com.omegadex.app.ui.components.SpriteEspece
-import com.omegadex.app.ui.components.TypeChip
+import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.OmegadexTheme
 
@@ -183,7 +183,10 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
         // Image de l'espèce (assets/sprites, image par défaut sinon) et, à côté, les logos de ses types.
         SpriteEspece(membre.especeId, decouverte = 1f, taille = 52.dp)
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            membre.types.forEach { IconeType(it, taille = 24.dp) }
+            membre.types.forEach { type ->
+                val nom = nomDuType(cleType(type))?.let { stringResource(it) } ?: type
+                IconeType(type, taille = 24.dp, description = nom)
+            }
         }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
@@ -192,11 +195,6 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                membre.types.forEach { type ->
-                    TypeChip(type = type, libelle = nomDuType(type)?.let { stringResource(it) } ?: type)
-                }
-            }
             Text(
                 membre.defiActif?.let { stringResource(R.string.equipe_defi_actif, it) }
                     ?: stringResource(R.string.equipe_aucun_defi, numero),
