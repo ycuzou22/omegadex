@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -148,6 +149,7 @@ private fun ContenuBoiteBadges(
 ) {
     var cadre by remember { mutableStateOf(Rect.Zero) }
     var niche by remember { mutableStateOf<Rect?>(null) }
+    val tActuel by rememberUpdatedState(t)
     val nom = stringResource(nomBadge(nouveau))
     Box(
         modifier
@@ -174,7 +176,9 @@ private fun ContenuBoiteBadges(
                 },
             contentAlignment = Alignment.Center,
         ) {
-            Ecrin(obtenus, nouveau, t) { niche = it }
+            // La position de la niche est relevée caméra immobile, puis figée : relue pendant le zoom,
+            // elle suivrait la caméra elle-même et le cadrage partirait de travers.
+            Ecrin(obtenus, nouveau, t) { if (zoomCamera(tActuel) == 0f) niche = it }
         }
         TextesSequence(nom, t)
     }
