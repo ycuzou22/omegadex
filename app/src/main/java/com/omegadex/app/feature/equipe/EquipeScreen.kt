@@ -43,6 +43,8 @@ import com.omegadex.app.ui.components.IconeType
 import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 /**
@@ -239,9 +241,11 @@ private fun ActionsMembre(numero: Int, membre: MembreVue, actions: ActionsEquipe
 @Composable
 private fun ReglageNiveau(numero: Int, membre: MembreVue, plafond: Int?, onNiveau: (Int, Int) -> Unit) {
     val ecart = membre.ecartPlafond
+    val sons = LocalSons.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             BoutonNiveau("−", stringResource(R.string.equipe_baisser, membre.nom), membre.niveau > 1) {
+                sons.jouer(Son.NIVEAU_CRAN)
                 onNiveau(numero, -1)
             }
             Text(
@@ -249,6 +253,8 @@ private fun ReglageNiveau(numero: Int, membre: MembreVue, plafond: Int?, onNivea
                 style = OmegadexTheme.chiffres.moyen,
             )
             BoutonNiveau("+", stringResource(R.string.equipe_monter, membre.nom), membre.niveau < NIVEAU_MAX) {
+                // Monter d'un niveau quand le membre est au plafond le fait passer au-dessus : alerte.
+                sons.jouer(if (ecart == 0) Son.PLAFOND_ALERTE else Son.NIVEAU_CRAN)
                 onNiveau(numero, 1)
             }
         }
