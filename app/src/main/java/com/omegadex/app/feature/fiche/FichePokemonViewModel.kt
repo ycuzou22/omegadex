@@ -3,6 +3,8 @@ package com.omegadex.app.feature.fiche
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omegadex.app.domain.defi.ObserverDefisUseCase
+import com.omegadex.app.domain.defi.ProposerDefisUseCase
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
@@ -29,6 +31,8 @@ class FichePokemonViewModel @Inject constructor(
     jeu: JeuRepository,
     private val observerRunEnCours: ObserverRunEnCoursUseCase,
     private val progression: ProgressionRepository,
+    observerDefis: ObserverDefisUseCase,
+    proposerDefis: ProposerDefisUseCase,
 ) : ViewModel() {
     val especeId: Int = checkNotNull(etatNavigation[ARGUMENT_ESPECE])
 
@@ -60,9 +64,45 @@ class FichePokemonViewModel @Inject constructor(
         )
     }
 
-    val uiState: StateFlow<FichePokemonUiState> = combine(base, jeu.attaquesApprises(especeId)) { etat, attaques ->
-        if (etat is FichePokemonUiState.Fiche) etat.copy(attaques = attaques) else etat
+    /** Lieux de l'espèce, éteints tant que leur étape n'est pas atteinte dans la run active. */
+    private val lieux = combine(
+        jeu.lieuxDeLEspece(especeId),
+        jeu.etapes(),
+        observerRunEnCours(),
+    ) { rencontres, etapes, enCours -> lieuxDeLaFiche(rencontres, etapes, enCours?.etape?.id) }
+
+    /** Défis de l'espèce et notes du joueur dans la run active ; null sans run. */
+    private val defisEtNotes = observerRunEnCours().flatMapLatest { enCours ->
+        if (enCours == null) return@flatMapLatest flowOf(null)
+        combine(observerDefis(), proposerDefis(), progression.notes(enCours.run.id, especeId)) { run, proposes, notes ->
+            run?.let { DefisFiche.de(especeId, it, proposes) } to notes
+        }
+    }
+
+    val uiState: StateFlow<FichePokemonUiState> = combine(
+        base,
+        jeu.attaquesApprises(especeId),
+        lieux,
+        jeu.especesEchangeRequis(),
+        defisEtNotes,
+    ) { etat, attaques, lieuxFiche, echanges, defis ->
+        if (etat !is FichePokemonUiState.Fiche) return@combine etat
+        etat.copy(
+            attaques = attaques,
+            lieux = lieuxFiche,
+            echangeRequis = especeId in echanges,
+            defis = defis?.first,
+            notes = defis?.second.orEmpty(),
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), FichePokemonUiState.Chargement)
+
+    /** Enregistre les notes du joueur sur l'espèce dans la run active. */
+    fun modifierNotes(notes: String) {
+        viewModelScope.launch {
+            val runId = observerRunEnCours().first()?.run?.id ?: return@launch
+            progression.definirNotes(runId, especeId, notes)
+        }
+    }
 
     /** Une touche sur les rubis : statut suivant ; appui long : statut précédent (comme dans le Pokédex). */
     fun avancerStatut() = changerStatut(StatutEspece::suivant)

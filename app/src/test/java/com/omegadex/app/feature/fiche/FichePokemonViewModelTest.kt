@@ -8,6 +8,8 @@ import com.omegadex.app.data.progression.ProgressionDatabase
 import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
+import com.omegadex.app.domain.defi.ObserverDefisUseCase
+import com.omegadex.app.domain.defi.ProposerDefisUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.MethodeApprentissage
@@ -26,7 +28,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -62,12 +66,22 @@ class FichePokemonViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun fiche(especeId: Int) = FichePokemonViewModel(
-        SavedStateHandle(mapOf(FichePokemonViewModel.ARGUMENT_ESPECE to especeId)),
-        jeu,
-        ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu),
-        progression,
-    )
+    private fun fiche(especeId: Int): FichePokemonViewModel {
+        val runEnCours = ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu)
+        return FichePokemonViewModel(
+            SavedStateHandle(mapOf(FichePokemonViewModel.ARGUMENT_ESPECE to especeId)),
+            jeu,
+            runEnCours,
+            progression,
+            ObserverDefisUseCase(runEnCours, progression, jeu),
+            ProposerDefisUseCase(runEnCours, progression, jeu),
+        )
+    }
+
+    private suspend fun nouvelleRun() {
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        CreerRunUseCase(comptes, progression, session, runActive)("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet())
+    }
 
     private suspend fun FichePokemonViewModel.fiche() =
         uiState.first { it is FichePokemonUiState.Fiche } as FichePokemonUiState.Fiche
@@ -83,8 +97,7 @@ class FichePokemonViewModelTest {
 
     @Test
     fun `le statut d'entrainement avance d'une touche et recule d'un appui long`() = runTest {
-        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
-        CreerRunUseCase(comptes, progression, session, runActive)("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet())
+        nouvelleRun()
         val vm = fiche(252)
         assertEquals(StatutEspece.NON_VUE, vm.fiche().statut)
         vm.avancerStatut()
@@ -116,12 +129,49 @@ class FichePokemonViewModelTest {
         assertEquals(1, sansRun.attaques.single().niveau)
         assertNull(sansRun.niveauActuel)
 
-        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
-        CreerRunUseCase(comptes, progression, session, runActive)("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet())
+        nouvelleRun()
         val run = requireNotNull(runActive.runActive(1).first())
         progression.placerMembre(run, MembreEquipe(2, 252, null, 14))
         val vm = fiche(252)
         vm.uiState.first { (it as? FichePokemonUiState.Fiche)?.niveauActuel == 14 }
         assertNull(fiche(253).fiche().niveauActuel)
+    }
+
+    @Test
+    fun `les lieux portent leur etape de deblocage et s'eteignent tant qu'elle n'est pas atteinte`() = runTest {
+        val massko = fiche(253).fiche().lieux.single()
+        assertEquals("Route 104", massko.rencontre.lieu.nom)
+        assertEquals(12 to 14, massko.rencontre.niveauMin to massko.rencontre.niveauMax)
+        assertEquals("Roxanne", massko.etape?.titre)
+        assertNull(massko.accessible)
+
+        nouvelleRun()
+        fiche(253).uiState.first { (it as? FichePokemonUiState.Fiche)?.lieux?.single()?.accessible == false }
+        fiche(252).uiState.first { (it as? FichePokemonUiState.Fiche)?.lieux?.single()?.accessible == true }
+    }
+
+    @Test
+    fun `une espece a echanger est annoncee a part, sans lieu`() = runTest {
+        jeuBase.openHelper.writableDatabase.execSQL(
+            "INSERT INTO rencontre VALUES (3, 1, 1, 'ECHANGE_REQUIS', NULL, NULL, NULL, NULL)",
+        )
+        val bulbizarre = fiche(1).fiche()
+        assertTrue(bulbizarre.echangeRequis)
+        assertTrue(bulbizarre.lieux.isEmpty())
+        assertFalse(fiche(252).fiche().echangeRequis)
+    }
+
+    @Test
+    fun `defis et notes suivent la run active`() = runTest {
+        val sansRun = fiche(252).fiche()
+        assertNull(sansRun.defis)
+        assertEquals("", sansRun.notes)
+
+        nouvelleRun()
+        val vm = fiche(252)
+        val etat = vm.uiState.first { (it as? FichePokemonUiState.Fiche)?.defis != null } as FichePokemonUiState.Fiche
+        assertEquals(Difficulte.NORMAL, etat.defis?.difficulteRun)
+        vm.modifierNotes("Garder Engrais")
+        vm.uiState.first { (it as? FichePokemonUiState.Fiche)?.notes == "Garder Engrais" }
     }
 }
