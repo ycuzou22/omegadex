@@ -13,17 +13,16 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -40,6 +39,8 @@ import com.omegadex.app.domain.model.TypeDefi
 import com.omegadex.app.feature.aventure.AventureUiState
 import com.omegadex.app.feature.aventure.AventureViewModel
 import com.omegadex.app.feature.aventure.CarteEtape
+import com.omegadex.app.feature.aventure.CelebrationEtape
+import com.omegadex.app.feature.aventure.EtapeValidee
 import com.omegadex.app.feature.defis.nomTypeDefi
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.components.OmegaButton
@@ -56,17 +57,10 @@ fun AccueilScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val aventure by aventureViewModel.uiState.collectAsStateWithLifecycle()
-    val annonces = remember { SnackbarHostState() }
-    val ressources = LocalResources.current
-    // Les quêtes cochées depuis l'accueil valident l'étape comme dans l'Aventure.
-    LaunchedEffect(aventureViewModel) {
-        aventureViewModel.evenements.collect { evenement ->
-            annonces.showSnackbar(
-                evenement.suivante?.let { ressources.getString(R.string.aventure_etape_validee, evenement.titre, it) }
-                    ?: ressources.getString(R.string.aventure_derniere_validee, evenement.titre),
-            )
-        }
-    }
+    var celebration by remember { mutableStateOf<EtapeValidee?>(null) }
+    // Les quêtes cochées depuis l'accueil valident l'étape comme dans l'Aventure, avec la même animation.
+    LaunchedEffect(aventureViewModel) { aventureViewModel.evenements.collect { celebration = it } }
+    celebration?.let { CelebrationEtape(it) { celebration = null } }
     Box(modifier.fillMaxSize()) {
         AccueilContenu(
             uiState = uiState,
@@ -78,7 +72,6 @@ fun AccueilScreen(
                 onRelever = viewModel::releverDefiDuJour,
             ),
         )
-        SnackbarHost(annonces, Modifier.align(Alignment.BottomCenter).padding(16.dp))
     }
 }
 
