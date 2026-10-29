@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package com.omegadex.app.ui.components
 
 import android.content.Context
