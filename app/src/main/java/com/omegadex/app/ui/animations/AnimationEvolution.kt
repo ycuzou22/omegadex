@@ -696,14 +696,33 @@ private val ETAPES_SOL = listOf(
     ChronoEvolution.REVELE to SOL_EVEIL,
 )
 
-/** L'ombre éclairée au pied du sprite, les ondes de chaleur et l'ombre de contact. */
-private fun DrawScope.dessinerOmbreEclairee(t: Float, ecoule: Float, anime: Boolean) {
+private fun etatSol(t: Float): EtatSol {
     var sol = SOL_REPOS
     ETAPES_SOL.forEach { (debut, cible) ->
         if (t >= debut) {
             sol = sol.vers(cible, avancement(t, debut, ChronoEvolution.TRANSITION_SOL, FastOutSlowInEasing))
         }
     }
+    return sol
+}
+
+/** Sous le cocon la flaque bat (brightness 1 → 1,4) ; à l'éclat elle flambe (brightness 1,5). */
+private fun surcroitSol(t: Float, ecoule: Float, anime: Boolean) = when {
+    t >= ChronoEvolution.ECLATE && t < ChronoEvolution.REVELE -> 0.5f
+    anime && t >= ChronoEvolution.COCON && t < ChronoEvolution.ECLATE -> 0.4f * vaEtVient(ecoule, 500f)
+    else -> 0f
+}
+
+/** L'ombre de contact s'efface quand le cocon éclaire, puis revient sous la nouvelle espèce. */
+private fun opaciteOmbre(t: Float) = when {
+    t < ChronoEvolution.COCON -> 1f
+    t < ChronoEvolution.REVELE -> 1f - avancement(t, ChronoEvolution.COCON, ChronoEvolution.TRANSITION_OMBRE)
+    else -> avancement(t, ChronoEvolution.REVELE, ChronoEvolution.TRANSITION_OMBRE)
+}
+
+/** L'ombre éclairée au pied du sprite, les ondes de chaleur et l'ombre de contact. */
+private fun DrawScope.dessinerOmbreEclairee(t: Float, ecoule: Float, anime: Boolean) {
+    val sol = etatSol(t)
     val flaque = rect(-10f, 196f, 260f, 70f).agrandi(sol.sx, sol.sy)
     val arrets = arrayOf(
         0f to Creme.copy(alpha = 0.95f * sol.opacite),
@@ -712,21 +731,12 @@ private fun DrawScope.dessinerOmbreEclairee(t: Float, ecoule: Float, anime: Bool
         0.72f to Magma.copy(alpha = 0f),
     )
     ovaleDegrade(flaque, *arrets)
-    // Sous le cocon la flaque bat (brightness 1 → 1,4) ; à l'éclat elle flambe (brightness 1,5).
-    val surcroit = when {
-        t >= ChronoEvolution.ECLATE && t < ChronoEvolution.REVELE -> 0.5f
-        anime && t >= ChronoEvolution.COCON && t < ChronoEvolution.ECLATE -> 0.4f * vaEtVient(ecoule, 500f)
-        else -> 0f
-    }
+    val surcroit = surcroitSol(t, ecoule, anime)
     if (surcroit > 0f) {
         ovaleDegrade(flaque, *arrets.map { (p, c) -> p to c.copy(alpha = c.alpha * surcroit) }.toTypedArray())
     }
     if (anime && t >= ChronoEvolution.COCON && t < ChronoEvolution.ECLATE) dessinerOndes(t)
-    val ombre = when {
-        t < ChronoEvolution.COCON -> 1f
-        t < ChronoEvolution.REVELE -> 1f - avancement(t, ChronoEvolution.COCON, ChronoEvolution.TRANSITION_OMBRE)
-        else -> avancement(t, ChronoEvolution.REVELE, ChronoEvolution.TRANSITION_OMBRE)
-    }
+    val ombre = opaciteOmbre(t)
     if (ombre > 0f) {
         ovaleDegrade(
             rect(66f, 212f, 108f, 18f),
