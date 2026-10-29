@@ -1,6 +1,7 @@
 package com.omegadex.app.data.jeu
 
 import com.omegadex.app.data.BasesDeTest
+import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.domain.model.MethodeApprentissage
 import com.omegadex.app.domain.model.MethodeRencontre
 import com.omegadex.app.domain.model.TypeQuete
@@ -63,8 +64,10 @@ class JeuDaoTest {
 
     @Test
     fun `les especes accessibles suivent l'etape`() = runTest {
-        assertEquals(listOf(252), base.rencontreDao().especesAccessibles(0).first())
-        assertEquals(setOf(252, 253), base.rencontreDao().especesAccessibles(1).first().toSet())
+        val jeu = JeuRepositoryImpl(base)
+        assertEquals(setOf(252), jeu.especesAccessibles(0).first())
+        assertEquals(setOf(252, 253), jeu.especesAccessibles(1).first())
+        assertEquals(2, base.rencontreDao().toutesLesRencontres().first().size)
     }
 
     @Test
@@ -74,7 +77,7 @@ class JeuDaoTest {
         sql.execSQL("INSERT INTO rencontre VALUES (11, 1, 1, 'ECHANGE_REQUIS', NULL, NULL, NULL, NULL)")
         sql.execSQL("INSERT INTO rencontre VALUES (12, 1, 253, 'HERBE', 2, 3, 15, 'Rubis Oméga uniquement')")
 
-        assertEquals(setOf(252, 253), base.rencontreDao().especesAccessibles(0).first().toSet())
+        assertEquals(setOf(252, 253), JeuRepositoryImpl(base).especesAccessibles(0).first())
         assertEquals(listOf(1), base.rencontreDao().especesEchangeRequis().first())
     }
 }
