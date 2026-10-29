@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TransformOrigin
@@ -58,6 +59,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.dessinerGemme
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.ApercusClairSombre
@@ -97,6 +99,9 @@ private object ChronoCapture {
     const val FENTE_DUREE = 460f
     const val ONDE_CASE = 3_660f
     const val ONDE_CASE_DUREE = 750f
+    const val DECOUVERTE = 3_760f
+    const val DECOUVERTE_DUREE = 900f
+    const val ECLAT_DUREE = 700f
     const val RUBIS = 3_900f
     const val RUBIS_ECART = 150f
     const val RUBIS_DUREE = 260f
@@ -120,7 +125,7 @@ private val EASE_FENTE: Easing = CubicBezierEasing(0.5f, 0f, 0.8f, 0.5f)
 private const val ZOOM_CAMERA = 2.2f
 private const val COLONNES = 3
 private val FORME_CASE = RoundedCornerShape(14.dp)
-private val HAUTEUR_CASE = 128.dp
+private val HAUTEUR_CASE = 188.dp
 
 /** Repère des fissures, celui de la case de la maquette (116 × 128). */
 private val REPERE_FISSURES = Size(116f, 128f)
@@ -381,7 +386,12 @@ private fun CaseCible(case: CaseCapture, t: Float, modifier: Modifier) {
     val fondAvant = if (case.avant == StatutEspece.NON_VUE) couleurs.piste else MaterialTheme.colorScheme.surface
     Box(modifier) {
         if (ouverte) {
-            FaceCase(case, case.apres, t = t, modifier = Modifier.matchParentSize())
+            val decouverte = if (case.avant == StatutEspece.NON_VUE) {
+                phase(t, ChronoCapture.DECOUVERTE, ChronoCapture.DECOUVERTE_DUREE)
+            } else {
+                1f
+            }
+            FaceCase(case, case.apres, t = t, modifier = Modifier.matchParentSize(), decouverte = decouverte)
         } else {
             FaceCase(case, case.avant, t = null, modifier = Modifier.matchParentSize())
         }
@@ -397,6 +407,19 @@ private fun CaseCible(case: CaseCapture, t: Float, modifier: Modifier) {
                 val secondaires = phase(t, ChronoCapture.FISSURES_SECONDAIRES, ChronoCapture.FISSURES_DUREE)
                 tracerFissure(FISSURE_PRINCIPALE, principale, refroidi)
                 FISSURES_SECONDAIRES.forEach { tracerFissure(it, secondaires, refroidi) }
+            }
+            val eclat = ((t - ChronoCapture.DECOUVERTE) / ChronoCapture.ECLAT_DUREE).coerceIn(0f, 1f)
+            if (case.avant == StatutEspece.NON_VUE && eclat > 0f && eclat < 1f) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        listOf(Color.White, LueurMagma.copy(alpha = 0.8f), Color.Transparent),
+                        center = Offset(size.width / 2f, size.height * 0.42f),
+                        radius = size.width * 0.6f * (0.4f + eclat),
+                    ),
+                    radius = size.width * 0.6f * (0.4f + eclat),
+                    center = Offset(size.width / 2f, size.height * 0.42f),
+                    alpha = sin(PI.toFloat() * eclat),
+                )
             }
             val onde = ((t - ChronoCapture.ONDE_CASE) / ChronoCapture.ONDE_CASE_DUREE).coerceIn(0f, 1f)
             if (onde > 0f && onde < 1f) {
@@ -451,7 +474,13 @@ private fun DrawScope.tracerFissure(points: List<Offset>, p: Float, alpha: Float
  * s'allument l'un après l'autre.
  */
 @Composable
-private fun FaceCase(case: CaseCapture, statut: StatutEspece, t: Float?, modifier: Modifier = Modifier) {
+private fun FaceCase(
+    case: CaseCapture,
+    statut: StatutEspece,
+    t: Float?,
+    modifier: Modifier = Modifier,
+    decouverte: Float = if (statut == StatutEspece.NON_VUE) 0f else 1f,
+) {
     val couleurs = OmegadexTheme.couleurs
     val silhouette = statut == StatutEspece.NON_VUE
     Column(
@@ -474,6 +503,7 @@ private fun FaceCase(case: CaseCapture, statut: StatutEspece, t: Float?, modifie
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+        SpriteEspece(case.especeId, decouverte, Modifier.align(Alignment.CenterHorizontally))
         if (!silhouette) {
             case.types.firstOrNull()?.let { type ->
                 Row(

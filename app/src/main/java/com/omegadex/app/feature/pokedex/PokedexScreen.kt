@@ -59,6 +59,7 @@ import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.ui.components.ChampTexte
 import com.omegadex.app.ui.components.IconeType
 import com.omegadex.app.ui.components.IconesTypes
+import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.ApercusClairSombre
@@ -254,6 +255,11 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
                     color = if (silhouette) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                )
+                SpriteEspece(
+                    especeId = espece.id,
+                    decouverte = if (silhouette) 0f else 1f,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
                 if (!silhouette) IconesTypes(espece.types)
                 if (espece.echangeRequis) {
