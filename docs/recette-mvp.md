@@ -2,7 +2,7 @@
 
 Résultat de la recette du milestone M2 · MVP, du 29 octobre 2026, sur `dev` au commit `8b57061` (données du jeu en version 5).
 
-**Verdict : pas encore prêt pour la release v1.0.0.** Deux défauts bloquants sont ouverts (B1 et B2), et un troisième reste à confirmer sur appareil (B3).
+**Verdict : prêt pour la release v1.0.0 une fois fusionnées les PR #202, #203 et #204.** Elles corrigent les trois défauts trouvés (B1, B2 et B3). Avec ces correctifs, la recette passe sur les trois profils d'émulateur. Restent la vraie run de T16.3 et la validation à l'œil des maquettes.
 
 ## Synthèse
 
@@ -12,17 +12,17 @@ Résultat de la recette du milestone M2 · MVP, du 29 octobre 2026, sur `dev` au
 | Déblocage d'étape | ✅ | `CocherQueteUseCaseTest` ; recette : étapes 0 à 10, l'étape suivante est vérifiée cachée après chaque quête |
 | Fiche complète | ✅ | `FichePokemonViewModelTest`, `ChaineEvolutionTest` ; recette : les 6 onglets |
 | Plafond et difficulté | ✅ | `ReglesDifficulteTest`, `MoteurDefisReglesTest`, `MoteurDefisEmbarqueTest` (couverture de `domain/defi` : 99 %) |
-| Statut en 1 touche | ⚠️ | ✅ sur Pixel et dans les tests ; ❌ sur l'émulateur Android 8 (B3) |
-| Export / import | ❌ | La logique est testée (`ExportSauvegardeTest`, `ImportSauvegardeTest`), mais **aucun écran ne permet d'exporter ni d'importer** (B1) |
+| Statut en 1 touche | ✅ | `PokedexViewModelTest` ; recette : Non vu → Vu → Capturé sur les 3 profils (Android 8 après #204) |
+| Export / import | ✅ | `ExportSauvegardeTest`, `ImportSauvegardeTest`, `SauvegardeViewModelTest` ; recette : export avec le sélecteur de fichiers, réimport sans doublon (après #202) |
 | Mode avion | ✅ | L'application ne déclare pas la permission `INTERNET` ; recette : redémarrage et les 5 onglets en mode avion |
 
 ## Défauts trouvés
 
 | N° | Gravité | Défaut | Où |
 | --- | --- | --- | --- |
-| B1 (#199) | **Bloquant** | L'export et l'import de la sauvegarde (T15) n'ont pas d'interface. `ExporterProgressionUseCase` et `ImporterSauvegardeUseCase` ne sont appelés par aucun écran, et il n'y a ni chaîne ni sélecteur de fichiers (`CreateDocument` / `OpenDocument`). Le travail de T15.1 prévoyait « l'export via le sélecteur de fichiers Android ». | `feature/` : aucun appel |
-| B2 (#200) | **Bloquant sur tablette** | Les écrans de connexion, d'inscription et de création de run ne tiennent pas compte des barres système. `MainActivity` appelle `enableEdgeToEdge()`, mais seuls l'application principale (`Scaffold`) et la barre de navigation appliquent les marges. Sur la tablette, le bouton « Commencer l'aventure » se retrouve sous la barre des tâches : la première run ne peut pas être créée. | `OmegadexRacine.kt` : `EcransDeCompte`, `CreationRunScreen` |
-| B3 (#201) | À confirmer | Sur l'émulateur Android 8.0 (API 26), toucher la bande des rubis d'une case du Pokédex ouvre la fiche au lieu de faire avancer le statut. Le même geste fonctionne sous Android 15. C'est reproduit à chaque passage de la recette, mais à confirmer sur un vrai appareil Android 8. | `PokedexScreen.kt` : `BandeStatut` dans la case cliquable |
+| B1 (#199) | Bloquant · **corrigé par #202** | L'export et l'import de la sauvegarde (T15) n'avaient pas d'interface. Correctif : carte « Sauvegarde » dans Mes runs, avec export et import par le sélecteur de fichiers Android (`CreateDocument` / `OpenDocument`) et un message pour chaque résultat. | `feature/sauvegarde/` |
+| B2 (#200) | Bloquant sur tablette · **corrigé par #203** | Les écrans de connexion, d'inscription et de création de run passaient sous les barres système (`enableEdgeToEdge()` sans marges). Sur tablette, « Commencer l'aventure » était sous la barre des tâches. Correctif : `safeDrawingPadding()` sur ces écrans, et le `Scaffold` consomme ses marges. | `ConnexionScreen`, `InscriptionScreen`, `CreationRunScreen`, `OmegadexApp` |
+| B3 (#201) | **Corrigé par #204** | Sous Android 8, toucher la bande des rubis ouvrait la fiche : c'était une zone cliquable placée dans celle de la case. Correctif : le haut de la case et la bande sont deux zones voisines. Vérifié sur l'émulateur Android 8. | `PokedexScreen.kt` : `CaseEspece` |
 
 ## Recette sur émulateur (T16.2 et T16.3)
 
@@ -30,12 +30,12 @@ Workflow `Recette` (`.github/workflows/recette.yml`) et script `tools/recette/re
 
 | Profil | Appareil | Résultat |
 | --- | --- | --- |
-| Pixel | Pixel 6, Android 15 (API 35), 1080×2400 | **47 / 47** (avec la run jusqu'à la Ligue) |
-| Android 8.0 | API 26, 1080×1920 | bloqué par B3 au statut en une touche |
-| Tablette | Nexus 10, Android 14 (API 34), 2560×1600 | bloqué par B2 à la création de la run |
+| Pixel | Pixel 6, Android 15 (API 35), 1080×2400 | **50 / 50** (avec la run jusqu'à la Ligue) |
+| Android 8.0 | API 26, 1080×1920 | **38 / 38** avec #204 (avant : bloqué par B3) |
+| Tablette | Nexus 10, Android 14 (API 34), 2560×1600 | **38 / 38** avec #203 (avant : bloqué par B2) |
 | Tests instrumentés | Pixel 6, Android 15 | ✅ (`ChiffrementProgressionTest` : la base progression n'est pas lisible sans la clé) |
 
-Aucun plantage ni ANR d'Omégadex n'a été relevé sur les trois profils.
+Aucun plantage ni ANR d'Omégadex n'a été relevé sur les trois profils. Les résultats « avec » ont été obtenus sur `dev-frontend` augmenté des trois correctifs, le 29 octobre 2026.
 
 ### Pour relancer la recette
 
@@ -79,13 +79,14 @@ Aucun plantage ni ANR d'Omégadex n'a été relevé sur les trois profils.
 | T14.1–T14.3, T14.5, T14.6 | Conforme à la maquette | revue visuelle | animations à juger sur appareil | 👁 |
 | T14.4, T14.5 | Testé avec « Supprimer les animations » | test JVM + émulateur | `AnimationsReduitesTest` ; la recette tourne animations coupées | ✅ |
 | T15.1 | Le fichier ne contient aucun mot de passe | test JVM | `ExportSauvegardeTest` « … sans aucun mot de passe » | ✅ |
-| T15.1 | Export via le sélecteur de fichiers Android (travail à réaliser) | inspection du code | **aucun écran n'appelle l'export ni l'import** : `ExporterProgressionUseCase` et `ImporterSauvegardeUseCase` n'ont pas d'interface | ❌ |
-| T15.2 | Un fichier invalide est refusé proprement | test JVM | `ImportSauvegardeTest` « un fichier invalide est refusé proprement » ; aucun écran pour importer (voir B1) | ⚠️ logique seule |
+| T15.1 | Export via le sélecteur de fichiers Android (travail à réaliser) | émulateur | recette « export dans un fichier JSON » (après #202) | ✅ |
+| T15.2 | Un fichier invalide est refusé proprement | test JVM | `ImportSauvegardeTest`, `SauvegardeViewModelTest` « un fichier invalide est refusé avec sa raison » | ✅ |
 
 ## Reste à faire avant la release v1.0.0
 
-1. Corriger B1 (écran d'export et d'import) et B2 (marges système des écrans de compte et de création de run).
-2. Confirmer B3 sur un appareil Android 8, puis le corriger si c'est le cas.
-3. Valider à l'œil les points 👁 : maquettes, animations, fluidité de la grille.
-4. T16.3 : jouer une vraie run avec l'application jusqu'à la Ligue et ouvrir une issue `type: bug` par problème trouvé.
-5. Relancer le workflow Recette : les trois profils doivent passer au vert.
+1. Fusionner #202, #203 et #204 dans `dev-frontend`, puis intégrer dans `dev`.
+2. Valider à l'œil les points 👁 : maquettes, animations, fluidité de la grille.
+3. T16.3 : jouer une vraie run avec l'application jusqu'à la Ligue et ouvrir une issue `type: bug` par problème trouvé.
+4. Relancer le workflow Recette sur `dev` : les trois profils doivent rester au vert.
+
+Petit défaut relevé en passant, sans gravité : « 1 étapes validées sur 13 » dans Mes runs (pluriel de `mes_runs_progression`).
