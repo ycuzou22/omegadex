@@ -19,7 +19,8 @@ class ReglagesDataStoreTest {
     @Test
     fun `sons et vibrations actifs, ambiance coupee par defaut, puis chaque reglage est garde`() = runTest {
         val portee = TestScope(UnconfinedTestDispatcher(testScheduler))
-        val magasin = PreferenceDataStoreFactory.create(scope = portee) { File(dossier.root, "reglages.preferences_pb") }
+        val fichier = File(dossier.root, "reglages.preferences_pb")
+        val magasin = PreferenceDataStoreFactory.create(scope = portee) { fichier }
         val reglages = ReglagesDataStore(magasin)
 
         assertEquals(Reglages(sons = true, vibrations = true, ambiance = false), reglages.reglages.first())
