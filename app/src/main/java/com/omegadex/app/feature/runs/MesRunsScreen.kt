@@ -38,6 +38,7 @@ import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.Run
 import com.omegadex.app.domain.run.ResumeRun
 import com.omegadex.app.domain.run.Starter
+import com.omegadex.app.feature.sauvegarde.CarteSauvegarde
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.ProgressGauge
 import com.omegadex.app.ui.theme.ApercusClairSombre
@@ -50,7 +51,10 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-/** Liste des runs du compte avec leur progression ; toucher une run en fait la run active. */
+/**
+ * Liste des runs du compte avec leur progression ; toucher une run en fait la run active.
+ * En bas, la carte Sauvegarde exporte ou importe la progression du compte.
+ */
 @Composable
 fun MesRunsScreen(
     onRetour: () -> Unit,
@@ -65,6 +69,7 @@ fun MesRunsScreen(
         onNouvelleRun = onNouvelleRun,
         onRetour = onRetour,
         modifier = modifier,
+        sauvegarde = { CarteSauvegarde() },
     )
 }
 
@@ -75,6 +80,7 @@ private fun MesRunsContenu(
     onNouvelleRun: () -> Unit,
     onRetour: () -> Unit,
     modifier: Modifier = Modifier,
+    sauvegarde: @Composable () -> Unit = {},
 ) {
     Box(
         modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
@@ -105,6 +111,8 @@ private fun MesRunsContenu(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+            // Export et import de la progression du compte (T15).
+            item { sauvegarde() }
         }
     }
 }
