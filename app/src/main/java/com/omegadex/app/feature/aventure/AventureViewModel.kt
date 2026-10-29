@@ -10,7 +10,7 @@ import com.omegadex.app.domain.model.TypeQuete
 import com.omegadex.app.domain.pokedex.CapturerEspeceUseCase
 import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
 import com.omegadex.app.domain.pokedex.ResultatCapture
-import com.omegadex.app.domain.pokedex.possibleDansRubisOmega
+import com.omegadex.app.domain.rencontre.RencontresDeLEtapeUseCase
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -41,6 +41,7 @@ class AventureViewModel @Inject constructor(
     private val cocherQuete: CocherQueteUseCase,
     private val observerPokedex: ObserverPokedexUseCase,
     private val capturer: CapturerEspeceUseCase,
+    private val rencontresDeLEtape: RencontresDeLEtapeUseCase,
 ) : ViewModel() {
     private val evenementsInternes = Channel<EtapeValidee>(Channel.BUFFERED)
     private val capturesInternes = Channel<CaptureAnimee>(Channel.BUFFERED)
@@ -63,7 +64,7 @@ class AventureViewModel @Inject constructor(
                 jeu.quetes(etape.id),
                 progression.quetesCochees(enCours.run.id),
                 jeu.lieuxDebloques(etape.id),
-                rencontres(enCours.run.id, etape.id),
+                rencontres(enCours.run.id, etape.id, enCours.run.starterId),
             ) { quetes, cochees, lieux, rencontres ->
                 val affichees = quetes.sortedBy { it.ordre }.map {
                     it.type to QueteAffichee(it.id, it.description, it.recompense, it.id in cochees)
@@ -124,32 +125,35 @@ class AventureViewModel @Inject constructor(
         }
     }
 
-    /** Espèces des lieux débloqués par l'étape, une ligne par espèce, avec leur état de capture dans la run. */
-    private fun rencontres(runId: Long, etapeId: Int): Flow<List<RencontreAffichee>> =
-        jeu.lieuxDebloques(etapeId).flatMapLatest { lieux ->
-            if (lieux.isEmpty()) {
-                flowOf(emptyList())
-            } else {
-                combine(lieux.map { jeu.especesDuLieu(it.id) }) { parLieu -> parLieu.toList().flatten() }
-            }
-        }.combine(jeu.pokedexNational()) { liste, especes ->
-            val parId = especes.associateBy { it.id }
-            liste.filter { it.possibleDansRubisOmega() }.distinctBy { it.especeId }.map {
-                val espece = parId[it.especeId]
-                RencontreAffichee(
-                    especeId = it.especeId,
-                    nom = espece?.nom ?: "#${it.especeId}",
-                    type = espece?.types?.firstOrNull(),
-                    lieu = it.lieu.nom,
-                    niveauMin = it.niveauMin,
-                    niveauMax = it.niveauMax,
-                    taux = it.taux,
-                    capturee = false,
-                )
-            }
-        }.combine(progression.statuts(runId)) { lignes, statuts ->
-            lignes.map { it.copy(capturee = (statuts[it.especeId] ?: StatutEspece.NON_VUE) >= StatutEspece.CAPTUREE) }
+    /** Rencontres débloquées à l'étape, avec l'état de capture de chaque espèce dans la run. */
+    private fun rencontres(runId: Long, etapeId: Int, starterId: Int): Flow<List<GroupeRencontresAffiche>> = combine(
+        rencontresDeLEtape(etapeId, starterId),
+        jeu.pokedexNational(),
+        progression.statuts(runId),
+    ) { groupes, especes, statuts ->
+        val parId = especes.associateBy { it.id }
+        groupes.map { groupe ->
+            GroupeRencontresAffiche(
+                lieuId = groupe.lieu.id,
+                lieu = groupe.lieu.nom,
+                debloqueur = groupe.debloqueur,
+                lignes = groupe.rencontres.map { (rencontre, echange) ->
+                    val espece = parId[rencontre.especeId]
+                    RencontreAffichee(
+                        especeId = rencontre.especeId,
+                        nom = espece?.nom ?: "#${rencontre.especeId}",
+                        types = espece?.types.orEmpty(),
+                        methode = rencontre.methode,
+                        niveauMin = rencontre.niveauMin,
+                        niveauMax = rencontre.niveauMax,
+                        taux = rencontre.taux,
+                        capturee = (statuts[rencontre.especeId] ?: StatutEspece.NON_VUE) >= StatutEspece.CAPTUREE,
+                        echange = echange,
+                    )
+                },
+            )
         }
+    }
 
     private companion object {
         const val ARRET_MS = 5_000L

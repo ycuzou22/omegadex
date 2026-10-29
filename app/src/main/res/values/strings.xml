@@ -325,4 +325,24 @@
     <string name="equipe_niveau_titre">À quel niveau est %1$s ?</string>
     <string name="equipe_ajouter">Ajouter</string>
     <string name="equipe_defi_propose">Défi pour ce nouveau membre : %1$s</string>
+    <string name="rencontre_nouveau">Nouveau · %1$s</string>
+    <string name="aventure_ouvrir_lieu">Ouvrir la fiche de %1$s</string>
+    <string name="rencontre_recu">Reçu</string>
+    <string name="rencontre_recu_description">Marquer %1$s comme reçu par échange</string>
+    <string name="rencontre_echange_saphir">Échange depuis Saphir Alpha</string>
+    <string name="rencontre_echange_hors_hoenn">Échange ou transfert depuis un autre jeu</string>
+    <string name="rencontre_verrou">Plus tard · étape %1$d</string>
+    <string name="rencontre_verrou_debloqueur">Plus tard · étape %1$d · %2$s</string>
+    <string name="debloqueur_canne">Canne</string>
+    <string name="debloqueur_eclate_roc">Éclate-Roc</string>
+    <string name="debloqueur_surf">Surf</string>
+    <string name="debloqueur_super_canne">Super Canne</string>
+    <string name="debloqueur_mega_canne">Méga Canne</string>
+    <string name="debloqueur_plongee">Plongée</string>
+    <string name="debloqueur_apres_groudon">après Groudon</string>
+    <string name="debloqueur_pokedex_national">Pokédex National</string>
+    <string name="debloqueur_lunettes_sable">Lunettes Sable</string>
+    <string name="debloqueur_devon_scope">Devon Scope</string>
+    <string name="debloqueur_apres_ligue">après la Ligue</string>
+    <string name="debloqueur_apres_delta">après l\'Épisode Delta</string>
 </resources>

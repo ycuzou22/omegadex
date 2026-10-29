@@ -45,6 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.model.MethodeRencontre.HERBE
+import com.omegadex.app.domain.model.MethodeRencontre.SURF
+import com.omegadex.app.domain.rencontre.Debloqueur
 import com.omegadex.app.ui.animations.AnimationCapture
 import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.components.CarteRubis
@@ -136,12 +139,16 @@ private fun AventureContenu(
                 }
                 if (uiState.rencontres.isNotEmpty()) {
                     item(key = "rencontres") { EnTeteRencontres(uiState.rencontres) }
-                    items(uiState.rencontres, key = { "rencontre-${it.especeId}" }) { rencontre ->
-                        LigneRencontre(
-                            rencontre,
-                            onAttraper = { rencontres.onAttraper(rencontre.especeId) },
-                            onRubis = { rencontres.onRubis(rencontre.especeId, it) },
-                        )
+                    uiState.rencontres.forEach { groupe ->
+                        val cle = "${groupe.lieuId}-${groupe.debloqueur}"
+                        item(key = "groupe-$cle") { EnTeteGroupe(groupe, onLieu) }
+                        items(groupe.lignes, key = { "rencontre-$cle-${it.especeId}" }) { rencontre ->
+                            LigneRencontre(
+                                rencontre,
+                                onAttraper = { rencontres.onAttraper(rencontre.especeId) },
+                                onRubis = { rencontres.onRubis(rencontre.especeId, it) },
+                            )
+                        }
                     }
                 }
                 if (uiState.annexes.isNotEmpty()) {
@@ -395,8 +402,21 @@ private fun AventurePreview() {
                 annexes = listOf(QueteAffichee(4, "Capturer Dynavolt (Route 110)", null, false)),
                 lieux = listOf(LieuAffiche(1, "Lavandia"), LieuAffiche(2, "Route 110")),
                 rencontres = listOf(
-                    RencontreAffichee(309, "Dynavolt", "electrik", "Route 110", 12, 13, 15, capturee = false),
-                    RencontreAffichee(316, "Gloupti", "poison", "Route 110", 12, 13, 15, capturee = true),
+                    GroupeRencontresAffiche(
+                        2,
+                        "Route 110",
+                        null,
+                        listOf(
+                            RencontreAffichee(309, "Dynavolt", listOf("electrik"), HERBE, 12, 13, 15, false),
+                            RencontreAffichee(316, "Gloupti", listOf("poison"), HERBE, 12, 13, 15, true),
+                        ),
+                    ),
+                    GroupeRencontresAffiche(
+                        3,
+                        "Route 104",
+                        Debloqueur.SURF,
+                        listOf(RencontreAffichee(279, "Bekipan", listOf("eau", "vol"), SURF, 25, 25, 5, false)),
+                    ),
                 ),
             ),
             onCocher = { _, _ -> },

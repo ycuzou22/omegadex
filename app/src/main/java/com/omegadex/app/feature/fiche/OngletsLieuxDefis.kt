@@ -31,6 +31,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.EtatDefi
+import com.omegadex.app.domain.rencontre.Echange
+import com.omegadex.app.feature.aventure.nomDebloqueur
 import com.omegadex.app.feature.lieu.nomMethodeRencontre
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.theme.OmegadexTheme
@@ -109,13 +111,23 @@ private fun LigneLieu(lieu: LieuFiche) {
         )
         lieu.etape?.let { etape ->
             Text(
-                stringResource(
-                    if (eteint) R.string.fiche_lieux_etape_a_venir else R.string.fiche_lieux_etape,
-                    etape.id,
-                    etape.titre,
-                ),
+                listOfNotNull(
+                    stringResource(
+                        if (eteint) R.string.fiche_lieux_etape_a_venir else R.string.fiche_lieux_etape,
+                        etape.id,
+                        etape.titre,
+                    ),
+                    lieu.debloqueur?.let { stringResource(nomDebloqueur(it)) },
+                ).joinToString(" · "),
                 style = MaterialTheme.typography.labelMedium,
                 color = if (eteint) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+            )
+        }
+        if (lieu.echange == Echange.SAPHIR_ALPHA) {
+            Text(
+                stringResource(R.string.rencontre_echange_saphir),
+                style = MaterialTheme.typography.labelMedium,
+                color = OmegadexTheme.couleurs.gemme,
             )
         }
         HorizontalDivider(Modifier.padding(top = 8.dp), color = OmegadexTheme.couleurs.piste)
