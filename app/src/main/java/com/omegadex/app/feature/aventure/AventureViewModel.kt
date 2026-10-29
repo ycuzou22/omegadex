@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.aventure.CocherQueteUseCase
 import com.omegadex.app.domain.aventure.ResultatCochage
+import com.omegadex.app.domain.badge.idsValidees
 import com.omegadex.app.domain.model.TypeQuete
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 class AventureViewModel @Inject constructor(
     observerRunEnCours: ObserverRunEnCoursUseCase,
     private val jeu: JeuRepository,
-    progression: ProgressionRepository,
+    private val progression: ProgressionRepository,
     private val cocherQuete: CocherQueteUseCase,
 ) : ViewModel() {
     private val evenementsInternes = Channel<EtapeValidee>(Channel.BUFFERED)
@@ -81,7 +82,8 @@ class AventureViewModel @Inject constructor(
                     .flatMap { it.recompense.orEmpty().split(",") }
                     .map { it.trim() }
                     .firstOrNull { it.startsWith(PREFIXE_BADGE) }
-                evenementsInternes.send(EtapeValidee(etape.numero, etape.titre, badge, suivante))
+                val validees = progression.etapes(etape.runId).first().idsValidees()
+                evenementsInternes.send(EtapeValidee(etape.numero, etape.titre, badge, suivante, validees))
             }
         }
     }

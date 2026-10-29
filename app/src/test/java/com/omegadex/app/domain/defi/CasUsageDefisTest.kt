@@ -282,6 +282,10 @@ private class FausseProgression : ProgressionRepository {
         statutsFlux.value = statutsFlux.value + (especeId to statut)
     }
 
+    override fun notes(runId: Long, especeId: Int) = flowOf("")
+
+    override suspend fun definirNotes(runId: Long, especeId: Int, notes: String) = Unit
+
     override fun equipe(runId: Long): Flow<List<MembreEquipe>> = equipeFlux
 
     override suspend fun placerMembre(runId: Long, membre: MembreEquipe) {

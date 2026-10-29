@@ -43,6 +43,7 @@ import com.omegadex.app.feature.aventure.CelebrationEtape
 import com.omegadex.app.feature.aventure.EtapeValidee
 import com.omegadex.app.feature.defis.nomTypeDefi
 import com.omegadex.app.feature.runs.titreDifficulte
+import com.omegadex.app.ui.components.BoiteBadges
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.VarianteBouton
 import com.omegadex.app.ui.theme.ApercusClairSombre
@@ -93,6 +94,7 @@ private fun AccueilContenu(
             EnTeteAccueil(uiState, actions.onChangerDeJoueur, actions.onMesRuns)
             etape?.let { CarteEtape(it, actions.onCocher) }
             uiState.jauges?.let { RangeeJauges(it) }
+            uiState.badges?.let { BoiteBadges(it, Modifier.fillMaxWidth()) }
             uiState.defiDuJour?.let { CarteDefiDuJour(it, actions.onRelever) }
             OmegaButton(
                 stringResource(R.string.accueil_changer_run),

@@ -48,7 +48,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -58,9 +57,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.TypeChip
+import com.omegadex.app.ui.components.brosseGemmeEspece
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
-import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.LueurMagma
 import com.omegadex.app.ui.theme.Magma
@@ -268,7 +267,7 @@ private fun Revelation(apres: EspeceAnimee, textes: TextesEvolution, t: Float, o
                         rotationZ = if (p < 0.6f) lerp(-25f, 6f, montee) else lerp(6f, 0f, pose)
                     }
                     .clip(FormeGemmeEvoluee)
-                    .background(brosseEspece(apres.types)),
+                    .background(brosseGemmeEspece(apres.types)),
             )
         }
         Text(
@@ -315,21 +314,6 @@ private fun Modifier.montee(t: Float, debut: Float, duree: Float) = graphicsLaye
     val p = avancement(t, debut, duree)
     alpha = p
     translationY = (1f - p) * 14.dp.toPx()
-}
-
-/** Dégradé de gemme aux couleurs de l'espèce : reflet clair, type principal, second type (ou ombre). */
-private fun brosseEspece(types: List<String>): Brush {
-    val principal = CouleursTypes.de(types.firstOrNull().orEmpty())
-    val second = types.getOrNull(1)?.let { CouleursTypes.de(it) } ?: lerp(principal, Color.Black, 0.35f)
-    val reflet = lerp(principal, Color.White, 0.4f)
-    return Brush.linearGradient(
-        0f to reflet,
-        0.38f to reflet,
-        0.38f to principal,
-        0.7f to principal,
-        0.7f to second,
-        1f to second,
-    )
 }
 
 /** Gemme plus large de l'espèce évoluée (`polygon(22% 0, 78% 0, 100% 30%, 50% 100%, 0 30%)`). */
