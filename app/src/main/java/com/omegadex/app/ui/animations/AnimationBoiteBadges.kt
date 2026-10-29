@@ -65,7 +65,7 @@ import kotlinx.coroutines.delay
  * avance vers la niche du nouveau badge, le badge y est forgé (voir [ChronoEnvolBadge]), puis la caméra recule
  * pour montrer toute la collection et le badge est annoncé.
  */
-private object Chrono {
+private object ChronoBoite {
     const val ARRIVEE_DUREE = 520f
     const val COUVERCLE = 600f
     const val COUVERCLE_DUREE = 900f
@@ -118,22 +118,22 @@ fun AnimationBoiteBadges(
         }
     }
     LaunchedEffect(nouveau) {
-        if (!reduites) temps.animateTo(Chrono.FIN, tween(Chrono.FIN.toInt(), easing = LinearEasing))
-        delay(if (reduites) Chrono.ATTENTE_REDUITE_MS else Chrono.ATTENTE_FIN_MS)
+        if (!reduites) temps.animateTo(ChronoBoite.FIN, tween(ChronoBoite.FIN.toInt(), easing = LinearEasing))
+        delay(if (reduites) ChronoBoite.ATTENTE_REDUITE_MS else ChronoBoite.ATTENTE_FIN_MS)
         terminer()
     }
     LaunchedEffect(passe) {
         if (passe && !reduites) {
-            delay(Chrono.ATTENTE_FIN_MS)
+            delay(ChronoBoite.ATTENTE_FIN_MS)
             terminer()
         }
     }
-    val t = if (passe) Chrono.FIN else temps.value
+    val t = if (passe) ChronoBoite.FIN else temps.value
     ContenuBoiteBadges(
         obtenus = obtenus,
         nouveau = nouveau,
         t = t,
-        onToucher = { if (t < Chrono.FIN) passe = true else terminer() },
+        onToucher = { if (t < ChronoBoite.FIN) passe = true else terminer() },
         modifier = modifier,
     )
 }
@@ -181,19 +181,19 @@ private fun ContenuBoiteBadges(
 }
 
 /** 0 → 1 quand la caméra avance vers la niche, 1 pendant la forge, puis retour à 0. */
-private fun zoomCamera(t: Float): Float = phase(t, Chrono.CAMERA_AVANT, Chrono.CAMERA_DUREE, EASE_CAMERA) -
-    phase(t, Chrono.CAMERA_RETOUR, Chrono.CAMERA_RETOUR_DUREE, EASE_CAMERA)
+private fun zoomCamera(t: Float): Float = phase(t, ChronoBoite.CAMERA_AVANT, ChronoBoite.CAMERA_DUREE, EASE_CAMERA) -
+    phase(t, ChronoBoite.CAMERA_RETOUR, ChronoBoite.CAMERA_RETOUR_DUREE, EASE_CAMERA)
 
 @Composable
 private fun Ecrin(obtenus: Set<BadgeArene>, nouveau: BadgeArene, t: Float, onNiche: (Rect) -> Unit) {
-    val arrivee = phase(t, 0f, Chrono.ARRIVEE_DUREE, EASE_REBOND)
+    val arrivee = phase(t, 0f, ChronoBoite.ARRIVEE_DUREE, EASE_REBOND)
     Box(
         Modifier
             .padding(horizontal = 24.dp)
             .widthIn(max = 380.dp)
             .fillMaxWidth()
             .graphicsLayer {
-                alpha = phase(t, 0f, Chrono.ARRIVEE_DUREE)
+                alpha = phase(t, 0f, ChronoBoite.ARRIVEE_DUREE)
                 translationY = 90.dp.toPx() * (1f - arrivee)
                 scaleX = 0.85f + 0.15f * arrivee
                 scaleY = scaleX
@@ -201,18 +201,18 @@ private fun Ecrin(obtenus: Set<BadgeArene>, nouveau: BadgeArene, t: Float, onNic
     ) {
         BoiteBadges(
             obtenus = obtenus,
-            arrivee = ArriveeBadge(nouveau, t - Chrono.ENVOL),
-            compteur = if (t < Chrono.COMPTEUR) obtenus.size - 1 else obtenus.size,
+            arrivee = ArriveeBadge(nouveau, t - ChronoBoite.ENVOL),
+            compteur = if (t < ChronoBoite.COMPTEUR) obtenus.size - 1 else obtenus.size,
             lueur = lueurInterieure(t),
             onNicheArrivee = onNiche,
         )
-        Couvercle(phase(t, Chrono.COUVERCLE, Chrono.COUVERCLE_DUREE, LinearEasing))
+        Couvercle(phase(t, ChronoBoite.COUVERCLE, ChronoBoite.COUVERCLE_DUREE, LinearEasing))
     }
 }
 
 /** La braise monte du fond de l'écrin à son ouverture, puis reste en veilleuse. */
 private fun lueurInterieure(t: Float): Float {
-    val p = ((t - Chrono.LUEUR) / 2_600f).coerceIn(0f, 1f)
+    val p = ((t - ChronoBoite.LUEUR) / 2_600f).coerceIn(0f, 1f)
     return when {
         p <= 0f -> 0f
         p < 0.3f -> p / 0.3f
@@ -261,7 +261,7 @@ private fun BoxScope.TextesSequence(nom: String, t: Float) {
         modifier = Modifier
             .align(Alignment.TopEnd)
             .padding(16.dp)
-            .graphicsLayer { alpha = 1f - phase(t, Chrono.ANNONCE - 200f, 300f) },
+            .graphicsLayer { alpha = 1f - phase(t, ChronoBoite.ANNONCE - 200f, 300f) },
     )
     Text(
         stringResource(R.string.badges_annonce, nom),
@@ -273,7 +273,7 @@ private fun BoxScope.TextesSequence(nom: String, t: Float) {
             .align(Alignment.BottomCenter)
             .padding(horizontal = 24.dp, vertical = 96.dp)
             .graphicsLayer {
-                val p = phase(t, Chrono.ANNONCE, Chrono.ANNONCE_DUREE)
+                val p = phase(t, ChronoBoite.ANNONCE, ChronoBoite.ANNONCE_DUREE)
                 alpha = p
                 translationY = 6.dp.toPx() * (1f - p)
             },
@@ -287,7 +287,7 @@ private fun AnimationBoiteBadgesPreview() {
         ContenuBoiteBadges(
             obtenus = setOf(BadgeArene.ROCHE, BadgeArene.POING, BadgeArene.DYNAMO),
             nouveau = BadgeArene.DYNAMO,
-            t = Chrono.FIN,
+            t = ChronoBoite.FIN,
             onToucher = {},
         )
     }
