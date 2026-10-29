@@ -38,6 +38,7 @@ import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.Run
 import com.omegadex.app.domain.run.ResumeRun
 import com.omegadex.app.domain.run.Starter
+import com.omegadex.app.feature.reglages.CarteReglagesSons
 import com.omegadex.app.feature.sauvegarde.CarteSauvegarde
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.ProgressGauge
@@ -69,7 +70,12 @@ fun MesRunsScreen(
         onNouvelleRun = onNouvelleRun,
         onRetour = onRetour,
         modifier = modifier,
-        sauvegarde = { CarteSauvegarde() },
+        sauvegarde = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                CarteSauvegarde()
+                CarteReglagesSons()
+            }
+        },
     )
 }
 

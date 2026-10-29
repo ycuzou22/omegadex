@@ -47,6 +47,8 @@ import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.ProgressGaugeRing
 import com.omegadex.app.ui.components.VarianteBouton
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
@@ -64,6 +66,7 @@ fun DefisScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val annonces = remember { SnackbarHostState() }
     val ressources = LocalResources.current
+    val sons = LocalSons.current
     LaunchedEffect(viewModel) {
         viewModel.refusEspece.collect { annonces.showSnackbar(ressources.getString(R.string.defis_refus_espece)) }
     }
@@ -74,7 +77,10 @@ fun DefisScreen(
                 onOnglet = viewModel::choisirOnglet,
                 onFiltre = viewModel::filtrer,
                 onRelever = viewModel::relever,
-                onValider = viewModel::valider,
+                onValider = { defiId, reussi ->
+                    sons.jouer(if (reussi) Son.DEFI_REUSSI else Son.DEFI_ECHOUE)
+                    viewModel.valider(defiId, reussi)
+                },
                 onRetenter = viewModel::retenter,
                 onEspece = onEspece,
                 onRetour = onRetour,

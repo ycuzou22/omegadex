@@ -60,6 +60,8 @@ import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.brosseGemmeEspece
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.components.rememberSprite
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.FormeGemme
@@ -148,6 +150,7 @@ private fun OngletsEtPages(modifier: Modifier, onglet: @Composable (OngletFiche)
     val pages = rememberPagerState(initialPage = OngletFiche.STATS.ordinal) { OngletFiche.entries.size }
     val portee = rememberCoroutineScope()
     val reduites = OmegadexTheme.animationsReduites
+    val sons = LocalSons.current
     Column(modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
             Modifier
@@ -165,6 +168,7 @@ private fun OngletsEtPages(modifier: Modifier, onglet: @Composable (OngletFiche)
                         .clip(MaterialTheme.shapes.small)
                         .background(if (choisi) MaterialTheme.colorScheme.primary else Color.Transparent)
                         .selectable(selected = choisi, role = Role.Tab) {
+                            if (!choisi) sons.jouer(Son.CLIC)
                             portee.launch {
                                 if (reduites) {
                                     pages.scrollToPage(entree.ordinal)
@@ -329,6 +333,7 @@ private fun Ecrin(espece: Espece, statut: StatutEspece?, texte: Color) {
 
 @Composable
 private fun PiedFiche(fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
+    val sons = LocalSons.current
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         fiche.statut?.let { statut ->
             val libelle = stringResource(libelleStatut(statut))
@@ -339,8 +344,14 @@ private fun PiedFiche(fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
                     .combinedClickable(
                         onClickLabel = stringResource(R.string.pokedex_action_avancer),
                         onLongClickLabel = stringResource(R.string.pokedex_action_reculer),
-                        onLongClick = actions.onReculerStatut,
-                        onClick = actions.onAvancerStatut,
+                        onLongClick = {
+                            if (statut != StatutEspece.NON_VUE) sons.jouer(Son.STATUT_RECULE)
+                            actions.onReculerStatut()
+                        },
+                        onClick = {
+                            if (statut != StatutEspece.MAITRISEE) sons.jouer(Son.statut(statut.ordinal + 1))
+                            actions.onAvancerStatut()
+                        },
                     )
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
