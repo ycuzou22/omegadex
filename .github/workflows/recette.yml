@@ -1,6 +1,6 @@
 name: Recette
 
-# Recette du MVP sur émulateur (T16.2) : 3 profils d'appareil et mode avion.
+# Recette du MVP sur émulateur (T16) : 3 profils d'appareil, mode avion, et une run jusqu'à la Ligue sur le Pixel.
 # Lancement à la demande (onglet Actions), à chaque pull request qui touche la recette, et avant chaque release.
 on:
   workflow_dispatch:
@@ -52,14 +52,17 @@ jobs:
             api: 35
             arch: x86_64
             appareil: pixel_6
+            options: --jusqu-a-la-ligue
           - profil: android-8
             api: 26
             arch: x86
             appareil: pixel
+            options: ""
           - profil: tablette
             api: 34
             arch: x86_64
             appareil: "Nexus 10"
+            options: ""
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
@@ -83,7 +86,7 @@ jobs:
             for avd in ~/.android/avd/*.avd; do echo "hw.keyboard=yes" >> "$avd/config.ini"; done
           script: |
             adb install -r app-debug.apk
-            python3 tools/recette/recette.py --profil ${{ matrix.profil }} --sortie recette
+            python3 tools/recette/recette.py --profil ${{ matrix.profil }} --sortie recette ${{ matrix.options }}
       - name: Résumé
         if: always()
         run: cat recette/${{ matrix.profil }}/recette.md >> "$GITHUB_STEP_SUMMARY" || true
