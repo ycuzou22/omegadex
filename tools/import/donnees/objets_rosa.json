@@ -728,7 +728,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
     },
     {
       "nom": "CT67 Vengeance",
@@ -808,7 +810,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Forêt Mirage)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Forêt Mirage",
+      "etape": 12
     },
     {
       "nom": "CT75 Danse-Lames",
@@ -908,7 +912,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Mont Mirage, Vélo Cross selon une source)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Mont Mirage",
+      "etape": 12
     },
     {
       "nom": "CT85 Dévorêve",
@@ -968,7 +974,9 @@
       "cs": "ECLATE_ROC",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage, rocher à briser)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
     },
     {
       "nom": "CT91 Luminocanon",
@@ -978,7 +986,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
     },
     {
       "nom": "CT92 Distorsion",
@@ -1018,7 +1028,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Grotte Mirage)",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Grotte Mirage",
+      "etape": 12
     },
     {
       "nom": "CT96 Force-Nature",
@@ -1078,7 +1090,8 @@
       "cs": null,
       "condition": "événement après le badge de Norman (Route 118)",
       "note": "Pierre l'offre quand Latios rejoint l'équipe",
-      "fiable": true
+      "fiable": true,
+      "etape": 6
     },
     {
       "nom": "Vélo Course",
@@ -1528,7 +1541,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Grotte Mirage) ; aussi tenue par Carvanha/Sharpedo sauvages",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Grotte Mirage",
+      "etape": 12
     },
     {
       "nom": "Écaille Océan",
@@ -1538,7 +1553,9 @@
       "cs": "VOL",
       "condition": "après Groudon (Flûte Éon)",
       "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Mont Mirage) ; aussi tenue par Loupio/Lanturn/Relicanth sauvages",
-      "fiable": true
+      "fiable": true,
+      "lieuLibre": "Mont Mirage",
+      "etape": 12
     },
     {
       "nom": "Restes",

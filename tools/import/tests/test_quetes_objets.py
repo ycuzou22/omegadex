@@ -26,6 +26,9 @@ OBJETS = [
     # Lieu de l'étape 2, mais la condition d'histoire le repousse après la Ligue.
     {"nom": "Méga-Gemme X", "lieu": "Grotte Granite", "methode": "SOL", "cs": None, "condition": "après la Ligue"},
     {"nom": "Objet sans lieu", "lieu": None, "methode": "SOL", "cs": None, "condition": None},
+    # Exceptions : étape imposée malgré un lieu débloqué plus tard, et lieu mirage absent de la base.
+    {"nom": "Méga-Bracelet", "lieu": "Atalanopolis", "methode": "CADEAU", "cs": None, "condition": None, "etape": 6},
+    {"nom": "CT90 Clonage", "lieu": None, "lieuLibre": "Île Mirage", "methode": "SOL", "cs": "ECLATE_ROC", "etape": 12},
 ]
 
 
@@ -53,13 +56,15 @@ class QuetesObjetsTest(unittest.TestCase):
         ).fetchall()
 
     def test_chaque_objet_arrive_quand_il_devient_accessible(self):
-        self.assertEqual(4, import_etapes.generer_quetes_objets(self.con, self.fichier))
+        self.assertEqual(6, import_etapes.generer_quetes_objets(self.con, self.fichier))
         self.assertEqual(
             [
                 (1, 1, "Gagner CT39 Tomberoche (Mérouville)", "CT39 Tomberoche"),
                 (2, 2, "Récupérer Pierre Feuille (Route 104) · Coupe", "Pierre Feuille"),
                 (2, 3, "Recevoir CT70 Flash (Grotte Granite)", "CT70 Flash"),
+                (6, 1, "Recevoir Méga-Bracelet (Atalanopolis)", "Méga-Bracelet"),
                 (10, 1, "Récupérer Méga-Gemme X (Grotte Granite)", "Méga-Gemme X"),
+                (12, 1, "Récupérer CT90 Clonage (Île Mirage) · Éclate-Roc", "CT90 Clonage"),
             ],
             self.quetes(),
         )
@@ -67,7 +72,7 @@ class QuetesObjetsTest(unittest.TestCase):
     def test_rejouer_ne_duplique_pas_les_quetes(self):
         import_etapes.generer_quetes_objets(self.con, self.fichier)
         import_etapes.generer_quetes_objets(self.con, self.fichier)
-        self.assertEqual(4, len(self.quetes()))
+        self.assertEqual(6, len(self.quetes()))
         self.assertEqual(1, self.con.execute("SELECT COUNT(*) FROM quete WHERE recompense IS NULL").fetchone()[0])
 
     def test_un_lieu_ou_une_cs_inconnus_sont_refuses(self):
