@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.ui.animations.AnimationCapture
+import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.components.CarteRubis
 import com.omegadex.app.ui.components.GemCheckbox
 import com.omegadex.app.ui.components.TypeChip
@@ -66,14 +68,25 @@ fun AventureScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var celebration by remember { mutableStateOf<EtapeValidee?>(null) }
     var derniereValidee by remember { mutableStateOf<EtapeValidee?>(null) }
+    var capture by remember { mutableStateOf<CaptureAnimee?>(null) }
+    // Centre du rubis de chaque ligne de rencontre : l'onde de la capture en part.
+    val rubis = remember { mutableMapOf<Int, Offset>() }
     LaunchedEffect(viewModel) { viewModel.evenements.collect { celebration = it } }
-    AventureContenu(
-        uiState = uiState,
-        onCocher = viewModel::cocher,
-        onLieu = onLieu,
-        derniereValidee = derniereValidee,
-        modifier = modifier,
-    )
+    LaunchedEffect(viewModel) { viewModel.captures.collect { capture = it } }
+    Box(modifier) {
+        AventureContenu(
+            uiState = uiState,
+            onCocher = viewModel::cocher,
+            onLieu = onLieu,
+            derniereValidee = derniereValidee,
+            rencontres = ActionsRencontres(onAttraper = viewModel::attraper, onRubis = { id, centre -> rubis[id] = centre }),
+            modifier = Modifier.fillMaxSize(),
+        )
+        // « Capture → Pokédex » se joue par-dessus l'Aventure, la barre de navigation reste visible.
+        capture?.let { enCours ->
+            AnimationCapture(enCours, rubis[enCours.especeId], onFin = { capture = null }, Modifier.matchParentSize())
+        }
+    }
     // Après l'animation « Étape validée », l'étape validée se résume en haut et la nouvelle étape s'illumine.
     celebration?.let { evenement ->
         CelebrationEtape(evenement) {
@@ -90,6 +103,7 @@ private fun AventureContenu(
     onLieu: (Int) -> Unit,
     modifier: Modifier = Modifier,
     derniereValidee: EtapeValidee? = null,
+    rencontres: ActionsRencontres = ActionsRencontres(),
 ) {
     when (uiState) {
         AventureUiState.Chargement -> Box(modifier.fillMaxSize())
@@ -112,6 +126,16 @@ private fun AventureContenu(
                 if (uiState.lieux.isNotEmpty()) {
                     item { LieuxEtape(uiState.lieux, onLieu) }
                 }
+                if (uiState.rencontres.isNotEmpty()) {
+                    item(key = "rencontres") { EnTeteRencontres(uiState.rencontres) }
+                    items(uiState.rencontres, key = { "rencontre-${it.especeId}" }) { rencontre ->
+                        LigneRencontre(
+                            rencontre,
+                            onAttraper = { rencontres.onAttraper(rencontre.especeId) },
+                            onRubis = { rencontres.onRubis(rencontre.especeId, it) },
+                        )
+                    }
+                }
                 if (uiState.annexes.isNotEmpty()) {
                     item { EnTeteAnnexes(uiState.annexes) }
                     items(uiState.annexes, key = { it.id }) { quete ->
@@ -122,6 +146,12 @@ private fun AventureContenu(
         }
     }
 }
+
+/** Actions des lignes de rencontre : attraper une espèce, et position de son rubis pour l'animation. */
+private data class ActionsRencontres(
+    val onAttraper: (Int) -> Unit = {},
+    val onRubis: (Int, Offset) -> Unit = { _, _ -> },
+)
 
 @Composable
 internal fun CarteEtape(
@@ -356,6 +386,10 @@ private fun AventurePreview() {
                 ),
                 annexes = listOf(QueteAffichee(4, "Capturer Dynavolt (Route 110)", null, false)),
                 lieux = listOf(LieuAffiche(1, "Lavandia"), LieuAffiche(2, "Route 110")),
+                rencontres = listOf(
+                    RencontreAffichee(309, "Dynavolt", "electrik", "Route 110", 12, 13, 15, capturee = false),
+                    RencontreAffichee(316, "Gloupti", "poison", "Route 110", 12, 13, 15, capturee = true),
+                ),
             ),
             onCocher = { _, _ -> },
             onLieu = {},

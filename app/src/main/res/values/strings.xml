@@ -111,6 +111,11 @@
     <string name="aventure_annexes_info">Facultatives : elles ne bloquent pas l\'étape suivante.</string>
     <string name="aventure_aucune_run">Aucune run en cours.</string>
     <string name="aventure_lieux">Lieux de l\'étape</string>
+    <string name="aventure_rencontres">Rencontres</string>
+    <string name="aventure_attraper">Attraper</string>
+    <string name="aventure_attraper_description">Attraper %1$s</string>
+    <string name="aventure_capturee">Capturé</string>
+    <string name="capture_annonce">%1$s rejoint le Pokédex · Capturé</string>
     <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
 
     <!-- Fiche de lieu -->
