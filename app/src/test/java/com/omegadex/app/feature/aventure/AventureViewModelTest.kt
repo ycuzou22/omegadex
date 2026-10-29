@@ -9,12 +9,16 @@ import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.domain.aventure.CocherQueteUseCase
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.CapturerEspeceUseCase
+import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.ResultatCreationRun
 import com.omegadex.app.domain.run.Starter
 import com.omegadex.app.testutil.FausseRunActive
 import com.omegadex.app.testutil.FausseSession
+import com.omegadex.app.ui.animations.CaseCapture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -64,6 +68,8 @@ class AventureViewModelTest {
         jeu,
         progression,
         CocherQueteUseCase(jeu, progression),
+        ObserverPokedexUseCase(jeu, progression),
+        CapturerEspeceUseCase(progression),
     )
 
     @Test
@@ -130,5 +136,38 @@ class AventureViewModelTest {
         viewModel.cocher(3, cochee = true)
         assertEquals(EtapeValidee(1, "Roxanne", "Badge Roche", null, setOf(0, 1)), viewModel.evenements.first())
         assertEquals(AventureUiState.Terminee, viewModel.uiState.first { it == AventureUiState.Terminee })
+    }
+
+    @Test
+    fun `les rencontres de l'etape s'affichent et attraper une espece la capture et lance l'animation`() = runTest {
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        val creer = CreerRunUseCase(comptes, progression, session, runActive)
+        val run = (creer("Run", Starter.ARCKO, Difficulte.NORMAL, emptySet()) as ResultatCreationRun.Creee).runId
+        progression.definirStatut(run, 252, StatutEspece.VUE)
+        val viewModel = viewModel()
+        val depart = viewModel.uiState.first { it is AventureUiState.EtapeEnCours } as AventureUiState.EtapeEnCours
+        assertEquals(
+            listOf(RencontreAffichee(252, "Arcko", "Plante", "Route 101", 5, 5, null, capturee = false)),
+            depart.rencontres,
+        )
+
+        viewModel.attraper(252)
+
+        val capture = viewModel.captures.first()
+        assertEquals(252 to "Arcko", capture.especeId to capture.nom)
+        assertEquals(0 to 3, capture.capturees to capture.total)
+        assertEquals(
+            listOf(
+                CaseCapture(252, 1, "Arcko", listOf("Plante"), StatutEspece.VUE, StatutEspece.CAPTUREE),
+                CaseCapture(253, 2, "Massko", listOf("Plante"), StatutEspece.NON_VUE, StatutEspece.NON_VUE),
+                CaseCapture(254, 3, "Jungko", listOf("Plante"), StatutEspece.NON_VUE, StatutEspece.NON_VUE),
+            ),
+            capture.cases,
+        )
+        assertEquals(StatutEspece.CAPTUREE, progression.statuts(run).first()[252])
+        val apres = viewModel.uiState.first {
+            it is AventureUiState.EtapeEnCours && it.rencontres.single().capturee
+        } as AventureUiState.EtapeEnCours
+        assertEquals(true, apres.rencontres.single().capturee)
     }
 }

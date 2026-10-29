@@ -20,10 +20,26 @@ sealed interface AventureUiState {
         val principales: List<QueteAffichee>,
         val annexes: List<QueteAffichee>,
         val lieux: List<LieuAffiche> = emptyList(),
+        val rencontres: List<RencontreAffichee> = emptyList(),
     ) : AventureUiState
 }
 
 data class LieuAffiche(val id: Int, val nom: String)
+
+/**
+ * Espèce qu'on peut rencontrer dans les lieux de l'étape (une ligne par espèce, au premier lieu où elle apparaît).
+ * [capturee] : déjà au moins capturée dans la run, la ligne montre son rubis au lieu du bouton « Attraper ».
+ */
+data class RencontreAffichee(
+    val especeId: Int,
+    val nom: String,
+    val type: String?,
+    val lieu: String,
+    val niveauMin: Int?,
+    val niveauMax: Int?,
+    val taux: Int?,
+    val capturee: Boolean,
+)
 
 /** Évènement ponctuel : l'étape vient d'être validée (déclencheur de l'animation « Étape validée », T14.1). */
 data class EtapeValidee(

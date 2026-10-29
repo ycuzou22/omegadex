@@ -111,6 +111,11 @@
     <string name="aventure_annexes_info">Facultatives : elles ne bloquent pas l\'étape suivante.</string>
     <string name="aventure_aucune_run">Aucune run en cours.</string>
     <string name="aventure_lieux">Lieux de l\'étape</string>
+    <string name="aventure_rencontres">Rencontres</string>
+    <string name="aventure_attraper">Attraper</string>
+    <string name="aventure_attraper_description">Attraper %1$s</string>
+    <string name="aventure_capturee">Capturé</string>
+    <string name="capture_annonce">%1$s rejoint le Pokédex · Capturé</string>
     <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
 
     <!-- Fiche de lieu -->
@@ -280,4 +285,44 @@
     <string name="fiche_defis_aucun">Aucun défi pour ce Pokémon à cette étape.</string>
     <string name="fiche_defis_notes">Notes</string>
     <string name="fiche_defis_notes_aide">Nature, talent, attaques à garder…</string>
+    <string name="equipe_aucune_run">Lance une run pour composer ton équipe.</string>
+    <string name="equipe_titre_compte">Équipe · %1$d/%2$d</string>
+    <string name="equipe_plafond_etape">%1$s · plafond niv. %2$d</string>
+    <string name="equipe_sans_plafond">Aventure terminée : plus de plafond.</string>
+    <string name="equipe_regle">%1$s : aucun Pokémon au-dessus du plafond.</string>
+    <string name="equipe_regle_hardcore">%1$s : toute l\'équipe exactement au plafond avant le champion.</string>
+    <plurals name="equipe_alerte_plafond">
+        <item quantity="one">%1$d Pokémon au-dessus du plafond</item>
+        <item quantity="many">%1$d Pokémon au-dessus du plafond</item>
+        <item quantity="other">%1$d Pokémon au-dessus du plafond</item>
+    </plurals>
+    <string name="equipe_surnom">%1$s (%2$s)</string>
+    <string name="equipe_defi_actif">Défi · %1$s</string>
+    <string name="equipe_aucun_defi">Emplacement %1$d · aucun défi</string>
+    <string name="equipe_baisser">Baisser le niveau de %1$s</string>
+    <string name="equipe_monter">Monter le niveau de %1$s</string>
+    <string name="equipe_au_dessus">+%1$d au-dessus</string>
+    <string name="equipe_au_plafond">Au plafond</string>
+    <string name="equipe_sous_plafond">Plafond %1$d</string>
+    <string name="equipe_emplacement_libre">Emplacement %1$d · libre</string>
+    <string name="equipe_evolution_titre">%1$s peut évoluer !</string>
+    <string name="equipe_evolution_cible">%1$s dès le niv. %2$d</string>
+    <string name="equipe_evoluer_en">Évoluer en %1$s</string>
+    <string name="equipe_plus_tard">Plus tard</string>
+    <string name="equipe_echanger">Échanger</string>
+    <string name="equipe_retirer">Retirer</string>
+    <string name="equipe_retirer_titre">Retirer %1$s de l\'équipe ?</string>
+    <string name="equipe_retirer_detail">L\'emplacement %1$d redevient libre. Le Pokémon reste capturé dans ton Pokédex.</string>
+    <string name="equipe_annuler">Annuler</string>
+    <string name="equipe_ajouter_capture">+ Ajouter</string>
+    <string name="equipe_ajouter_titre">Ajouter à l\'équipe</string>
+    <string name="equipe_echanger_titre">Échanger %1$s</string>
+    <string name="equipe_ajouter_regle">Seuls les Pokémon capturés peuvent rejoindre l\'équipe.</string>
+    <string name="equipe_pleine">L\'équipe est complète : échange un membre pour en faire entrer un autre.</string>
+    <string name="equipe_aucune_capture">Aucune capture disponible. Marque un Pokémon « capturé » dans le Pokédex.</string>
+    <string name="equipe_numero_hoenn">Hoenn #%1$03d</string>
+    <string name="equipe_numero_national">National #%1$03d</string>
+    <string name="equipe_niveau_titre">À quel niveau est %1$s ?</string>
+    <string name="equipe_ajouter">Ajouter</string>
+    <string name="equipe_defi_propose">Défi pour ce nouveau membre : %1$s</string>
 </resources>
