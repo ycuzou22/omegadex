@@ -1,5 +1,5 @@
 // Coordonnées et instants recopiés de la maquette « 7 · Fissure + onde » du canevas : ce sont des données.
-@file:Suppress("MagicNumber")
+@file:Suppress("MagicNumber", "MatchingDeclarationName")
 
 package com.omegadex.app.ui.components
 
