@@ -1,7 +1,6 @@
 package com.omegadex.app.feature.equipe
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -41,10 +39,10 @@ import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.animations.EspeceAnimee
 import com.omegadex.app.ui.animations.EvolutionPleinEcran
-import com.omegadex.app.ui.components.TypeChip
-import com.omegadex.app.ui.components.brosseGemmeEspece
+import com.omegadex.app.ui.components.IconeType
+import com.omegadex.app.ui.components.SpriteEspece
+import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
-import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 /**
@@ -182,12 +180,14 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
-            Modifier
-                .size(width = 44.dp, height = 41.dp)
-                .clip(FormeGemme)
-                .background(brosseGemmeEspece(membre.types)),
-        )
+        // Image de l'espèce (assets/sprites, image par défaut sinon) et, à côté, les logos de ses types.
+        SpriteEspece(membre.especeId, decouverte = 1f, taille = 52.dp)
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            membre.types.forEach { type ->
+                val nom = nomDuType(cleType(type))?.let { stringResource(it) } ?: type
+                IconeType(type, taille = 24.dp, description = nom)
+            }
+        }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 membre.surnom?.let { stringResource(R.string.equipe_surnom, it, membre.nom) } ?: membre.nom,
@@ -195,11 +195,6 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                membre.types.forEach { type ->
-                    TypeChip(type = type, libelle = nomDuType(type)?.let { stringResource(it) } ?: type)
-                }
-            }
             Text(
                 membre.defiActif?.let { stringResource(R.string.equipe_defi_actif, it) }
                     ?: stringResource(R.string.equipe_aucun_defi, numero),
