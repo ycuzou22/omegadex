@@ -285,4 +285,28 @@
     <string name="fiche_defis_aucun">Aucun défi pour ce Pokémon à cette étape.</string>
     <string name="fiche_defis_notes">Notes</string>
     <string name="fiche_defis_notes_aide">Nature, talent, attaques à garder…</string>
+    <string name="equipe_aucune_run">Lance une run pour composer ton équipe.</string>
+    <string name="equipe_titre_compte">Équipe · %1$d/%2$d</string>
+    <string name="equipe_plafond_etape">%1$s · plafond niv. %2$d</string>
+    <string name="equipe_sans_plafond">Aventure terminée : plus de plafond.</string>
+    <string name="equipe_regle">%1$s : aucun Pokémon au-dessus du plafond.</string>
+    <string name="equipe_regle_hardcore">%1$s : toute l\'équipe exactement au plafond avant le champion.</string>
+    <plurals name="equipe_alerte_plafond">
+        <item quantity="one">%1$d Pokémon au-dessus du plafond</item>
+        <item quantity="many">%1$d Pokémon au-dessus du plafond</item>
+        <item quantity="other">%1$d Pokémon au-dessus du plafond</item>
+    </plurals>
+    <string name="equipe_surnom">%1$s (%2$s)</string>
+    <string name="equipe_defi_actif">Défi · %1$s</string>
+    <string name="equipe_aucun_defi">Emplacement %1$d · aucun défi</string>
+    <string name="equipe_baisser">Baisser le niveau de %1$s</string>
+    <string name="equipe_monter">Monter le niveau de %1$s</string>
+    <string name="equipe_au_dessus">+%1$d au-dessus</string>
+    <string name="equipe_au_plafond">Au plafond</string>
+    <string name="equipe_sous_plafond">Plafond %1$d</string>
+    <string name="equipe_emplacement_libre">Emplacement %1$d · libre</string>
+    <string name="equipe_evolution_titre">%1$s peut évoluer !</string>
+    <string name="equipe_evolution_cible">%1$s dès le niv. %2$d</string>
+    <string name="equipe_evoluer_en">Évoluer en %1$s</string>
+    <string name="equipe_plus_tard">Plus tard</string>
 </resources>
