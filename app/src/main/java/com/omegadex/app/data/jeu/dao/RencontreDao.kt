@@ -32,11 +32,16 @@ interface RencontreDao {
     )
     fun especesDuLieu(lieuId: Int): Flow<List<RencontreLigne>>
 
-    /** Espèces trouvables dans les lieux débloqués jusqu'à l'étape donnée (mises en avant dans le Pokédex). */
+    /**
+     * Espèces trouvables dans Rubis Oméga dans les lieux débloqués jusqu'à l'étape donnée (mises en avant
+     * dans le Pokédex). Les rencontres réservées à Saphir Alpha et les échanges requis n'en font pas partie.
+     */
     @Query(
         """
         SELECT DISTINCT r.especeId FROM rencontre r JOIN lieu l ON l.id = r.lieuId
         WHERE l.etapeDeblocageId <= :etapeId
+            AND r.methode <> 'ECHANGE_REQUIS'
+            AND (r.condition IS NULL OR r.condition NOT LIKE '%Saphir Alpha uniquement%')
         """,
     )
     fun especesAccessibles(etapeId: Int): Flow<List<Int>>
