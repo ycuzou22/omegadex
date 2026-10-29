@@ -590,6 +590,11 @@ private fun AnimationCaptureFinPreview() {
         CaseCapture(266, 15, "Armulys", listOf("insecte"), StatutEspece.NON_VUE, StatutEspece.NON_VUE),
     )
     OmegadexTheme {
-        ContenuCapture(CaptureAnimee(265, "Chenipotte", false, cases, 13, 211), { null }, ChronoCapture.FIN, onToucher = {})
+        ContenuCapture(
+            capture = CaptureAnimee(265, "Chenipotte", false, cases, 13, 211),
+            origine = { null },
+            t = ChronoCapture.FIN,
+            onToucher = {},
+        )
     }
 }
