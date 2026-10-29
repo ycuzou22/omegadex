@@ -309,4 +309,20 @@
     <string name="equipe_evolution_cible">%1$s dès le niv. %2$d</string>
     <string name="equipe_evoluer_en">Évoluer en %1$s</string>
     <string name="equipe_plus_tard">Plus tard</string>
+    <string name="equipe_echanger">Échanger</string>
+    <string name="equipe_retirer">Retirer</string>
+    <string name="equipe_retirer_titre">Retirer %1$s de l\'équipe ?</string>
+    <string name="equipe_retirer_detail">L\'emplacement %1$d redevient libre. Le Pokémon reste capturé dans ton Pokédex.</string>
+    <string name="equipe_annuler">Annuler</string>
+    <string name="equipe_ajouter_capture">+ Ajouter</string>
+    <string name="equipe_ajouter_titre">Ajouter à l\'équipe</string>
+    <string name="equipe_echanger_titre">Échanger %1$s</string>
+    <string name="equipe_ajouter_regle">Seuls les Pokémon capturés peuvent rejoindre l\'équipe.</string>
+    <string name="equipe_pleine">L\'équipe est complète : échange un membre pour en faire entrer un autre.</string>
+    <string name="equipe_aucune_capture">Aucune capture disponible. Marque un Pokémon « capturé » dans le Pokédex.</string>
+    <string name="equipe_numero_hoenn">Hoenn #%1$03d</string>
+    <string name="equipe_numero_national">National #%1$03d</string>
+    <string name="equipe_niveau_titre">À quel niveau est %1$s ?</string>
+    <string name="equipe_ajouter">Ajouter</string>
+    <string name="equipe_defi_propose">Défi pour ce nouveau membre : %1$s</string>
 </resources>

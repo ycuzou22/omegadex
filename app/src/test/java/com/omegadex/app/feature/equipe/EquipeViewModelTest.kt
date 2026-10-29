@@ -10,6 +10,7 @@ import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
 import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
+import com.omegadex.app.domain.equipe.RetirerMembreUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.StatutEspece
@@ -72,6 +73,7 @@ class EquipeViewModelTest {
             ObserverDefisUseCase(runEnCours, progression, jeu),
             ChangerNiveauUseCase(progression, jeu),
             FaireEvoluerUseCase(progression, jeu),
+            RetirerMembreUseCase(progression),
         )
     }
 
@@ -134,5 +136,15 @@ class EquipeViewModelTest {
 
         vm.finirAnimation()
         assertNull(vm.evolutionEnCours.value)
+    }
+
+    @Test
+    fun `retirer un membre libere son emplacement`() = runTest {
+        val run = nouvelleRun()
+        progression.placerMembre(run, MembreEquipe(2, 252, null, 5))
+        val vm = equipe()
+        vm.equipe { it.membres.size == 1 }
+        vm.retirer(2)
+        assertNull(vm.equipe { it.membres.isEmpty() }.emplacements[1].membre)
     }
 }
