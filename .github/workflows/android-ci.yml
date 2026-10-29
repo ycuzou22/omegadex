@@ -31,7 +31,16 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Build, lint et tests
-        run: ./gradlew build lint ktlintCheck detekt test createDebugUnitTestCoverageReport --continue
+        run: ./gradlew build lint ktlintCheck detekt test createDebugUnitTestCoverageReport --continue 2>&1 | tee gradle.log; exit ${PIPESTATUS[0]}
+        shell: bash
+
+      - name: DIAG temporaire
+        if: failure()
+        run: |
+          grep -E "^e: |AnimationEvolution|EquipeScreen|What went wrong|> Task .*FAILED" gradle.log | head -40 | while IFS= read -r l; do echo "::error::${l:0:900}"; done
+          find app/build/reports -name "*.txt" -path "*ktlint*" -exec cat {} \; | head -20 | while IFS= read -r l; do echo "::error::KT ${l:0:900}"; done
+          find app/build/reports -name "*.txt" -path "*detekt*" -exec cat {} \; | head -20 | while IFS= read -r l; do echo "::error::DT ${l:0:900}"; done
+          find app/build -name "lint-results*.txt" -exec grep -E "Error|error" {} \; | head -10 | while IFS= read -r l; do echo "::error::LINT ${l:0:900}"; done
 
       - name: Couverture du domaine
         run: python3 tools/couverture/verifier_couverture.py
