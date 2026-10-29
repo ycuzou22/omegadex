@@ -85,9 +85,12 @@
       "categorie": "CT",
       "lieu": "Site Météore",
       "methode": "SOL",
-      "cs": "CASCADE",
+      "cs": [
+        "SURF",
+        "CASCADE"
+      ],
       "condition": null,
-      "note": "Salle aquatique du sous-sol, Surf + Cascade",
+      "note": "Salle du 1er sous-sol, Surf puis Cascade",
       "fiable": true
     },
     {
@@ -705,7 +708,10 @@
       "categorie": "CT",
       "lieu": "Pilier Céleste",
       "methode": "SOL",
-      "cs": "VELO_COURSE",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
       "condition": null,
       "note": "Surf pour atteindre le Pilier ; sols fissurés à franchir au Vélo Course",
       "fiable": false
@@ -715,9 +721,9 @@
       "categorie": "CT",
       "lieu": "Grotte Granite",
       "methode": "SOL",
-      "cs": "VELO_CROSS",
+      "cs": "VELO_COURSE",
       "condition": null,
-      "note": null,
+      "note": "2e sous-sol, sols fissurés du 1er sous-sol à franchir au Vélo Course",
       "fiable": true
     },
     {
@@ -757,9 +763,9 @@
       "categorie": "CT",
       "lieu": "Sentier Sinuroc",
       "methode": "SOL",
-      "cs": "VELO_CROSS",
+      "cs": "VELO_COURSE",
       "condition": null,
-      "note": null,
+      "note": "En haut d'une pente à gravir à vélo (n'importe lequel)",
       "fiable": true
     },
     {
@@ -859,7 +865,10 @@
       "categorie": "CT",
       "lieu": "Grotte Tréfonds",
       "methode": "SOL",
-      "cs": "VELO_COURSE",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
       "condition": "marée basse",
       "note": "Pentes boueuses, Surf aussi requis",
       "fiable": true
@@ -995,9 +1004,12 @@
       "categorie": "CT",
       "lieu": "Route 110",
       "methode": "RECOMPENSE",
-      "cs": null,
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC"
+      ],
       "condition": null,
-      "note": "Maison des Pièges, épreuve avancée",
+      "note": "Maison des Pièges, épreuve 3 (après les épreuves 1 Coupe et 2 Éclate-Roc)",
       "fiable": true
     },
     {
@@ -1128,9 +1140,9 @@
       "categorie": "OBJET_CLE",
       "lieu": "Route 118",
       "methode": "CADEAU",
-      "cs": null,
+      "cs": "SURF",
       "condition": null,
-      "note": "Pêcheur",
+      "note": "Pêcheur de la rive est, après le chenal à traverser en Surf",
       "fiable": true
     },
     {
@@ -1317,40 +1329,40 @@
       "nom": "Pierre Feu",
       "categorie": "EVOLUTION",
       "lieu": "Route 114",
-      "methode": "SOL",
+      "methode": "RECOMPENSE",
       "cs": null,
       "condition": null,
-      "note": "Aussi au Chemin Ardent et via le chasseur de trésors du Chenal 124 (Tesson Rouge)",
+      "note": "5 % après une revanche contre le Pyromane de la route ; au sol au Chemin Ardent (Force)",
       "fiable": true
     },
     {
       "nom": "Pierre Eau",
       "categorie": "EVOLUTION",
       "lieu": "Chenal 106",
-      "methode": "SOL",
+      "methode": "RECOMPENSE",
       "cs": null,
-      "condition": null,
-      "note": "Aussi via le chasseur de trésors du Chenal 124 (Tesson Bleu)",
+      "condition": "après le badge de Myokara",
+      "note": "5 % par revanche contre le Pêcheur Elliot (plage derrière la Grotte Granite), revanches dès le Badge Poing ; aussi via le chasseur de trésors du Chenal 124 (Tesson Bleu)",
       "fiable": true
     },
     {
       "nom": "Pierre Foudre",
       "categorie": "EVOLUTION",
       "lieu": "Route 118",
-      "methode": "SOL",
+      "methode": "RECOMPENSE",
       "cs": null,
-      "condition": null,
-      "note": "Aussi à New Lavandia et via le chasseur de trésors du Chenal 124 (Tesson Jaune)",
+      "condition": "après le badge de Vermilava",
+      "note": "5 % par revanche contre le Guitariste de la rive ouest, revanches dès le Badge Chaleur",
       "fiable": true
     },
     {
       "nom": "Pierre Plante",
       "categorie": "EVOLUTION",
       "lieu": "Route 118",
-      "methode": "SOL",
+      "methode": "RECOMPENSE",
       "cs": null,
-      "condition": null,
-      "note": "Aussi Route 119 et via le chasseur de trésors du Chenal 124 (Tesson Vert)",
+      "condition": "après le badge de Vermilava",
+      "note": "5 % par revanche contre l'Aromathérapeute de la rive ouest, revanches dès le Badge Chaleur",
       "fiable": true
     },
     {
@@ -1367,10 +1379,10 @@
       "nom": "Pierre Soleil",
       "categorie": "EVOLUTION",
       "lieu": "Route 115",
-      "methode": "SOL",
-      "cs": null,
+      "methode": "RECOMPENSE",
+      "cs": "SURF",
       "condition": null,
-      "note": "Aussi offerte au Centre Spatial d'Algatia",
+      "note": "5 % après une revanche contre l'Expert de la partie nord (Surf) ; aussi au Centre Spatial d'Algatia",
       "fiable": true
     },
     {
@@ -1418,7 +1430,10 @@
       "categorie": "EVOLUTION",
       "lieu": "Pilier Céleste",
       "methode": "SOL",
-      "cs": "VELO_COURSE",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
       "condition": null,
       "note": "2e étage ; Vélo Course probable pour monter",
       "fiable": false
@@ -1682,9 +1697,9 @@
       "categorie": "OBJET_TENU",
       "lieu": "Route 110",
       "methode": "RECOMPENSE",
-      "cs": null,
+      "cs": "COUPE",
       "condition": null,
-      "note": "Maison des Pièges ; aussi Boutique PCo de la Maison de Combat",
+      "note": "Maison des Pièges, après l'épreuve 1 (Coupe)",
       "fiable": true
     },
     {
@@ -1751,10 +1766,10 @@
       "nom": "Herbe Blanche",
       "categorie": "OBJET_TENU",
       "lieu": "Route 104",
-      "methode": "SOL",
+      "methode": "CADEAU",
       "cs": null,
-      "condition": null,
-      "note": null,
+      "condition": "après le badge de Norman",
+      "note": "Donnée par une fille devant la Boutique Fleurie, après avoir parlé à la fleuriste",
       "fiable": true
     },
     {
@@ -1772,9 +1787,12 @@
       "categorie": "OBJET_TENU",
       "lieu": "Route 116",
       "methode": "SOL",
-      "cs": "CHERCHE_OBJET",
+      "cs": [
+        "ECLATE_ROC",
+        "CHERCHE_OBJET"
+      ],
       "condition": null,
-      "note": "Objet caché",
+      "note": "Objet caché dans la partie est, atteinte par le Tunnel Mérazon (rochers à briser)",
       "fiable": true
     },
     {
@@ -1802,9 +1820,9 @@
       "categorie": "OBJET_TENU",
       "lieu": "Bois Clémenti",
       "methode": "CADEAU",
-      "cs": null,
+      "cs": "COUPE",
       "condition": null,
-      "note": "Donné par une fille",
+      "note": "Donné par une fille derrière un arbre à couper, à l'est de la sortie nord",
       "fiable": true
     },
     {
@@ -1842,9 +1860,12 @@
       "categorie": "OBJET_TENU",
       "lieu": "Route 110",
       "methode": "RECOMPENSE",
-      "cs": null,
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC"
+      ],
       "condition": null,
-      "note": "Maison des Pièges ; aussi Route 114",
+      "note": "Maison des Pièges, épreuve 2 (Éclate-Roc, après l'épreuve 1 Coupe)",
       "fiable": true
     },
     {
@@ -1901,10 +1922,10 @@
       "nom": "Lunettes Filtre",
       "categorie": "OBJET_TENU",
       "lieu": "Route 111",
-      "methode": "SOL",
+      "methode": "CADEAU",
       "cs": null,
       "condition": "Lunettes Sable",
-      "note": "Dans le désert",
+      "note": "Donnée par un Kinésiste côté est du désert (Lunettes Sable)",
       "fiable": true
     },
     {
@@ -1952,9 +1973,13 @@
       "categorie": "OBJET_TENU",
       "lieu": "Route 110",
       "methode": "RECOMPENSE",
-      "cs": null,
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC",
+        "FORCE"
+      ],
       "condition": null,
-      "note": "Maison des Pièges, 4e épreuve",
+      "note": "Maison des Pièges, épreuve 4 (Force, après les épreuves Coupe et Éclate-Roc)",
       "fiable": true
     },
     {
@@ -2242,9 +2267,9 @@
       "categorie": "MEGA_GEMME",
       "lieu": "Route 110",
       "methode": "SOL",
-      "cs": null,
+      "cs": "VELO_COURSE",
       "condition": null,
-      "note": "Sous la Piste Cyclable (Vélo requis)",
+      "note": "Sur la Piste Cyclable, juste après l'entrée côté Lavandia (n'importe quel vélo)",
       "fiable": true
     },
     {
@@ -2442,7 +2467,10 @@
       "categorie": "MEGA_GEMME",
       "lieu": "Grotte Tréfonds",
       "methode": "SOL",
-      "cs": "VELO_COURSE",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
       "condition": "marée basse",
       "note": "Salle de glace",
       "fiable": true
@@ -2464,7 +2492,7 @@
       "methode": "SOL",
       "cs": "VELO_COURSE",
       "condition": null,
-      "note": "Zone sombre du sous-sol",
+      "note": "2e sous-sol, sols fissurés du 1er sous-sol à franchir au Vélo Course",
       "fiable": true
     },
     {
@@ -2472,7 +2500,7 @@
       "categorie": "MEGA_GEMME",
       "lieu": "Sentier Sinuroc",
       "methode": "SOL",
-      "cs": "VELO_CROSS",
+      "cs": null,
       "condition": "après Groudon (Pokédex National)",
       "note": null,
       "fiable": true
@@ -2492,9 +2520,12 @@
       "categorie": "MEGA_GEMME",
       "lieu": "Site Météore",
       "methode": "SOL",
-      "cs": "CASCADE",
+      "cs": [
+        "SURF",
+        "CASCADE"
+      ],
       "condition": "après Groudon (Pokédex National)",
-      "note": null,
+      "note": "Corniches ouest de la grotte intérieure, Surf puis Cascade",
       "fiable": true
     },
     {

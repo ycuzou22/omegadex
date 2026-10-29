@@ -27,7 +27,8 @@ METHODES_CAPTURE = ("HERBE", "HORDE", "SURF", "PLONGEE", "PECHE", "NAVI_DEX", "R
 CONDITIONS_ETAPE = [("Groudon", 8), ("Pokédex National", 10), ("Ligue", 10), ("Delta", 11)]
 # Étape à partir de laquelle chaque méthode est utilisable (CS ou canne obtenue à l'étape précédente).
 METHODES_ETAPE = {"SURF": 6, "PLONGEE": 8, "ROCHE_FRACASSEE": 3}
-CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 3), ("Canne", 2)]
+# Super Canne : pêcheur de la rive est de la Route 118, rejointe en Surf (même règle que DisponibiliteRencontre).
+CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 6), ("Canne", 2)]
 # Étape à partir de laquelle chaque capacité de terrain ouvre le chemin : CS en poche et badge qui l'autorise.
 CS_ETAPE = {
     "COUPE": 2,
