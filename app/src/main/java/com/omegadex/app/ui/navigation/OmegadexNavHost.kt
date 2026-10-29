@@ -41,7 +41,9 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable(Destination.AVENTURE.route) {
             AventureScreen(onLieu = { navController.navigate("$ROUTE_LIEU/$it") })
         }
-        composable(Destination.POKEDEX.route) { PokedexScreen() }
+        composable(Destination.POKEDEX.route) {
+            PokedexScreen(onEspece = { navController.navigate("$ROUTE_ESPECE/$it") })
+        }
         composable(Destination.DEFIS.route) {
             DefisScreen(onEspece = { navController.navigate("$ROUTE_DEFIS_ESPECE/$it") })
         }

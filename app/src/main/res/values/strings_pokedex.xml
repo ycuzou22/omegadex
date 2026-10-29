@@ -9,6 +9,10 @@
     <string name="pokedex_numero">N°%1$03d</string>
     <string name="pokedex_echange">Échange requis</string>
     <string name="pokedex_a_portee">à portée</string>
+    <string name="pokedex_action_ouvrir">Ouvrir la fiche</string>
+    <string name="pokedex_action_avancer">Passer au statut suivant</string>
+    <string name="pokedex_action_reculer">Revenir au statut précédent</string>
+    <string name="pokedex_marquer_vu">Marquer vu</string>
 
     <string name="statut_non_vue">Non vu</string>
     <string name="statut_vue">Vu</string>

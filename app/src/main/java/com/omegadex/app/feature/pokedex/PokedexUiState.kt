@@ -11,8 +11,22 @@ sealed interface PokedexUiState {
      * [national] : le Pokédex national est débloqué (Ligue validée), sinon seul le régional de Hoenn est montré.
      * [vues] et [capturees] comptent les espèces au moins vues et au moins capturées.
      */
-    data class Pret(val national: Boolean, val especes: List<EspeceAffichee>, val vues: Int, val capturees: Int) :
-        PokedexUiState
+    data class Pret(
+        val runId: Long,
+        val national: Boolean,
+        val especes: List<EspeceAffichee>,
+        val vues: Int,
+        val capturees: Int,
+    ) : PokedexUiState
+}
+
+/**
+ * Évènement ponctuel : le joueur vient de changer le statut d'une espèce.
+ * [capture] signale l'entrée de l'espèce dans les capturées : c'est le déclencheur de l'animation
+ * « Capture → Pokédex » (T14.2).
+ */
+data class StatutModifie(val especeId: Int, val nom: String, val avant: StatutEspece, val apres: StatutEspece) {
+    val capture: Boolean get() = avant < StatutEspece.CAPTUREE && apres >= StatutEspece.CAPTUREE
 }
 
 /**
