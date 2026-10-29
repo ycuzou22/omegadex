@@ -106,6 +106,7 @@ private object ChronoCapture {
     const val CAMERA_RETOUR_DUREE = 600f
     const val ANNONCE = 5_100f
     const val ANNONCE_DUREE = 400f
+    const val PASSER_DUREE = 300f
     const val FIN = 5_500f
     const val ATTENTE_FIN_MS = 1_400L
     const val ATTENTE_REDUITE_MS = 2_500L
@@ -231,7 +232,12 @@ private fun ContenuCapture(
             .onGloballyPositioned { visee.scene = it },
     ) {
         // L'Aventure s'efface sous le fond de l'écran, puis la grille du Pokédex émerge.
-        Box(Modifier.matchParentSize().graphicsLayer { alpha = phase(t, ChronoCapture.VOILE, ChronoCapture.VOILE_DUREE, EASE_IN) }.background(fond))
+        Box(
+            Modifier
+                .matchParentSize()
+                .graphicsLayer { alpha = phase(t, ChronoCapture.VOILE, ChronoCapture.VOILE_DUREE, EASE_IN) }
+                .background(fond),
+        )
         Box(
             Modifier
                 .matchParentSize()
@@ -291,7 +297,8 @@ private fun BoxScope.OndeEtRubis(t: Float, origine: () -> Offset?) {
         if (pulse > 0f && pulse < 1f) {
             val echelle = 1f + 0.45f * sin(PI.toFloat() * pulse)
             val taille = Size(26.dp.toPx() * echelle, 24.dp.toPx() * echelle)
-            drawCircle(couleurs.gemmeClaire, radius = taille.width, center = centre, alpha = 0.35f * sin(PI.toFloat() * pulse))
+            val halo = 0.35f * sin(PI.toFloat() * pulse)
+            drawCircle(couleurs.gemmeClaire, radius = taille.width, center = centre, alpha = halo)
             translate(centre.x - taille.width / 2f, centre.y - taille.height / 2f) {
                 val cadre = drawContext.size
                 drawContext.size = taille
@@ -450,7 +457,11 @@ private fun FaceCase(case: CaseCapture, statut: StatutEspece, t: Float?, modifie
             .clearAndSetSemantics {},
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(stringResource(R.string.pokedex_numero, case.numero), style = OmegadexTheme.chiffres.petit, color = couleurs.texteEteint)
+        Text(
+            stringResource(R.string.pokedex_numero, case.numero),
+            style = OmegadexTheme.chiffres.petit,
+            color = couleurs.texteEteint,
+        )
         Text(
             case.nom,
             style = MaterialTheme.typography.titleSmall,
@@ -460,7 +471,10 @@ private fun FaceCase(case: CaseCapture, statut: StatutEspece, t: Float?, modifie
         )
         if (!silhouette) {
             case.types.firstOrNull()?.let { type ->
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Box(Modifier.size(10.dp).background(CouleursTypes.de(type), CircleShape))
                     Text(
                         nomDuType(type)?.let { stringResource(it) } ?: type,
@@ -478,7 +492,11 @@ private fun FaceCase(case: CaseCapture, statut: StatutEspece, t: Float?, modifie
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (silhouette) {
-                Text(stringResource(R.string.pokedex_marquer_vu), style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
+                Text(
+                    stringResource(R.string.pokedex_marquer_vu),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = couleurs.texteEteint,
+                )
             } else {
                 RubisCase(case, statut, t)
             }
@@ -498,7 +516,8 @@ private fun RubisCase(case: CaseCapture, statut: StatutEspece, t: Float?) {
             val gagne = t != null && index >= case.avant.ordinal && index < statut.ordinal
             val p = if (gagne) {
                 val rang = index - case.avant.ordinal
-                phase(t ?: 0f, ChronoCapture.RUBIS + rang * ChronoCapture.RUBIS_ECART, ChronoCapture.RUBIS_DUREE, LinearEasing)
+                val debut = ChronoCapture.RUBIS + rang * ChronoCapture.RUBIS_ECART
+                phase(t ?: 0f, debut, ChronoCapture.RUBIS_DUREE, LinearEasing)
             } else {
                 1f
             }
@@ -530,7 +549,10 @@ private fun BoxScope.TextesCapture(nom: String, t: Float) {
         modifier = Modifier
             .align(Alignment.TopEnd)
             .padding(12.dp)
-            .graphicsLayer { alpha = phase(t, ChronoCapture.VOILE, ChronoCapture.VOILE_DUREE) * (1f - phase(t, ChronoCapture.ANNONCE, 300f)) },
+            .graphicsLayer {
+                alpha = phase(t, ChronoCapture.VOILE, ChronoCapture.VOILE_DUREE) *
+                    (1f - phase(t, ChronoCapture.ANNONCE, ChronoCapture.PASSER_DUREE))
+            },
     )
     Text(
         stringResource(R.string.capture_annonce, nom),

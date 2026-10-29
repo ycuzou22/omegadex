@@ -79,7 +79,10 @@ fun AventureScreen(
             onCocher = viewModel::cocher,
             onLieu = onLieu,
             derniereValidee = derniereValidee,
-            rencontres = ActionsRencontres(onAttraper = viewModel::attraper, onRubis = { id, centre -> rubis[id] = centre }),
+            rencontres = ActionsRencontres(
+                onAttraper = viewModel::attraper,
+                onRubis = { id, centre -> rubis[id] = centre },
+            ),
             modifier = Modifier.fillMaxSize(),
         )
         // « Capture → Pokédex » se joue par-dessus l'Aventure, la barre de navigation reste visible.
