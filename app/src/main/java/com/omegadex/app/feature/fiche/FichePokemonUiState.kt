@@ -2,6 +2,7 @@ package com.omegadex.app.feature.fiche
 
 import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.model.TalentEspece
 
 /** Les six rubriques de la fiche, dans l'ordre de la maquette E · Fiche Pokémon. */
 enum class OngletFiche { INFOS, STATS, EVOLUTION, ATTAQUES, LIEUX, DEFIS }
@@ -14,5 +15,8 @@ sealed interface FichePokemonUiState {
         val espece: Espece,
         /** Statut d'entraînement dans la run active ; null sans run. */
         val statut: StatutEspece?,
+        val talents: List<TalentEspece> = emptyList(),
+        /** Stade de la famille qui peut méga-évoluer (l'espèce elle-même ou une évolution), s'il y en a un. */
+        val stadeMega: String? = null,
     ) : FichePokemonUiState
 }

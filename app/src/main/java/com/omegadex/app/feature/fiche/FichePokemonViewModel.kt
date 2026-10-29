@@ -38,8 +38,19 @@ class FichePokemonViewModel @Inject constructor(
             ?: flowOf(null)
     }
 
-    val uiState: StateFlow<FichePokemonUiState> = combine(jeu.espece(especeId), statut) { espece, statutRun ->
-        if (espece == null) FichePokemonUiState.Introuvable else FichePokemonUiState.Fiche(espece, statutRun)
+    val uiState: StateFlow<FichePokemonUiState> = combine(
+        jeu.espece(especeId),
+        statut,
+        jeu.talents(especeId),
+        jeu.famille(especeId),
+        jeu.pokedexNational(),
+    ) { espece, statutRun, talents, famille, especes ->
+        if (espece == null) return@combine FichePokemonUiState.Introuvable
+        val membres = (famille.flatMap { listOf(it.especeSourceId, it.especeCibleId) } + espece.id).distinct()
+        val stadeMega = especes.filter { it.id in membres && it.aUneMega }
+            .minByOrNull { if (it.id == espece.id) 0 else 1 }
+            ?.nom
+        FichePokemonUiState.Fiche(espece, statutRun, talents, stadeMega)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), FichePokemonUiState.Chargement)
 
     /** Une touche sur les rubis : statut suivant ; appui long : statut précédent (comme dans le Pokédex). */

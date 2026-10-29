@@ -26,16 +26,20 @@ fun OmegadexApp(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            BarreNavigationOmega(
-                destinationCourante = destinationCourante,
-                onDestination = { destination ->
-                    navController.navigate(destination.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-            )
+            // Les écrans de détail (fiche Pokémon, fiche de lieu, Mes runs…) prennent tout l'écran,
+            // comme les maquettes ; ils ont leur propre bouton retour.
+            if (destinationCourante != null) {
+                BarreNavigationOmega(
+                    destinationCourante = destinationCourante,
+                    onDestination = { destination ->
+                        navController.navigate(destination.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
+            }
         },
     ) { padding ->
         OmegadexNavHost(navController = navController, modifier = Modifier.padding(padding))

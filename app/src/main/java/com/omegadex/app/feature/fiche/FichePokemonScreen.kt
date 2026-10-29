@@ -101,7 +101,7 @@ fun FichePokemonScreen(
                 onReculerStatut = viewModel::reculerStatut,
             ),
             modifier = modifier,
-            onglet = { onglet -> ContenuOnglet(onglet) },
+            onglet = { onglet -> ContenuOnglet(onglet, etat) },
         )
     }
 }
@@ -345,7 +345,16 @@ private fun PiedFiche(fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
 
 /** Contenu d'un onglet ; chaque rubrique est remplie par sa sous-tâche (T10.2 à T10.5). */
 @Composable
-private fun ContenuOnglet(onglet: OngletFiche) {
+private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche) {
+    when (onglet) {
+        OngletFiche.INFOS -> OngletInfos(fiche)
+        OngletFiche.STATS -> OngletStats(fiche)
+        else -> OngletABientot(onglet)
+    }
+}
+
+@Composable
+private fun OngletABientot(onglet: OngletFiche) {
     Text(
         stringResource(libelleOnglet(onglet)) + " · " + stringResource(R.string.ecran_bientot_disponible),
         style = MaterialTheme.typography.bodyLarge,
@@ -386,6 +395,6 @@ private fun FichePreview() {
         FicheContenu(
             FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE),
             ActionsFiche({}, {}, {}, {}),
-        ) { ContenuOnglet(it) }
+        ) { ContenuOnglet(it, FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE)) }
     }
 }

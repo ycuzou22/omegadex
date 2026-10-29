@@ -92,4 +92,15 @@ class FichePokemonViewModelTest {
         vm.reculerStatut()
         vm.uiState.first { (it as? FichePokemonUiState.Fiche)?.statut == StatutEspece.VUE }
     }
+
+    @Test
+    fun `les infos viennent de la base jeu, dont le talent cache et le stade Mega de la famille`() = runTest {
+        val arcko = fiche(252).fiche()
+        assertEquals(listOf("Engrais" to false, "Délestage" to true), arcko.talents.map { it.nom to it.cache })
+        assertEquals("Jungko", arcko.stadeMega)
+        assertEquals(45, arcko.espece.tauxCapture)
+        assertEquals(0.875, arcko.espece.ratioMale ?: 0.0, 0.0)
+        assertEquals("Jungko", fiche(254).fiche().stadeMega)
+        assertNull(fiche(1).fiche().stadeMega)
+    }
 }
