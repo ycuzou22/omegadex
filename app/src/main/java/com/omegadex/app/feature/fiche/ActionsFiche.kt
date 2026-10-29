@@ -1,0 +1,9 @@
+package com.omegadex.app.feature.fiche
+
+/** Actions de la fiche Pokémon, regroupées pour garder des signatures courtes. */
+class ActionsFiche(
+    val onRetour: () -> Unit,
+    val onDefis: () -> Unit,
+    val onAvancerStatut: () -> Unit,
+    val onReculerStatut: () -> Unit,
+)

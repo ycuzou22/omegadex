@@ -201,4 +201,19 @@
     <string name="anim_evolution_surtitre">Évolution réussie</string>
     <string name="anim_evolution_titre">%1$s a évolué\nen %2$s !</string>
     <string name="anim_continuer">Continuer</string>
+
+    <!-- Fiche Pokémon -->
+    <string name="fiche_introuvable">Espèce introuvable.</string>
+    <string name="fiche_retour">Retour</string>
+    <string name="fiche_numeros">Hoenn #%1$03d · National #%2$03d</string>
+    <string name="fiche_numero_national">National #%1$03d</string>
+    <string name="fiche_onglet_infos">Infos</string>
+    <string name="fiche_onglet_stats">Stats</string>
+    <string name="fiche_onglet_evolution">Évol.</string>
+    <string name="fiche_onglet_attaques">Attaq.</string>
+    <string name="fiche_onglet_lieux">Lieux</string>
+    <string name="fiche_onglet_defis">Défis</string>
+    <string name="fiche_entrainement">Entraînement · %1$s</string>
+    <string name="fiche_statut_description">Statut %1$d sur %2$d : %3$s</string>
+    <string name="fiche_voir_defis">Voir les défis de %1$s</string>
 </resources>

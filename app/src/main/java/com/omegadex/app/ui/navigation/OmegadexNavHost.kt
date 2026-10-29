@@ -2,24 +2,23 @@ package com.omegadex.app.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.omegadex.app.R
 import com.omegadex.app.feature.accueil.AccueilScreen
 import com.omegadex.app.feature.aventure.AventureScreen
 import com.omegadex.app.feature.defis.DefisScreen
 import com.omegadex.app.feature.defis.DefisViewModel
 import com.omegadex.app.feature.equipe.EquipeScreen
+import com.omegadex.app.feature.fiche.FichePokemonScreen
+import com.omegadex.app.feature.fiche.FichePokemonViewModel
 import com.omegadex.app.feature.lieu.FicheLieuScreen
 import com.omegadex.app.feature.lieu.FicheLieuViewModel
 import com.omegadex.app.feature.pokedex.PokedexScreen
 import com.omegadex.app.feature.runs.CreationRunScreen
 import com.omegadex.app.feature.runs.MesRunsScreen
-import com.omegadex.app.ui.components.EcranEnConstruction
 
 /** Écrans hors onglets, ouverts depuis l'accueil. */
 private const val ROUTE_MES_RUNS = "mes-runs"
@@ -66,11 +65,13 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
                 onEspece = { navController.navigate("$ROUTE_ESPECE/$it") },
             )
         }
-        // Fiche Pokémon : écran provisoire jusqu'à T10.
-        composable("$ROUTE_ESPECE/{especeId}") {
-            EcranEnConstruction(
-                titre = stringResource(R.string.espece_fiche_titre),
-                detail = stringResource(R.string.ecran_bientot_disponible),
+        composable(
+            "$ROUTE_ESPECE/{${FichePokemonViewModel.ARGUMENT_ESPECE}}",
+            arguments = listOf(navArgument(FichePokemonViewModel.ARGUMENT_ESPECE) { type = NavType.IntType }),
+        ) {
+            FichePokemonScreen(
+                onRetour = { navController.popBackStack() },
+                onDefis = { navController.navigate("$ROUTE_DEFIS_ESPECE/$it") },
             )
         }
         composable(ROUTE_MES_RUNS) {
