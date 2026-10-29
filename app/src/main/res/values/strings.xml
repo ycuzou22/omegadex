@@ -245,4 +245,15 @@
     <string name="fiche_fois">×%1$d</string>
     <string name="fiche_fois_demi">×½</string>
     <string name="fiche_fois_quart">×¼</string>
+    <string name="fiche_evolution_aucune">Cette espèce n\'évolue pas.</string>
+    <string name="fiche_evolution_pas_capture">Capture un membre de cette famille pour voir ton stade actuel en rubis.</string>
+    <string name="fiche_evolution_stade">Stade %1$d</string>
+    <string name="fiche_evolution_stade_actuel">ton stade actuel</string>
+    <string name="evolution_niveau">niv. %1$s</string>
+    <string name="evolution_pierre">Pierre</string>
+    <string name="evolution_bonheur">Bonheur</string>
+    <string name="evolution_echange">Échange</string>
+    <string name="evolution_objet">Objet</string>
+    <string name="evolution_lieu">Niveau gagné à %1$s</string>
+    <string name="evolution_autre">Condition spéciale</string>
 </resources>

@@ -18,5 +18,6 @@ sealed interface FichePokemonUiState {
         val talents: List<TalentEspece> = emptyList(),
         /** Stade de la famille qui peut méga-évoluer (l'espèce elle-même ou une évolution), s'il y en a un. */
         val stadeMega: String? = null,
+        val evolution: ChaineEvolution = ChaineEvolution(emptyList(), emptyList(), null),
     ) : FichePokemonUiState
 }

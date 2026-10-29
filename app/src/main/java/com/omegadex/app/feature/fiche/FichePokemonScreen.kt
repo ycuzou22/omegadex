@@ -83,6 +83,7 @@ private const val PIC_ETINCELLE = 0.88f
 fun FichePokemonScreen(
     onRetour: () -> Unit,
     onDefis: (Int) -> Unit,
+    onEspece: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FichePokemonViewModel = hiltViewModel(),
 ) {
@@ -99,9 +100,10 @@ fun FichePokemonScreen(
                 onDefis = { onDefis(etat.espece.id) },
                 onAvancerStatut = viewModel::avancerStatut,
                 onReculerStatut = viewModel::reculerStatut,
+                onEspece = onEspece,
             ),
             modifier = modifier,
-            onglet = { onglet -> ContenuOnglet(onglet, etat) },
+            onglet = { onglet -> ContenuOnglet(onglet, etat, onEspece) },
         )
     }
 }
@@ -345,10 +347,11 @@ private fun PiedFiche(fiche: FichePokemonUiState.Fiche, actions: ActionsFiche) {
 
 /** Contenu d'un onglet ; chaque rubrique est remplie par sa sous-tâche (T10.2 à T10.5). */
 @Composable
-private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche) {
+private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche, onEspece: (Int) -> Unit) {
     when (onglet) {
         OngletFiche.INFOS -> OngletInfos(fiche)
         OngletFiche.STATS -> OngletStats(fiche)
+        OngletFiche.EVOLUTION -> OngletEvolution(fiche, onEspece)
         else -> OngletABientot(onglet)
     }
 }
@@ -394,7 +397,7 @@ private fun FichePreview() {
     OmegadexTheme {
         FicheContenu(
             FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE),
-            ActionsFiche({}, {}, {}, {}),
-        ) { ContenuOnglet(it, FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE)) }
+            ActionsFiche({}, {}, {}, {}, {}),
+        ) { ContenuOnglet(it, FichePokemonUiState.Fiche(gobou, StatutEspece.CAPTUREE)) {} }
     }
 }
