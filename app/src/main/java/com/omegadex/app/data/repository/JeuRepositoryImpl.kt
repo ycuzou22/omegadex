@@ -2,6 +2,8 @@ package com.omegadex.app.data.repository
 
 import com.omegadex.app.data.jeu.JeuDatabase
 import com.omegadex.app.data.mapper.versDomaine
+import com.omegadex.app.domain.pokedex.possibleDansRubisOmega
+import com.omegadex.app.domain.rencontre.DisponibiliteRencontre
 import com.omegadex.app.domain.repository.JeuRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map
@@ -49,7 +51,15 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
         liste.map { it.versDomaine() }
     }
 
-    override fun especesAccessibles(etapeId: Int) = rencontres.especesAccessibles(etapeId).map { it.toSet() }
+    override fun toutesLesRencontres() = rencontres.toutesLesRencontres().map { liste ->
+        liste.map { it.versDomaine() }
+    }
+
+    override fun especesAccessibles(etapeId: Int) = toutesLesRencontres().map { liste ->
+        liste.filter { it.possibleDansRubisOmega() && DisponibiliteRencontre.possibleA(it, etapeId) }
+            .map { it.especeId }
+            .toSet()
+    }
 
     override fun especesEchangeRequis() = rencontres.especesEchangeRequis().map { it.toSet() }
 }
