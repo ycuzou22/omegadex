@@ -3,6 +3,8 @@ package com.omegadex.app.feature.pokedex
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,13 +24,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,26 +51,56 @@ import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.OmegadexTheme
 
-/** Pokédex de la run active : la grille de toutes les espèces, colorée selon leur statut. */
+/**
+ * Pokédex de la run active : la grille de toutes les espèces, colorée selon leur statut.
+ * Toucher une case ouvre sa fiche ([onEspece], fiche Pokémon de T10) ; toucher la bande des rubis
+ * fait avancer le statut d'un cran, un appui long sur cette bande le fait reculer.
+ * [onStatutModifie] reçoit chaque changement : c'est le point d'accroche de l'animation
+ * « Capture → Pokédex » (T14.2), à brancher quand [StatutModifie.capture] est vrai.
+ */
 @Composable
-fun PokedexScreen(modifier: Modifier = Modifier, viewModel: PokedexViewModel = hiltViewModel()) {
+fun PokedexScreen(
+    modifier: Modifier = Modifier,
+    onEspece: (Int) -> Unit = {},
+    onStatutModifie: (StatutModifie) -> Unit = {},
+    viewModel: PokedexViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    PokedexContenu(uiState = uiState, modifier = modifier)
+    val surChangement by rememberUpdatedState(onStatutModifie)
+    LaunchedEffect(viewModel) {
+        viewModel.evenements.collect { surChangement(it) }
+    }
+    PokedexContenu(
+        uiState = uiState,
+        actions = ActionsPokedex(
+            onOuvrir = onEspece,
+            onAvancer = viewModel::avancerStatut,
+            onReculer = viewModel::reculerStatut,
+        ),
+        modifier = modifier,
+    )
 }
 
+/** Réactions de l'écran aux gestes du joueur, regroupées pour alléger les signatures. */
+private class ActionsPokedex(
+    val onOuvrir: (Int) -> Unit = {},
+    val onAvancer: (Int) -> Unit = {},
+    val onReculer: (Int) -> Unit = {},
+)
+
 @Composable
-private fun PokedexContenu(uiState: PokedexUiState, modifier: Modifier = Modifier) {
+private fun PokedexContenu(uiState: PokedexUiState, actions: ActionsPokedex, modifier: Modifier = Modifier) {
     when (uiState) {
         PokedexUiState.Chargement -> Box(modifier.fillMaxSize())
         PokedexUiState.AucuneRun -> Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.pokedex_aucune_run), style = MaterialTheme.typography.bodyLarge)
         }
-        is PokedexUiState.Pret -> GrillePokedex(uiState, modifier)
+        is PokedexUiState.Pret -> GrillePokedex(uiState, actions, modifier)
     }
 }
 
 @Composable
-private fun GrillePokedex(etat: PokedexUiState.Pret, modifier: Modifier = Modifier) {
+private fun GrillePokedex(etat: PokedexUiState.Pret, actions: ActionsPokedex, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(LARGEUR_CASE),
         modifier = modifier.fillMaxSize(),
@@ -73,7 +112,13 @@ private fun GrillePokedex(etat: PokedexUiState.Pret, modifier: Modifier = Modifi
             EnTetePokedex(etat)
         }
         items(etat.especes, key = { it.id }, contentType = { "espece" }) { espece ->
-            CaseEspece(espece, etat.national)
+            CaseEspece(
+                espece = espece,
+                national = etat.national,
+                onOuvrir = { actions.onOuvrir(espece.id) },
+                onAvancer = { actions.onAvancer(espece.id) },
+                onReculer = { actions.onReculer(espece.id) },
+            )
         }
     }
 }
@@ -100,18 +145,33 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
 }
 
 /**
- * Case d'une espèce. Une espèce jamais vue apparaît en silhouette : fond éteint, nom estompé,
- * ni types ni rubis ;
+ * Case d'une espèce. Une espèce jamais vue apparaît en silhouette : fond éteint, nom estompé, sans types ;
  * une espèce à portée et pas encore capturée a une bordure rubis.
+ *
+ * Deux gestes, pour laisser la touche simple à la fiche Pokémon (T10) :
+ * - toucher la case ouvre la fiche ;
+ * - toucher la bande des rubis fait avancer le statut, un appui long sur elle le fait reculer.
+ * TalkBack lit la case d'un bloc ; il l'ouvre par un double appui et propose les deux changements
+ * de statut dans ses actions.
  */
 @Composable
-private fun CaseEspece(espece: EspeceAffichee, national: Boolean) {
+private fun CaseEspece(
+    espece: EspeceAffichee,
+    national: Boolean,
+    onOuvrir: () -> Unit,
+    onAvancer: () -> Unit,
+    onReculer: () -> Unit,
+) {
     val couleurs = OmegadexTheme.couleurs
     val silhouette = espece.statut == StatutEspece.NON_VUE
     val numero = stringResource(R.string.pokedex_numero, espece.numero)
     val statut = stringResource(libelleStatut(espece.statut))
     val portee = stringResource(R.string.pokedex_a_portee)
     val echange = stringResource(R.string.pokedex_echange)
+    val actionOuvrir = stringResource(R.string.pokedex_action_ouvrir)
+    val actionAvancer = stringResource(R.string.pokedex_action_avancer)
+    val actionReculer = stringResource(R.string.pokedex_action_reculer)
+    val forme = RoundedCornerShape(14.dp)
     val description = buildList {
         add("$numero ${espece.nom}")
         add(statut)
@@ -119,28 +179,79 @@ private fun CaseEspece(espece: EspeceAffichee, national: Boolean) {
         if (espece.echangeRequis && national) add(echange)
     }.joinToString(", ")
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = forme,
         color = if (silhouette) couleurs.piste else MaterialTheme.colorScheme.surface,
         border = if (espece.aPortee) BorderStroke(2.dp, couleurs.gemme) else BorderStroke(1.dp, couleurs.trait),
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = HAUTEUR_CASE)
-            .clearAndSetSemantics { contentDescription = description },
+            .clip(forme)
+            .clickable(onClickLabel = actionOuvrir, role = Role.Button, onClick = onOuvrir)
+            .semantics {
+                contentDescription = description
+                customActions = listOf(
+                    CustomAccessibilityAction(actionAvancer) {
+                        onAvancer()
+                        true
+                    },
+                    CustomAccessibilityAction(actionReculer) {
+                        onReculer()
+                        true
+                    },
+                )
+            },
     ) {
-        Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(numero, style = OmegadexTheme.chiffres.petit, color = couleurs.texteEteint)
-            Text(
-                espece.nom,
-                style = MaterialTheme.typography.titleSmall,
-                color = if (silhouette) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (!silhouette) PastillesTypes(espece.types)
-            if (!silhouette) RubisStatut(espece.statut)
-            if (espece.echangeRequis && national) {
-                Text(echange, style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
+        // Les textes de la case sont déjà lus d'un bloc par la description de la case.
+        Column(Modifier.clearAndSetSemantics {}) {
+            Column(
+                Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(numero, style = OmegadexTheme.chiffres.petit, color = couleurs.texteEteint)
+                Text(
+                    espece.nom,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = if (silhouette) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (!silhouette) PastillesTypes(espece.types)
+                if (espece.echangeRequis && national) {
+                    Text(echange, style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
+                }
             }
+            BandeStatut(espece.statut, onAvancer = onAvancer, onReculer = onReculer)
+        }
+    }
+}
+
+/**
+ * Bas de la case, cible tactile de 48 dp : les rubis du statut et un « + » qui invite à toucher.
+ * Une espèce jamais vue n'a pas encore de rubis : la bande propose seulement de la marquer vue.
+ */
+@Composable
+private fun BandeStatut(statut: StatutEspece, onAvancer: () -> Unit, onReculer: () -> Unit) {
+    val couleurs = OmegadexTheme.couleurs
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .minimumInteractiveComponentSize()
+            .combinedClickable(onLongClick = onReculer, onClick = onAvancer)
+            .padding(horizontal = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (statut == StatutEspece.NON_VUE) {
+            Text(
+                stringResource(R.string.pokedex_marquer_vu),
+                style = MaterialTheme.typography.labelSmall,
+                color = couleurs.texteEteint,
+            )
+        } else {
+            RubisStatut(statut)
+        }
+        if (statut != StatutEspece.MAITRISEE) {
+            Text("+", style = MaterialTheme.typography.labelLarge, color = couleurs.gemme)
         }
     }
 }
@@ -179,6 +290,7 @@ private fun RubisStatut(statut: StatutEspece) {
     }
 }
 
+/** Libellé d'un statut, partagé avec la fiche Pokémon (T10) : chaînes `statut_*` de `strings_pokedex.xml`. */
 @StringRes
 fun libelleStatut(statut: StatutEspece): Int = when (statut) {
     StatutEspece.NON_VUE -> R.string.statut_non_vue
@@ -198,6 +310,7 @@ private fun PokedexPreview() {
     OmegadexTheme {
         PokedexContenu(
             PokedexUiState.Pret(
+                runId = 1,
                 national = false,
                 especes = listOf(
                     EspeceAffichee(252, 1, "Arcko", listOf("plante"), StatutEspece.ENTRAINEE, false, false),
@@ -209,6 +322,7 @@ private fun PokedexPreview() {
                 vues = 3,
                 capturees = 2,
             ),
+            actions = ActionsPokedex(),
         )
     }
 }
