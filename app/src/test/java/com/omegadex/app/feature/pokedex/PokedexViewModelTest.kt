@@ -236,4 +236,77 @@ class PokedexViewModelTest {
         assertEquals(StatutEspece.EVOLUEE, StatutEspece.MAITRISEE.precedent())
         assertEquals(StatutEspece.NON_VUE, StatutEspece.NON_VUE.precedent())
     }
+
+    @Test
+    fun `la recherche et les filtres mettent la grille a jour sans toucher au compteur`() = runTest {
+        val run = nouvelleRun()
+        progression.definirStatut(run, 253, StatutEspece.CAPTUREE)
+        val viewModel = viewModel()
+        val depart = viewModel.uiState.first { it is PokedexUiState.Pret && it.capturees == 1 } as PokedexUiState.Pret
+        assertEquals(listOf("plante"), depart.typesDisponibles)
+        assertEquals(depart.especes, depart.resultats)
+
+        viewModel.rechercher("jung")
+        assertEquals(listOf(254), viewModel.resultats(FiltresPokedex(recherche = "jung")))
+        viewModel.rechercher("2")
+        assertEquals(listOf(253), viewModel.resultats(FiltresPokedex(recherche = "2")))
+
+        viewModel.rechercher("")
+        viewModel.basculerStatut(StatutEspece.NON_VUE)
+        assertEquals(listOf(252, 254), viewModel.resultats(FiltresPokedex(statuts = setOf(StatutEspece.NON_VUE))))
+        viewModel.basculerStatut(StatutEspece.CAPTUREE)
+        val deux = setOf(StatutEspece.NON_VUE, StatutEspece.CAPTUREE)
+        assertEquals(listOf(252, 253, 254), viewModel.resultats(FiltresPokedex(statuts = deux)))
+        viewModel.basculerStatut(StatutEspece.NON_VUE)
+        assertEquals(listOf(253), viewModel.resultats(FiltresPokedex(statuts = setOf(StatutEspece.CAPTUREE))))
+
+        val etat = viewModel.uiState.first { it is PokedexUiState.Pret } as PokedexUiState.Pret
+        assertEquals(3, etat.especes.size)
+        assertEquals(1 to 1, etat.vues to etat.capturees)
+    }
+
+    @Test
+    fun `choisir deux fois le meme type retire le filtre et effacer remet tout`() = runTest {
+        nouvelleRun()
+        val viewModel = viewModel()
+        viewModel.uiState.first { it is PokedexUiState.Pret }
+
+        viewModel.choisirType("eau")
+        assertEquals(emptyList<Int>(), viewModel.resultats(FiltresPokedex(type = "eau")))
+        viewModel.choisirType("plante")
+        assertEquals(listOf(252, 253, 254), viewModel.resultats(FiltresPokedex(type = "plante")))
+        viewModel.choisirType("plante")
+        assertEquals(listOf(252, 253, 254), viewModel.resultats(FiltresPokedex()))
+
+        viewModel.rechercher("zzz")
+        viewModel.basculerStatut(StatutEspece.VUE)
+        val vide = FiltresPokedex(recherche = "zzz", statuts = setOf(StatutEspece.VUE))
+        assertEquals(emptyList<Int>(), viewModel.resultats(vide))
+        viewModel.effacerFiltres()
+        assertEquals(listOf(252, 253, 254), viewModel.resultats(FiltresPokedex()))
+    }
+
+    @Test
+    fun `un changement de statut garde les filtres et sort l'espece des resultats filtres`() = runTest {
+        nouvelleRun()
+        val viewModel = viewModel()
+        viewModel.uiState.first { it is PokedexUiState.Pret }
+        viewModel.basculerStatut(StatutEspece.NON_VUE)
+        val nonVues = FiltresPokedex(statuts = setOf(StatutEspece.NON_VUE))
+        assertEquals(listOf(252, 253, 254), viewModel.resultats(nonVues))
+
+        viewModel.avancerStatut(252)
+
+        val etat = viewModel.uiState.first {
+            it is PokedexUiState.Pret && it.vues == 1
+        } as PokedexUiState.Pret
+        assertEquals(nonVues, etat.filtres)
+        assertEquals(listOf(253, 254), etat.resultats.map { it.id })
+    }
+
+    /** Attend l'état qui applique [filtres] et rend les espèces retenues. */
+    private suspend fun PokedexViewModel.resultats(filtres: FiltresPokedex): List<Int> {
+        val etat = uiState.first { it is PokedexUiState.Pret && it.filtres == filtres } as PokedexUiState.Pret
+        return etat.resultats.map { it.id }
+    }
 }

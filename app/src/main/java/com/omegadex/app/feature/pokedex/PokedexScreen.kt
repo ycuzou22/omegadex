@@ -3,8 +3,10 @@ package com.omegadex.app.feature.pokedex
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +21,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,24 +37,31 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.ui.components.ChampTexte
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.OmegadexTheme
+import com.omegadex.app.ui.theme.texteLisibleSur
 
 /**
  * Pokédex de la run active : la grille de toutes les espèces, colorée selon leur statut.
@@ -76,6 +88,10 @@ fun PokedexScreen(
             onOuvrir = onEspece,
             onAvancer = viewModel::avancerStatut,
             onReculer = viewModel::reculerStatut,
+            onRecherche = viewModel::rechercher,
+            onStatut = viewModel::basculerStatut,
+            onType = viewModel::choisirType,
+            onEffacer = viewModel::effacerFiltres,
         ),
         modifier = modifier,
     )
@@ -86,6 +102,10 @@ private class ActionsPokedex(
     val onOuvrir: (Int) -> Unit = {},
     val onAvancer: (Int) -> Unit = {},
     val onReculer: (Int) -> Unit = {},
+    val onRecherche: (String) -> Unit = {},
+    val onStatut: (StatutEspece) -> Unit = {},
+    val onType: (String) -> Unit = {},
+    val onEffacer: () -> Unit = {},
 )
 
 @Composable
@@ -95,7 +115,11 @@ private fun PokedexContenu(uiState: PokedexUiState, actions: ActionsPokedex, mod
         PokedexUiState.AucuneRun -> Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.pokedex_aucune_run), style = MaterialTheme.typography.bodyLarge)
         }
-        is PokedexUiState.Pret -> GrillePokedex(uiState, actions, modifier)
+        is PokedexUiState.Pret -> Column(modifier.fillMaxSize()) {
+            // La barre reste fixe au-dessus de la grille : le champ garde le focus pendant le défilement.
+            BarreFiltres(etat = uiState, actions = actions)
+            GrillePokedex(uiState, actions, Modifier.weight(1f))
+        }
     }
 }
 
@@ -111,7 +135,17 @@ private fun GrillePokedex(etat: PokedexUiState.Pret, actions: ActionsPokedex, mo
         item(key = "en-tete", span = { GridItemSpan(maxLineSpan) }, contentType = "en-tete") {
             EnTetePokedex(etat)
         }
-        items(etat.especes, key = { it.id }, contentType = { "espece" }) { espece ->
+        if (etat.resultats.isEmpty()) {
+            item(key = "aucun-resultat", span = { GridItemSpan(maxLineSpan) }, contentType = "vide") {
+                Text(
+                    stringResource(R.string.pokedex_aucun_resultat),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 24.dp),
+                )
+            }
+        }
+        items(etat.resultats, key = { it.id }, contentType = { "espece" }) { espece ->
             CaseEspece(
                 espece = espece,
                 onOuvrir = { actions.onOuvrir(espece.id) },
@@ -135,6 +169,14 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
             style = OmegadexTheme.chiffres.petit,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        if (etat.filtres.actifs) {
+            Text(
+                stringResource(R.string.pokedex_resultats, etat.resultats.size),
+                style = OmegadexTheme.chiffres.petit,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        }
         Text(
             stringResource(R.string.pokedex_legende_portee),
             style = MaterialTheme.typography.bodySmall,
@@ -284,6 +326,81 @@ private fun RubisStatut(statut: StatutEspece) {
     }
 }
 
+/** Champ de recherche, puis une ligne de filtres par statut et une ligne de filtres par type. */
+@Composable
+private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
+    val clavier = LocalSoftwareKeyboardController.current
+    val filtres = etat.filtres
+    Column(
+        Modifier.fillMaxWidth().padding(top = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        ChampTexte(
+            valeur = filtres.recherche,
+            onValeur = actions.onRecherche,
+            libelle = stringResource(R.string.pokedex_recherche),
+            actionClavier = ImeAction.Search,
+            onValider = { clavier?.hide() },
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        LigneFiltres {
+            StatutEspece.entries.forEach { statut ->
+                PuceFiltre(
+                    libelle = stringResource(libelleStatut(statut)),
+                    choisie = statut in filtres.statuts,
+                    onBascule = { actions.onStatut(statut) },
+                )
+            }
+        }
+        LigneFiltres {
+            etat.typesDisponibles.forEach { type ->
+                PuceFiltre(
+                    libelle = nomDuType(type)?.let { stringResource(it) } ?: type,
+                    choisie = type == filtres.type,
+                    onBascule = { actions.onType(type) },
+                    couleur = CouleursTypes.de(type),
+                )
+            }
+            if (filtres.actifs) {
+                TextButton(onClick = actions.onEffacer) { Text(stringResource(R.string.pokedex_effacer_filtres)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LigneFiltres(contenu: @Composable () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        contenu()
+    }
+}
+
+/**
+ * Puce de filtre à cocher. Choisie, elle prend la [couleur] donnée (celle du type, rubis par défaut) ;
+ * TalkBack l'annonce comme une case cochée ou non.
+ */
+@Composable
+private fun PuceFiltre(libelle: String, choisie: Boolean, onBascule: () -> Unit, couleur: Color = Color.Unspecified) {
+    val fond = if (couleur == Color.Unspecified) MaterialTheme.colorScheme.primary else couleur
+    Text(
+        text = libelle,
+        style = MaterialTheme.typography.labelLarge,
+        color = if (choisie) texteLisibleSur(fond) else MaterialTheme.colorScheme.onSurface,
+        maxLines = 1,
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(if (choisie) fond else MaterialTheme.colorScheme.surface, CircleShape)
+            .border(1.dp, if (choisie) fond else OmegadexTheme.couleurs.trait, CircleShape)
+            .toggleable(value = choisie, role = Role.Checkbox, onValueChange = { onBascule() })
+            .heightIn(min = HAUTEUR_PUCE)
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+    )
+}
+
 /** Libellé d'un statut, partagé avec la fiche Pokémon (T10) : chaînes `statut_*` de `strings_pokedex.xml`. */
 @StringRes
 fun libelleStatut(statut: StatutEspece): Int = when (statut) {
@@ -297,6 +414,9 @@ fun libelleStatut(statut: StatutEspece): Int = when (statut) {
 
 private val LARGEUR_CASE = 104.dp
 private val HAUTEUR_CASE = 100.dp
+
+/** Cible tactile minimale d'une puce de filtre (48 dp moins le texte, centré par le padding). */
+private val HAUTEUR_PUCE = 32.dp
 
 @ApercusClairSombre
 @Composable

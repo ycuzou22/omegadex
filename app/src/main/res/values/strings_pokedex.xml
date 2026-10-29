@@ -13,6 +13,10 @@
     <string name="pokedex_action_avancer">Passer au statut suivant</string>
     <string name="pokedex_action_reculer">Revenir au statut précédent</string>
     <string name="pokedex_marquer_vu">Marquer vu</string>
+    <string name="pokedex_recherche">Nom ou numéro</string>
+    <string name="pokedex_effacer_filtres">Tout effacer</string>
+    <string name="pokedex_aucun_resultat">Aucune espèce ne correspond à ta recherche.</string>
+    <string name="pokedex_resultats">Résultats : %1$d</string>
 
     <string name="statut_non_vue">Non vu</string>
     <string name="statut_vue">Vu</string>
