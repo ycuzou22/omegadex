@@ -31,12 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -146,25 +146,25 @@ private fun ContenuBoiteBadges(
     onToucher: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var cadre by remember { mutableStateOf(Rect.Zero) }
-    var niche by remember { mutableStateOf<Rect?>(null) }
+    val visee = remember { ViseeCamera() }
     val nom = stringResource(nomBadge(nouveau))
     Box(
         modifier
             .fillMaxSize()
             .background(Brush.radialGradient(listOf(Color(0xFF2A1F22), Roche, Color(0xFF0B0809))))
             .clickable(onClickLabel = stringResource(R.string.badges_passer), onClick = onToucher)
-            .semantics { liveRegion = LiveRegionMode.Polite },
+            .semantics { liveRegion = LiveRegionMode.Polite }
+            .onGloballyPositioned { visee.cadre = it },
     ) {
         Box(
             Modifier
                 .fillMaxSize()
-                .onGloballyPositioned { cadre = it.boundsInRoot() }
                 .graphicsLayer {
-                    val cible = niche
                     val zoom = zoomCamera(t)
-                    if (cible != null && zoom > 0f && size.width > 0f) {
-                        val origine = cible.center - cadre.topLeft
+                    // Cible relevée caméra immobile (écrin posé), puis figée pendant tout le zoom.
+                    if (zoom == 0f) visee.relever()
+                    val origine = visee.cible
+                    if (origine != null && zoom > 0f && size.width > 0f) {
                         transformOrigin = TransformOrigin(origine.x / size.width, origine.y / size.height)
                         translationX = (size.width / 2f - origine.x) * zoom
                         translationY = (size.height / 2f - origine.y) * zoom
@@ -174,9 +174,27 @@ private fun ContenuBoiteBadges(
                 },
             contentAlignment = Alignment.Center,
         ) {
-            Ecrin(obtenus, nouveau, t) { niche = it }
+            Ecrin(obtenus, nouveau, t) { visee.niche = it }
         }
         TextesSequence(nom, t)
+    }
+}
+
+/**
+ * Point visé par la caméra : le centre de la niche du nouveau badge, dans le repère de la scène.
+ * Il est recalculé à chaque image tant que la caméra est immobile (l'écrin bouge encore à son arrivée,
+ * ce qui ne relance pas de mise en page), puis figé : relu pendant le zoom, il suivrait la caméra elle-même.
+ */
+private class ViseeCamera {
+    var cadre: LayoutCoordinates? = null
+    var niche: LayoutCoordinates? = null
+    var cible: Offset? = null
+        private set
+
+    fun relever() {
+        val scene = cadre ?: return
+        val visee = niche ?: return
+        if (scene.isAttached && visee.isAttached) cible = scene.localBoundingBoxOf(visee, clipBounds = false).center
     }
 }
 
@@ -185,7 +203,7 @@ private fun zoomCamera(t: Float): Float = phase(t, ChronoBoite.CAMERA_AVANT, Chr
     phase(t, ChronoBoite.CAMERA_RETOUR, ChronoBoite.CAMERA_RETOUR_DUREE, EASE_CAMERA)
 
 @Composable
-private fun Ecrin(obtenus: Set<BadgeArene>, nouveau: BadgeArene, t: Float, onNiche: (Rect) -> Unit) {
+private fun Ecrin(obtenus: Set<BadgeArene>, nouveau: BadgeArene, t: Float, onNiche: (LayoutCoordinates) -> Unit) {
     val arrivee = phase(t, 0f, ChronoBoite.ARRIVEE_DUREE, EASE_REBOND)
     Box(
         Modifier
