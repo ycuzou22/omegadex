@@ -61,6 +61,15 @@ fun AccueilScreen(
     // Les quêtes cochées depuis l'accueil valident l'étape comme dans l'Aventure, avec la même animation.
     LaunchedEffect(aventureViewModel) { aventureViewModel.evenements.collect { celebration = it } }
     celebration?.let { CelebrationEtape(it) { celebration = null } }
+    var demo by remember { mutableStateOf(true) }
+    if (demo) {
+        com.omegadex.app.ui.animations.EvolutionPleinEcran(
+            com.omegadex.app.ui.animations.EspeceAnimee("Gobou", listOf("eau")),
+            com.omegadex.app.ui.animations.EspeceAnimee("Flobio", listOf("eau", "sol")),
+            onFin = { demo = false },
+            detail = "Défi réussi : « Évoluer avant Voltère »",
+        )
+    }
     Box(modifier.fillMaxSize()) {
         AccueilContenu(
             uiState = uiState,
