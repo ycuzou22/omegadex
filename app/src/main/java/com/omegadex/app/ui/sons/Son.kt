@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.omegadex.app.ui.sons
 
 import androidx.annotation.RawRes

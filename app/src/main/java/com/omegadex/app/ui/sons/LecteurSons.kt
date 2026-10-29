@@ -59,7 +59,8 @@ class LecteurSons @Inject constructor(
     }
 
     override fun ambiance(active: Boolean) {
-        if (active && reglages.value.ambiance && reglages.value.sons && sonore()) {
+        val autorisee = reglages.value.let { it.ambiance && it.sons }
+        if (active && autorisee && sonore()) {
             if (lecteurAmbiance == null) {
                 lecteurAmbiance = MediaPlayer.create(context, R.raw.ambiance_aventure)?.apply {
                     setAudioAttributes(attributs)

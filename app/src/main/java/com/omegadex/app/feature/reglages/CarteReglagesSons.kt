@@ -21,36 +21,11 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.omegadex.app.R
 import com.omegadex.app.domain.repository.Reglages
-import com.omegadex.app.domain.repository.ReglagesRepository
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-
-@HiltViewModel
-class ReglagesSonsViewModel @Inject constructor(private val repository: ReglagesRepository) : ViewModel() {
-    val reglages: StateFlow<Reglages> =
-        repository.reglages.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), Reglages())
-
-    fun activerSons(actifs: Boolean) = viewModelScope.launch { repository.activerSons(actifs) }
-
-    fun activerVibrations(actives: Boolean) = viewModelScope.launch { repository.activerVibrations(actives) }
-
-    fun activerAmbiance(active: Boolean) = viewModelScope.launch { repository.activerAmbiance(active) }
-
-    private companion object {
-        const val ARRET_MS = 5_000L
-    }
-}
 
 /** Carte « Sons et vibrations » de Mes runs : trois interrupteurs, l'ambiance désactivée par défaut. */
 @Composable
