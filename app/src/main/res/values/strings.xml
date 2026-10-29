@@ -256,4 +256,17 @@
     <string name="evolution_objet">Objet</string>
     <string name="evolution_lieu">Niveau gagné à %1$s</string>
     <string name="evolution_autre">Condition spéciale</string>
+    <string name="fiche_attaques_filtre">%1$s · %2$d</string>
+    <string name="fiche_attaques_par_niveau">Niveau</string>
+    <string name="fiche_attaques_ct_cs">CT/CS</string>
+    <string name="fiche_attaques_reproduction">Reproduction</string>
+    <string name="fiche_attaques_donneur">Donneur</string>
+    <string name="fiche_attaques_aucune">Aucune attaque apprise par cette méthode.</string>
+    <string name="fiche_attaques_niveau">niv. %1$d</string>
+    <string name="fiche_attaques_niveau_actuel">Niveau actuel · %1$d</string>
+    <string name="fiche_attaques_valeurs">%1$s · %2$s · %3$d PP</string>
+    <string name="fiche_attaques_precision">%1$d %%</string>
+    <string name="categorie_physique">Physique</string>
+    <string name="categorie_speciale">Spéciale</string>
+    <string name="categorie_statut">Statut</string>
 </resources>

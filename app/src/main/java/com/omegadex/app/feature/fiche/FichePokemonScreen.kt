@@ -352,6 +352,7 @@ private fun ContenuOnglet(onglet: OngletFiche, fiche: FichePokemonUiState.Fiche,
         OngletFiche.INFOS -> OngletInfos(fiche)
         OngletFiche.STATS -> OngletStats(fiche)
         OngletFiche.EVOLUTION -> OngletEvolution(fiche, onEspece)
+        OngletFiche.ATTAQUES -> OngletAttaques(fiche)
         else -> OngletABientot(onglet)
     }
 }

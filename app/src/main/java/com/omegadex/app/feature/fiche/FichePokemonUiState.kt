@@ -1,5 +1,6 @@
 package com.omegadex.app.feature.fiche
 
+import com.omegadex.app.domain.model.AttaqueApprise
 import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.model.TalentEspece
@@ -19,5 +20,8 @@ sealed interface FichePokemonUiState {
         /** Stade de la famille qui peut méga-évoluer (l'espèce elle-même ou une évolution), s'il y en a un. */
         val stadeMega: String? = null,
         val evolution: ChaineEvolution = ChaineEvolution(emptyList(), emptyList(), null),
+        val attaques: List<AttaqueApprise> = emptyList(),
+        /** Niveau du Pokémon de l'équipe de cette espèce (le plus haut s'il y en a plusieurs). */
+        val niveauActuel: Int? = null,
     ) : FichePokemonUiState
 }

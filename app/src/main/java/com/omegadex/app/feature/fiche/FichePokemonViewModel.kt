@@ -38,7 +38,7 @@ class FichePokemonViewModel @Inject constructor(
             ?: flowOf(null)
     }
 
-    val uiState: StateFlow<FichePokemonUiState> = combine(
+    private val base = combine(
         jeu.espece(especeId),
         suivi,
         jeu.talents(especeId),
@@ -56,7 +56,12 @@ class FichePokemonViewModel @Inject constructor(
             talents = talents,
             stadeMega = stadeMega,
             evolution = ChaineEvolution.construire(espece.id, famille, especes.filter { it.id in membres }, suiviRun),
+            niveauActuel = suiviRun?.equipe?.filter { it.especeId == especeId }?.maxOfOrNull { it.niveau },
         )
+    }
+
+    val uiState: StateFlow<FichePokemonUiState> = combine(base, jeu.attaquesApprises(especeId)) { etat, attaques ->
+        if (etat is FichePokemonUiState.Fiche) etat.copy(attaques = attaques) else etat
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), FichePokemonUiState.Chargement)
 
     /** Une touche sur les rubis : statut suivant ; appui long : statut précédent (comme dans le Pokédex). */
