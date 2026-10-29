@@ -252,9 +252,9 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
     ) {
         // Les textes de la case sont déjà lus d'un bloc par la description de la case.
         Column(Modifier.clearAndSetSemantics {}) {
+            // La partie haute prend la hauteur de son contenu (image, types) : pondérée, elle était rognée.
             Column(
                 Modifier
-                    .weight(1f, fill = true)
                     .fillMaxWidth()
                     .clickable(onClick = onOuvrir)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp),
