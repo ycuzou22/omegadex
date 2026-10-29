@@ -551,6 +551,52 @@ def tester_comptes(r: Recette) -> None:
     r.verifier("Comptes isolés", "Yamao retrouve son étape 1", etape_affichee(ETAPES[1]))
 
 
+def bouton_systeme(*libelles: str, delai: float = 12) -> Noeud | None:
+    """Bouton d'une fenêtre système (sélecteur de fichiers), quelle que soit la langue ou la casse."""
+    fin = time.time() + delai
+    while time.time() < fin:
+        ecran = lire_ecran()
+        for n in ecran:
+            if n.texte.strip().lower() in {l.lower() for l in libelles}:
+                return n
+        time.sleep(1)
+    return None
+
+
+def tester_sauvegarde(r: Recette) -> None:
+    """Export puis import de la sauvegarde depuis Mes runs, avec le sélecteur de fichiers Android (T15)."""
+    onglet("Accueil")
+    remonter(3)
+    # L'en-tête « Run <nom> · <difficulté> » de l'accueil ouvre Mes runs (action « Changer de run »).
+    changer = attendre("Run Rubis Oméga", 6)
+    if changer:
+        toucher(changer, 3)
+    exporter = trouver_en_defilant("Exporter ma progression", 8, exact=True)
+    if not r.verifier("Export / import", "carte Sauvegarde dans Mes runs", exporter):
+        return
+    toucher(exporter, 4)
+    enregistrer = bouton_systeme("Save", "Enregistrer")
+    if enregistrer:
+        toucher(enregistrer, 3)
+    r.verifier("Export / import", "export dans un fichier JSON", attendre("Sauvegarde enregistrée", 12),
+               "bouton du sélecteur introuvable" if not enregistrer else "")
+    importer = trouver_en_defilant("Importer une sauvegarde", 6, exact=True)
+    if importer:
+        toucher(importer, 4)
+    fichier = None
+    fin = time.time() + 15
+    while time.time() < fin and fichier is None:
+        fichier = next((n for n in lire_ecran() if n.texte.startswith("omegadex-sauvegarde-")), None)
+        time.sleep(1)
+    if fichier:
+        toucher(fichier, 4)
+    r.verifier("Export / import", "import : la run déjà présente n'est pas dupliquée",
+               attendre("déjà dans ce compte", 12), "fichier introuvable dans le sélecteur" if not fichier else "")
+    retour = chercher("Retour", exact=True)
+    if retour:
+        toucher(retour, 2)
+
+
 def scenario(r: Recette) -> None:
     shell(f"am start -n {ACTIVITE}")
     time.sleep(8)
@@ -583,6 +629,7 @@ def scenario(r: Recette) -> None:
         r.verifier("Écrans", f"onglet {nom}", chercher(nom) is not None)
     tester_mode_avion(r)
     tester_comptes(r)
+    tester_sauvegarde(r)
 
 
 def main() -> int:
