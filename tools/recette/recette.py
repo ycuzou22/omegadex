@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Recette du MVP sur émulateur (T16.2) : pilote l'application installée par adb et UI Automator.
+"""Recette du MVP sur émulateur (T16.2 et T16.3) : pilote l'application installée par adb et UI Automator.
 
-    python3 tools/recette/recette.py --profil pixel [--sortie recette]
+    python3 tools/recette/recette.py --profil pixel [--jusqu-a-la-ligue] [--sortie recette]
 
 Chaque vérification est notée OK ou ÉCHEC dans <sortie>/<profil>/resultats.json et recette.md, avec une capture
 d'écran par étape. Le script échoue (code 1) si une vérification échoue ou si l'application plante.
@@ -25,6 +25,7 @@ PAQUET = "com.omegadex.app"
 ACTIVITE = f"{PAQUET}/.MainActivity"
 RACINE = pathlib.Path(__file__).resolve().parents[2]
 ETAPES = json.loads((RACINE / "tools/import/donnees/etapes_rosa.json").read_text(encoding="utf-8"))["etapes"]
+ETAPE_LIGUE = 10
 MOT_DE_PASSE = "rubis-omega"
 
 
@@ -597,7 +598,7 @@ def tester_sauvegarde(r: Recette) -> None:
         toucher(retour, 2)
 
 
-def scenario(r: Recette) -> None:
+def scenario(r: Recette, jusqu_a_la_ligue: bool) -> None:
     shell(f"am start -n {ACTIVITE}")
     time.sleep(8)
     for _ in range(3):
@@ -631,11 +632,31 @@ def scenario(r: Recette) -> None:
     tester_comptes(r)
     tester_sauvegarde(r)
 
+    if jusqu_a_la_ligue:
+        run_jusqu_a_la_ligue(r)
+
+
+def run_jusqu_a_la_ligue(r: Recette) -> None:
+    """T16.3 : valide les quêtes principales des étapes 1 à 10 (Ligue) dans l'application."""
+    ouvrir_aventure()
+    for i in range(1, ETAPE_LIGUE + 1):
+        etape, suivante = ETAPES[i], ETAPES[i + 1]
+        remonter(4)
+        if not valider_etape(r, etape, suivante, capturer=True):
+            return
+        remonter(4)
+    onglet("Pokédex")
+    r.verifier("Pokédex national", "le Pokédex national s'ouvre après la Ligue", attendre("Pokédex national", 10))
+    onglet("Accueil")
+    remonter(3)
+    r.verifier("Run jusqu'à la Ligue", "accueil après la Ligue", attendre("Bonjour, Yamao", 8))
+
 
 def main() -> int:
     args = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     args.add_argument("--profil", required=True)
     args.add_argument("--sortie", type=pathlib.Path, default=pathlib.Path("recette"))
+    args.add_argument("--jusqu-a-la-ligue", action="store_true")
     a = args.parse_args()
     dossier = a.sortie / a.profil
     dossier.mkdir(parents=True, exist_ok=True)
@@ -644,7 +665,7 @@ def main() -> int:
     shell("settings put global hide_error_dialogs 1")  # pas de boîte « … ne répond pas » du lanceur
     print("Claviers virtuels désactivés :", desactiver_clavier_virtuel(), flush=True)
     try:
-        scenario(r)
+        scenario(r, a.jusqu_a_la_ligue)
     except Exception as erreur:  # le rapport doit être écrit même si le script lui-même échoue
         r.verifier("Script", "exception du script de recette", False, repr(erreur)[:300])
     finally:
