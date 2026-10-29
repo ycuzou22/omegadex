@@ -28,7 +28,7 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
 3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
 
-Version actuelle des données : **4** (schéma Room v4, 60 modèles de défis).
+Version actuelle des données : **5** (schéma Room v4, 60 modèles de défis, quêtes d'échange pour les exclusivités Saphir Alpha).
 
 ## Attention aux schémas exportés
 

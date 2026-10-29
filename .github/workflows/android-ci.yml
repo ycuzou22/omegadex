@@ -31,7 +31,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Build, lint et tests
-        run: ./gradlew build lint ktlintCheck detekt test --continue
+        run: ./gradlew build lint ktlintCheck detekt test createDebugUnitTestCoverageReport --continue
+
+      - name: Couverture du domaine
+        run: python3 tools/couverture/verifier_couverture.py
 
       - name: Rapports en cas d'échec
         if: failure()

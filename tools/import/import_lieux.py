@@ -50,6 +50,13 @@ PRECISIONS_METHODE = {"Pêche à la Canne": "Canne", "Pêche à la Super Canne":
                       "Longues herbes": "longues herbes", "Sable": "sable", "Vols d'oiseaux": "vols d'oiseaux",
                       "Fossiles": "fossile ranimé", "Fausses Balls au sol": "fausse Poké Ball au sol"}  # fmt: skip
 VERSIONS = {"RuO": "Rubis Oméga uniquement", "SaA": "Saphir Alpha uniquement"}
+# Rencontres de l'autre version : gardées pour l'affichage, mais impossibles dans une partie de Rubis Oméga.
+AUTRE_VERSION = VERSIONS["SaA"]
+
+
+def dans_rubis_omega(condition: str | None) -> bool:
+    """Vrai si la rencontre existe dans Rubis Oméga (elle n'est pas réservée à Saphir Alpha)."""
+    return not (condition and AUTRE_VERSION in condition)
 
 
 def texte_brut(wiki: str) -> str:
@@ -135,9 +142,7 @@ def importer(con: sqlite3.Connection) -> dict[str, int]:
         "INSERT INTO rencontre (lieuId, especeId, methode, niveauMin, niveauMax, taux, condition) VALUES (?,?,?,?,?,?,?)",
         uniques,
     )
-    presentes = {r[1] for r in uniques}
-    obtenables = _famille_complete(con, presentes)
-    absentes = [eid for eid in especes.values() if eid not in obtenables]
+    absentes = especes_echange_requis(con, uniques, especes.values())
     con.executemany(
         "INSERT INTO rencontre (lieuId, especeId, methode, niveauMin, niveauMax, taux, condition) VALUES (?,?,?,?,?,?,?)",
         [(id_hors_hoenn, eid, "ECHANGE_REQUIS", None, None, None, None) for eid in sorted(absentes)],
@@ -145,10 +150,20 @@ def importer(con: sqlite3.Connection) -> dict[str, int]:
     return {
         "lieux": len(lieux) + 1,
         "rencontres": len(uniques),
-        "especes trouvables": len(presentes),
-        "obtenables par evolution ou reproduction": len(obtenables) - len(presentes),
+        "especes trouvables dans Rubis Omega": len({r[1] for r in uniques if dans_rubis_omega(r[6])}),
         "echange requis": len(absentes),
     }
+
+
+def especes_echange_requis(con: sqlite3.Connection, rencontres: list[tuple], especes) -> list[int]:
+    """Espèces qu'une partie de Rubis Oméga ne peut pas obtenir seule : ni trouvables, ni par évolution
+    ou reproduction d'une espèce trouvable. Les exclusivités de Saphir Alpha en font partie.
+
+    [rencontres] : tuples (lieuId, especeId, methode, niveauMin, niveauMax, taux, condition).
+    """
+    presentes = {r[1] for r in rencontres if dans_rubis_omega(r[6])}
+    obtenables = _famille_complete(con, presentes)
+    return sorted(eid for eid in especes if eid not in obtenables)
 
 
 def _famille_complete(con: sqlite3.Connection, trouvables: set[int]) -> set[int]:
