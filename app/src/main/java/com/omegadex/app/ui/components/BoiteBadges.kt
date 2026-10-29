@@ -25,13 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -98,7 +97,7 @@ private val ETINCELLES = listOf(
 /**
  * Boîte à badges : écrin de roche avec une niche par arène. Les badges [obtenus] y sont posés, les autres niches
  * montrent leur numéro. Pendant l'animation de gain, [arrivee] fait arriver un badge, [compteur] et [lueur]
- * (0 à 1, braise montant du fond) sont pilotés par la séquence et [onNicheArrivee] reçoit la position de la
+ * (0 à 1, braise montant du fond) sont pilotés par la séquence et [onNicheArrivee] reçoit les coordonnées de la
  * niche visée, pour la caméra. Le badge en vol déborde de l'écrin : le parent ne doit pas le rogner.
  */
 @Composable
@@ -108,7 +107,7 @@ fun BoiteBadges(
     arrivee: ArriveeBadge? = null,
     compteur: Int = obtenus.size,
     lueur: Float = 0f,
-    onNicheArrivee: (Rect) -> Unit = {},
+    onNicheArrivee: (LayoutCoordinates) -> Unit = {},
 ) {
     val total = BadgeArene.entries.size
     val noms = BadgeArene.entries.filter { it in obtenus }.map { stringResource(nomBadge(it)) }
@@ -177,7 +176,7 @@ private fun NicheBadge(
     badge: BadgeArene,
     obtenu: Boolean,
     arrivee: ArriveeBadge?,
-    onPosition: (Rect) -> Unit,
+    onPosition: (LayoutCoordinates) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val t = arrivee?.t
@@ -191,7 +190,7 @@ private fun NicheBadge(
             Modifier
                 .size(64.dp)
                 .then(
-                    if (arrivee != null) Modifier.onGloballyPositioned { onPosition(it.boundsInRoot()) } else Modifier,
+                    if (arrivee != null) Modifier.onGloballyPositioned(onPosition) else Modifier,
                 ),
             contentAlignment = Alignment.Center,
         ) {
