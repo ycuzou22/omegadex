@@ -34,7 +34,7 @@ CS_ETAPE = {
     "ECLATE_ROC": 3,
     "FORCE": 5,
     "SURF": 6,
-    "VOL": 6,
+    "VOL": 7,
     "VELO_CROSS": 3,
     "VELO_COURSE": 3,
     "CHERCHE_OBJET": 0,
@@ -43,6 +43,8 @@ CS_ETAPE = {
 }
 # Conditions d'histoire qui repoussent un objet, repérées dans le champ « condition » (mot-clé, étape minimale).
 CONDITIONS_OBJET = [
+    ("Pokédex National complété", 12),
+    ("Pokédex de Hoenn complété", 10),
     ("Delta", 11),
     ("Ligue", 10),
     ("Pokédex National", 10),
@@ -55,6 +57,17 @@ CONDITIONS_OBJET = [
     ("Voltère", 4),
     ("Bastien", 3),
     ("Roxanne", 2),
+    # Récompense remise en battant le champion : à l'étape de son arène.
+    ("arène de Clémenti-Ville", 5),
+    # Badge désigné par la ville de son arène.
+    ("badge d'Atalanopolis", 10),
+    ("badge d'Algatia", 8),
+    ("badge de Cimetronelle", 7),
+    ("badge de Clémenti", 6),
+    ("badge de Vermilava", 5),
+    ("badge de Lavandia", 4),
+    ("badge de Myokara", 3),
+    ("badge de Mérouville", 2),
 ]
 NOMS_CS = {
     "COUPE": "Coupe",
@@ -215,9 +228,15 @@ def generer_quetes_objets(con: sqlite3.Connection, fichier: pathlib.Path | None 
     objets = json.loads(fichier.read_text(encoding="utf-8"))["objets"]
     con.execute("DELETE FROM quete WHERE type = 'ANNEXE' AND recompense IS NOT NULL")
     lieux = {nom: (lid, etape) for lid, nom, etape in con.execute("SELECT id, nom, etapeDeblocageId FROM lieu")}
+    # Les récompenses d'arène (« Badge Roche, CT39 Tomberoche ») sont déjà dans les quêtes principales.
+    deja_donnes = {
+        nom.strip()
+        for (recompense,) in con.execute("SELECT recompense FROM quete WHERE type = 'PRINCIPALE' AND recompense IS NOT NULL")
+        for nom in recompense.split(",")
+    }
     quetes = []
     for rang, objet in enumerate(objets):
-        if not objet.get("lieu"):
+        if not objet.get("lieu") or objet["nom"] in deja_donnes:
             continue
         if objet["lieu"] not in lieux:
             raise ValueError(f"Objet « {objet['nom']} » : lieu inconnu « {objet['lieu']} »")
