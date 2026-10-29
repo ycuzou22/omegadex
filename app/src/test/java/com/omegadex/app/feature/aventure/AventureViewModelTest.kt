@@ -120,7 +120,7 @@ class AventureViewModelTest {
 
         viewModel.cocher(1, cochee = true)
 
-        assertEquals(EtapeValidee("Départ", "Roxanne"), viewModel.evenements.first())
+        assertEquals(EtapeValidee(0, "Départ", null, "Roxanne"), viewModel.evenements.first())
         val suivante = viewModel.uiState.first {
             it is AventureUiState.EtapeEnCours && it.numero == 1
         } as AventureUiState.EtapeEnCours
@@ -128,7 +128,7 @@ class AventureViewModelTest {
         assertEquals(listOf(3), suivante.principales.map { it.id })
 
         viewModel.cocher(3, cochee = true)
-        assertEquals(EtapeValidee("Roxanne", null), viewModel.evenements.first())
+        assertEquals(EtapeValidee(1, "Roxanne", "Badge Roche", null), viewModel.evenements.first())
         assertEquals(AventureUiState.Terminee, viewModel.uiState.first { it == AventureUiState.Terminee })
     }
 }
