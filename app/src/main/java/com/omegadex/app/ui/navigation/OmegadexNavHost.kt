@@ -55,7 +55,9 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
                 onRetour = { navController.popBackStack() },
             )
         }
-        composable(Destination.EQUIPE.route) { EquipeScreen() }
+        composable(Destination.EQUIPE.route) {
+            EquipeScreen(onEspece = { navController.navigate("$ROUTE_ESPECE/$it") })
+        }
         composable(
             "$ROUTE_LIEU/{${FicheLieuViewModel.ARGUMENT_LIEU}}",
             arguments = listOf(navArgument(FicheLieuViewModel.ARGUMENT_LIEU) { type = NavType.IntType }),
