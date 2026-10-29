@@ -114,7 +114,6 @@ private fun GrillePokedex(etat: PokedexUiState.Pret, actions: ActionsPokedex, mo
         items(etat.especes, key = { it.id }, contentType = { "espece" }) { espece ->
             CaseEspece(
                 espece = espece,
-                national = etat.national,
                 onOuvrir = { actions.onOuvrir(espece.id) },
                 onAvancer = { actions.onAvancer(espece.id) },
                 onReculer = { actions.onReculer(espece.id) },
@@ -146,7 +145,8 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
 
 /**
  * Case d'une espèce. Une espèce jamais vue apparaît en silhouette : fond éteint, nom estompé, sans types ;
- * une espèce à portée et pas encore capturée a une bordure rubis.
+ * une espèce à portée et pas encore capturée a une bordure rubis ; « Échange requis » signale une espèce
+ * que Rubis Oméga n'obtient pas seul (exclusivité de Saphir Alpha, espèce d'une autre région).
  *
  * Deux gestes, pour laisser la touche simple à la fiche Pokémon (T10) :
  * - toucher la case ouvre la fiche ;
@@ -155,13 +155,7 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
  * de statut dans ses actions.
  */
 @Composable
-private fun CaseEspece(
-    espece: EspeceAffichee,
-    national: Boolean,
-    onOuvrir: () -> Unit,
-    onAvancer: () -> Unit,
-    onReculer: () -> Unit,
-) {
+private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: () -> Unit, onReculer: () -> Unit) {
     val couleurs = OmegadexTheme.couleurs
     val silhouette = espece.statut == StatutEspece.NON_VUE
     val numero = stringResource(R.string.pokedex_numero, espece.numero)
@@ -176,7 +170,7 @@ private fun CaseEspece(
         add("$numero ${espece.nom}")
         add(statut)
         if (espece.aPortee) add(portee)
-        if (espece.echangeRequis && national) add(echange)
+        if (espece.echangeRequis) add(echange)
     }.joinToString(", ")
     Surface(
         shape = forme,
@@ -216,7 +210,7 @@ private fun CaseEspece(
                     overflow = TextOverflow.Ellipsis,
                 )
                 if (!silhouette) PastillesTypes(espece.types)
-                if (espece.echangeRequis && national) {
+                if (espece.echangeRequis) {
                     Text(echange, style = MaterialTheme.typography.labelSmall, color = couleurs.texteEteint)
                 }
             }
