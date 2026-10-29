@@ -23,6 +23,8 @@ OBJETS = [
     # Route 104 est atteinte à l'étape 1, mais l'objet est derrière un arbre : Coupe, utilisable à l'étape 2.
     {"nom": "Pierre Feuille", "lieu": "Route 104", "methode": "SOL", "cs": "COUPE", "condition": None},
     {"nom": "CT70 Flash", "lieu": "Grotte Granite", "methode": "CADEAU", "cs": None, "condition": None},
+    # Plusieurs capacités : la dernière devenue utilisable compte (Vélo Cross à l'étape 3, Surf à l'étape 6).
+    {"nom": "Pierre Eau", "lieu": "Route 104", "methode": "SOL", "cs": ["VELO_CROSS", "SURF"], "condition": None},
     # Lieu de l'étape 2, mais la condition d'histoire le repousse après la Ligue.
     {"nom": "Méga-Gemme X", "lieu": "Grotte Granite", "methode": "SOL", "cs": None, "condition": "après la Ligue"},
     {"nom": "Objet sans lieu", "lieu": None, "methode": "SOL", "cs": None, "condition": None},
@@ -56,13 +58,14 @@ class QuetesObjetsTest(unittest.TestCase):
         ).fetchall()
 
     def test_chaque_objet_arrive_quand_il_devient_accessible(self):
-        self.assertEqual(6, import_etapes.generer_quetes_objets(self.con, self.fichier))
+        self.assertEqual(7, import_etapes.generer_quetes_objets(self.con, self.fichier))
         self.assertEqual(
             [
                 (1, 1, "Gagner CT39 Tomberoche (Mérouville)", "CT39 Tomberoche"),
                 (2, 2, "Récupérer Pierre Feuille (Route 104) · Coupe", "Pierre Feuille"),
                 (2, 3, "Recevoir CT70 Flash (Grotte Granite)", "CT70 Flash"),
-                (6, 1, "Recevoir Méga-Bracelet (Atalanopolis)", "Méga-Bracelet"),
+                (6, 1, "Récupérer Pierre Eau (Route 104) · Vélo Cross + Surf", "Pierre Eau"),
+                (6, 2, "Recevoir Méga-Bracelet (Atalanopolis)", "Méga-Bracelet"),
                 (10, 1, "Récupérer Méga-Gemme X (Grotte Granite)", "Méga-Gemme X"),
                 (12, 1, "Récupérer CT90 Clonage (Île Mirage) · Éclate-Roc", "CT90 Clonage"),
             ],
@@ -72,11 +75,15 @@ class QuetesObjetsTest(unittest.TestCase):
     def test_rejouer_ne_duplique_pas_les_quetes(self):
         import_etapes.generer_quetes_objets(self.con, self.fichier)
         import_etapes.generer_quetes_objets(self.con, self.fichier)
-        self.assertEqual(6, len(self.quetes()))
+        self.assertEqual(7, len(self.quetes()))
         self.assertEqual(1, self.con.execute("SELECT COUNT(*) FROM quete WHERE recompense IS NULL").fetchone()[0])
 
     def test_un_lieu_ou_une_cs_inconnus_sont_refuses(self):
-        for objet in ({"nom": "X", "lieu": "Nulle Part", "cs": None}, {"nom": "X", "lieu": "Route 104", "cs": "TELEPORT"}):
+        for objet in (
+            {"nom": "X", "lieu": "Nulle Part", "cs": None},
+            {"nom": "X", "lieu": "Route 104", "cs": "TELEPORT"},
+            {"nom": "X", "lieu": "Route 104", "cs": ["SURF", "TELEPORT"]},
+        ):
             self.fichier.write_text(json.dumps({"objets": [objet]}), encoding="utf-8")
             with self.assertRaises(ValueError):
                 import_etapes.generer_quetes_objets(self.con, self.fichier)
@@ -88,7 +95,8 @@ class QuetesObjetsTest(unittest.TestCase):
         lieux = {lieu["nom"] for lieu in json.loads((import_etapes.DOSSIER / "donnees" / "lieux_rosa.json").read_text("utf-8"))["lieux"]}
         for objet in json.loads(fichier.read_text("utf-8"))["objets"]:
             self.assertTrue(objet.get("lieu") is None or objet["lieu"] in lieux, objet)
-            self.assertTrue(objet.get("cs") is None or objet["cs"] in import_etapes.CS_ETAPE, objet)
+            for cs in import_etapes.capacites_objet(objet):
+                self.assertIn(cs, import_etapes.CS_ETAPE, objet)
 
 
 if __name__ == "__main__":

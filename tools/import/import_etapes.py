@@ -201,9 +201,21 @@ def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> tupl
     return len(quetes) - echanges, echanges
 
 
-def etape_objet(etape_lieu: int, cs: str | None, condition: str | None) -> int:
-    """Étape où l'objet devient récupérable : lieu débloqué, capacité de terrain utilisable, histoire avancée."""
-    etape = max(etape_lieu, CS_ETAPE.get(cs, 0) if cs else 0)
+def capacites_objet(objet: dict) -> list[str]:
+    """Capacités de terrain qu'il faut pour atteindre l'objet : « cs » vaut un code, une liste de codes ou rien."""
+    cs = objet.get("cs")
+    if not cs:
+        return []
+    return [cs] if isinstance(cs, str) else list(cs)
+
+
+def etape_objet(etape_lieu: int, cs: str | list[str] | None, condition: str | None) -> int:
+    """Étape où l'objet devient récupérable : lieu débloqué, capacités de terrain utilisables, histoire avancée.
+
+    Avec plusieurs capacités (Surf puis Vélo Cross…), c'est la dernière devenue utilisable qui compte.
+    """
+    capacites = capacites_objet({"cs": cs})
+    etape = max([etape_lieu, *(CS_ETAPE.get(c, 0) for c in capacites)])
     for mot, minimum in CONDITIONS_OBJET:
         if condition and mot in condition:
             etape = max(etape, minimum)
@@ -214,8 +226,9 @@ def description_objet(objet: dict) -> str:
     """« Récupérer CT39 Tomberoche (Mérouville) », « Acheter … », avec la capacité de terrain requise."""
     verbe = VERBES_OBJET.get(objet.get("methode") or "SOL", "Récupérer")
     texte = f"{verbe} {objet['nom']} ({objet.get('lieu') or objet['lieuLibre']})"
-    if objet.get("cs"):
-        texte += f" · {NOMS_CS[objet['cs']]}"
+    capacites = capacites_objet(objet)
+    if capacites:
+        texte += " · " + " + ".join(NOMS_CS[c] for c in capacites)
     return texte
 
 
@@ -246,8 +259,9 @@ def generer_quetes_objets(con: sqlite3.Connection, fichier: pathlib.Path | None 
             continue
         if objet["lieu"] not in lieux:
             raise ValueError(f"Objet « {objet['nom']} » : lieu inconnu « {objet['lieu']} »")
-        if objet.get("cs") and objet["cs"] not in CS_ETAPE:
-            raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {objet['cs']} »")
+        for cs in capacites_objet(objet):
+            if cs not in CS_ETAPE:
+                raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {cs} »")
         lieu_id, etape_lieu = lieux[objet["lieu"]]
         etape = objet.get("etape")
         if etape is None:
