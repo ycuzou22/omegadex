@@ -248,6 +248,8 @@ private class FauxJeu(
 
     override fun especesDuLieu(lieuId: Int) = flowOf(emptyList<Rencontre>())
 
+    override fun toutesLesRencontres() = flowOf(emptyList<Rencontre>())
+
     override fun especesAccessibles(etapeId: Int) = flowOf(emptySet<Int>())
 
     override fun especesEchangeRequis() = flowOf(emptySet<Int>())

@@ -30,6 +30,11 @@ interface JeuRepository {
     fun attaquesApprises(especeId: Int): Flow<List<AttaqueApprise>>
     fun lieuxDeLEspece(especeId: Int): Flow<List<Rencontre>>
     fun especesDuLieu(lieuId: Int): Flow<List<Rencontre>>
+
+    /** Toutes les rencontres du jeu, avec leur lieu. */
+    fun toutesLesRencontres(): Flow<List<Rencontre>>
+
+    /** Espèces attrapables dans Rubis Oméga à l'étape donnée : lieux atteints et méthodes utilisables. */
     fun especesAccessibles(etapeId: Int): Flow<Set<Int>>
 
     /** Espèces qu'on ne peut obtenir que par échange ou transfert (mention « échange requis »). */
