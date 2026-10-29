@@ -87,6 +87,18 @@ class ProgressionRepositoryTest {
     }
 
     @Test
+    fun `les notes d'une espece se gardent sans toucher a son statut`() = runTest {
+        val (_, run) = nouvelleRun("yamao")
+        assertEquals("", progression.notes(run, 252).first())
+        progression.definirNotes(run, 252, "Garder Engrais")
+        assertEquals("Garder Engrais", progression.notes(run, 252).first())
+        progression.definirStatut(run, 252, StatutEspece.CAPTUREE)
+        progression.definirNotes(run, 252, "Garder Engrais, CT Giga-Sangsue")
+        assertEquals("Garder Engrais, CT Giga-Sangsue", progression.notes(run, 252).first())
+        assertEquals(StatutEspece.CAPTUREE, progression.statuts(run).first()[252])
+    }
+
+    @Test
     fun `equipe de 6 emplacements et defis`() = runTest {
         val (_, run) = nouvelleRun("yamao")
         progression.placerMembre(run, MembreEquipe(1, 252, "Gecko", 5))

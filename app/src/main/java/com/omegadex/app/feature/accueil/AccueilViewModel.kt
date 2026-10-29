@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.accueil.DefiDuJourUseCase
 import com.omegadex.app.domain.accueil.ObserverJaugesUseCase
+import com.omegadex.app.domain.badge.ObserverBadgesUseCase
 import com.omegadex.app.domain.defi.AccepterDefiUseCase
 import com.omegadex.app.domain.defi.DefiPropose
 import com.omegadex.app.domain.repository.CompteRepository
@@ -12,14 +13,19 @@ import com.omegadex.app.domain.repository.SessionRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
+@Suppress("LongParameterList") // Un cas d'usage par bloc de l'accueil, injectés par Hilt.
 class AccueilViewModel @Inject constructor(
     infosAppRepository: InfosAppRepository,
     comptes: CompteRepository,
@@ -28,6 +34,7 @@ class AccueilViewModel @Inject constructor(
     defiDuJour: DefiDuJourUseCase,
     private val observerRunEnCours: ObserverRunEnCoursUseCase,
     private val accepterDefi: AccepterDefiUseCase,
+    observerBadges: ObserverBadgesUseCase,
 ) : ViewModel() {
     private var defiPropose: DefiPropose? = null
 
@@ -56,7 +63,12 @@ class AccueilViewModel @Inject constructor(
             jauges = jauges,
             defiDuJour = defi?.let { DefiDuJour(it.modele.type, it.modele.titre, it.enonce) },
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
+    }.combine(badgesDeLaRun(observerBadges)) { etat, badges -> etat.copy(badges = badges) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), AccueilUiState(version = version))
+
+    private fun badgesDeLaRun(observerBadges: ObserverBadgesUseCase) = observerRunEnCours().flatMapLatest { enCours ->
+        enCours?.let { observerBadges(it.run.id) } ?: flowOf(null)
+    }
 
     /** Relève le défi du jour : il devient actif dans l'espace Défis et un autre défi du jour est proposé. */
     fun releverDefiDuJour() {

@@ -32,6 +32,8 @@ data class EtapeValidee(
     /** Badge obtenu (récompense « Badge … » d'une quête principale), s'il y en a un. */
     val badge: String?,
     val suivante: String?,
+    /** Étapes validées de la run, celle-ci comprise (badges déjà dans la boîte). */
+    val etapesValidees: Set<Int> = emptySet(),
 )
 
 data class QueteAffichee(val id: Int, val description: String, val recompense: String?, val cochee: Boolean)

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Boîte à badges (T14.6). Fichier séparé de strings.xml pour limiter les conflits entre branches. -->
+<resources>
+    <string name="badges_titre">Boîte à badges</string>
+    <string name="badges_compteur">%1$d / %2$d</string>
+    <string name="badges_description">Boîte à badges : %1$d sur %2$d. %3$s</string>
+    <string name="badges_aucun">Aucun badge pour l\'instant.</string>
+    <string name="badges_obtenus">Obtenus : %1$s.</string>
+    <string name="badges_annonce">Badge %1$s obtenu !</string>
+    <string name="badges_passer">Toucher pour passer</string>
+    <string name="badges_animation_description">Le badge %1$s rejoint ta boîte à badges</string>
+
+    <string name="badge_roche">Roche</string>
+    <string name="badge_poing">Poing</string>
+    <string name="badge_dynamo">Dynamo</string>
+    <string name="badge_chaleur">Chaleur</string>
+    <string name="badge_balance">Balance</string>
+    <string name="badge_plume">Plume</string>
+    <string name="badge_esprit">Esprit</string>
+    <string name="badge_pluie">Pluie</string>
+</resources>
