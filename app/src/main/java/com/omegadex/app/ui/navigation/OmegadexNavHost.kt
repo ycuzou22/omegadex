@@ -72,6 +72,7 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
             FichePokemonScreen(
                 onRetour = { navController.popBackStack() },
                 onDefis = { navController.navigate("$ROUTE_DEFIS_ESPECE/$it") },
+                onEspece = { navController.navigate("$ROUTE_ESPECE/$it") },
             )
         }
         composable(ROUTE_MES_RUNS) {

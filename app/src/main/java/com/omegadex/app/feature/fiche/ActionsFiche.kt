@@ -6,4 +6,5 @@ class ActionsFiche(
     val onDefis: () -> Unit,
     val onAvancerStatut: () -> Unit,
     val onReculerStatut: () -> Unit,
+    val onEspece: (Int) -> Unit,
 )

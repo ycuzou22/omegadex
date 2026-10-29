@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -33,24 +32,31 @@ class FichePokemonViewModel @Inject constructor(
 ) : ViewModel() {
     val especeId: Int = checkNotNull(etatNavigation[ARGUMENT_ESPECE])
 
-    private val statut = observerRunEnCours().flatMapLatest { enCours ->
-        enCours?.let { progression.statuts(it.run.id).map { statuts -> statuts[especeId] ?: StatutEspece.NON_VUE } }
+    /** Statuts et équipe de la run active ; null sans run. */
+    private val suivi = observerRunEnCours().flatMapLatest { enCours ->
+        enCours?.let { combine(progression.statuts(it.run.id), progression.equipe(it.run.id), ::SuiviRun) }
             ?: flowOf(null)
     }
 
     val uiState: StateFlow<FichePokemonUiState> = combine(
         jeu.espece(especeId),
-        statut,
+        suivi,
         jeu.talents(especeId),
         jeu.famille(especeId),
         jeu.pokedexNational(),
-    ) { espece, statutRun, talents, famille, especes ->
+    ) { espece, suiviRun, talents, famille, especes ->
         if (espece == null) return@combine FichePokemonUiState.Introuvable
         val membres = (famille.flatMap { listOf(it.especeSourceId, it.especeCibleId) } + espece.id).distinct()
         val stadeMega = especes.filter { it.id in membres && it.aUneMega }
             .minByOrNull { if (it.id == espece.id) 0 else 1 }
             ?.nom
-        FichePokemonUiState.Fiche(espece, statutRun, talents, stadeMega)
+        FichePokemonUiState.Fiche(
+            espece = espece,
+            statut = suiviRun?.let { it.statuts[especeId] ?: StatutEspece.NON_VUE },
+            talents = talents,
+            stadeMega = stadeMega,
+            evolution = ChaineEvolution.construire(espece.id, famille, especes.filter { it.id in membres }, suiviRun),
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), FichePokemonUiState.Chargement)
 
     /** Une touche sur les rubis : statut suivant ; appui long : statut précédent (comme dans le Pokédex). */
