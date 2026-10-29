@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
+@Suppress("LongParameterList") // Un cas d'usage par bloc de l'accueil, injectés par Hilt.
 class AccueilViewModel @Inject constructor(
     infosAppRepository: InfosAppRepository,
     comptes: CompteRepository,

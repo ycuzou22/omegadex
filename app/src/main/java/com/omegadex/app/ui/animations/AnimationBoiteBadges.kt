@@ -181,9 +181,8 @@ private fun ContenuBoiteBadges(
 }
 
 /** 0 → 1 quand la caméra avance vers la niche, 1 pendant la forge, puis retour à 0. */
-private fun zoomCamera(t: Float): Float =
-    phase(t, Chrono.CAMERA_AVANT, Chrono.CAMERA_DUREE, EASE_CAMERA) -
-        phase(t, Chrono.CAMERA_RETOUR, Chrono.CAMERA_RETOUR_DUREE, EASE_CAMERA)
+private fun zoomCamera(t: Float): Float = phase(t, Chrono.CAMERA_AVANT, Chrono.CAMERA_DUREE, EASE_CAMERA) -
+    phase(t, Chrono.CAMERA_RETOUR, Chrono.CAMERA_RETOUR_DUREE, EASE_CAMERA)
 
 @Composable
 private fun Ecrin(obtenus: Set<BadgeArene>, nouveau: BadgeArene, t: Float, onNiche: (Rect) -> Unit) {

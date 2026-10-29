@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
  * ([etapeId], données `tools/import/donnees/etapes_rosa.json`) est validée. [type] est la clé du type de
  * l'arène (couleur du badge). Les dessins sont originaux, sans reprendre ceux du jeu.
  */
+@Suppress("MagicNumber") // Identifiants d'étapes des données du jeu.
 enum class BadgeArene(val etapeId: Int, val type: String) {
     ROCHE(1, "roche"),
     POING(2, "combat"),
