@@ -48,6 +48,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -194,8 +196,10 @@ private fun EnTetePokedex(etat: PokedexUiState.Pret) {
  * que Rubis Oméga n'obtient pas seul (exclusivité de Saphir Alpha, espèce d'une autre région).
  *
  * Deux gestes, pour laisser la touche simple à la fiche Pokémon (T10) :
- * - toucher la case ouvre la fiche ;
+ * - toucher le haut de la case ouvre la fiche ;
  * - toucher la bande des rubis fait avancer le statut, un appui long sur elle le fait reculer.
+ * Les deux zones sont voisines et non imbriquées : une zone cliquable dans une autre perdait la touche
+ * au profit de la case sous Android 8 (#201).
  * TalkBack lit la case d'un bloc ; il l'ouvre par un double appui et propose les deux changements
  * de statut dans ses actions.
  */
@@ -227,9 +231,13 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
             .fillMaxWidth()
             .heightIn(min = HAUTEUR_CASE)
             .clip(forme)
-            .clickable(onClickLabel = actionOuvrir, role = Role.Button, onClick = onOuvrir)
             .semantics {
                 contentDescription = description
+                role = Role.Button
+                onClick(label = actionOuvrir) {
+                    onOuvrir()
+                    true
+                }
                 customActions = listOf(
                     CustomAccessibilityAction(actionAvancer) {
                         onAvancer()
@@ -245,7 +253,11 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
         // Les textes de la case sont déjà lus d'un bloc par la description de la case.
         Column(Modifier.clearAndSetSemantics {}) {
             Column(
-                Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                Modifier
+                    .weight(1f, fill = true)
+                    .fillMaxWidth()
+                    .clickable(onClick = onOuvrir)
+                    .padding(start = 10.dp, end = 10.dp, top = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(numero, style = OmegadexTheme.chiffres.petit, color = couleurs.texteEteint)
