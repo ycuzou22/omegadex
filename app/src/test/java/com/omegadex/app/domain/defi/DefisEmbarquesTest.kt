@@ -32,7 +32,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-/** Le moteur appliqué aux 60 modèles réels de la base embarquée. */
+/** Le moteur appliqué aux 60 modèles réels de la base embarquée et à la banque de défis par famille. */
 @RunWith(RobolectricTestRunner::class)
 class DefisEmbarquesTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
@@ -100,7 +100,7 @@ class DefisEmbarquesTest {
     }
 
     @Test
-    fun `une run propose ses defis, les accepte une fois et refuse un second defi pour le meme pokemon`() = runTest {
+    fun `une run tire un defi par pokemon de l'equipe, l'accepte une fois et refuse un second defi`() = runTest {
         val session = FausseSession()
         val horloge = Horloge { 1_000L }
         val comptes = CompteRepositoryImpl(progressionBase, horloge)
@@ -117,10 +117,15 @@ class DefisEmbarquesTest {
         val proposes = proposer().first()
         assertTrue(proposes.any { it.modele.type == TypeDefi.ETAPE && it.etapeId == 0 })
         val pourArcko = proposes.filter { it.especeId == 252 }
-        assertTrue(pourArcko.size >= 2)
+        assertEquals("un seul défi tiré dans la banque d'Arcko", 1, pourArcko.size)
+        val tire = pourArcko.single()
+        assertTrue(BanqueDefis.estDeLaBanque(tire.modele.id))
+        assertEquals(252, BanqueDefis.cible(tire.modele))
+        val relu = proposer().first().single { it.especeId == 252 }
+        assertEquals("le tirage ne change pas d'une lecture à l'autre", tire, relu)
 
-        assertTrue(accepter(run, pourArcko[0]).isSuccess)
-        assertTrue(accepter(run, pourArcko[1]).isFailure)
+        assertTrue(accepter(run, tire).isSuccess)
+        assertTrue(accepter(run, tire).isFailure)
         assertEquals(listOf(EtatDefi.ACTIF), progression.defis(run).first().map { it.etat })
         assertTrue(proposer().first().none { it.especeId == 252 })
     }

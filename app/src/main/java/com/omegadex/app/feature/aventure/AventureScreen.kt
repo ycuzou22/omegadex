@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,7 @@ import com.omegadex.app.ui.components.CarteRubis
 import com.omegadex.app.ui.components.GemCheckbox
 import com.omegadex.app.ui.components.TypeChip
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.sons.LocalSons
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
 import com.omegadex.app.ui.theme.FormeGemme
@@ -76,6 +78,12 @@ fun AventureScreen(
     val rubis = remember { mutableMapOf<Int, Offset>() }
     LaunchedEffect(viewModel) { viewModel.evenements.collect { celebration = it } }
     LaunchedEffect(viewModel) { viewModel.captures.collect { capture = it } }
+    // Ambiance volcanique tant que l'Aventure est affichée (si elle est activée dans les réglages).
+    val sons = LocalSons.current
+    DisposableEffect(sons) {
+        sons.ambiance(active = true)
+        onDispose { sons.ambiance(active = false) }
+    }
     Box(modifier) {
         AventureContenu(
             uiState = uiState,

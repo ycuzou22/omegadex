@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
@@ -46,6 +48,7 @@ fun GemCheckbox(
 ) {
     val couleurs = OmegadexTheme.couleurs
     val reduites = OmegadexTheme.animationsReduites
+    val sons = LocalSons.current
     val temps = remember { Animatable(ChronoGemmeOmega.FIN) }
     var etatPrecedent by remember { mutableStateOf(coche) }
     LaunchedEffect(coche) {
@@ -64,7 +67,10 @@ fun GemCheckbox(
     Row(
         modifier = modifier
             .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
-            .toggleable(value = coche, enabled = actif, role = Role.Checkbox, onValueChange = onCocheChange),
+            .toggleable(value = coche, enabled = actif, role = Role.Checkbox, onValueChange = {
+                sons.jouer(if (it) Son.COCHER else Son.DECOCHER)
+                onCocheChange(it)
+            }),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

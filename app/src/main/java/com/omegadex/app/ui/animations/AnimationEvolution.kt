@@ -68,6 +68,8 @@ import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.TypeChip
 import com.omegadex.app.ui.components.rememberSprite
 import com.omegadex.app.ui.components.spriteParDefaut
+import com.omegadex.app.ui.sons.Son
+import com.omegadex.app.ui.sons.SonsAuxReperes
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
 import com.omegadex.app.ui.theme.LueurMagma
@@ -110,6 +112,10 @@ private object ChronoEvolution {
     const val BRAISE_ATTISEE = 1_800f
     const val FIN = REVELE + 2_900f
 }
+
+/** Montée lumineuse du son d'évolution, avant son flash (ms) : le flash tombe quand le cocon éclate. */
+private const val MONTEE_SON_EVOLUTION = 1_800f
+private val REPERES_SONS_EVOLUTION = listOf(ChronoEvolution.ECLATE - MONTEE_SON_EVOLUTION to Son.EVOLUTION)
 
 /** Mesures de la maquette (écran de 390 × 844) : la scène de 240 dp porte l'autel, le sprite et le cocon. */
 private object Scene {
@@ -275,6 +281,7 @@ private fun ContenuEvolution(
     modifier: Modifier = Modifier,
 ) {
     val t = min(ecoule, ChronoEvolution.FIN)
+    SonsAuxReperes(t, REPERES_SONS_EVOLUTION)
     val ouverture = avancement(t, 0f, ChronoEvolution.OUVERTURE_DUREE, EASE_OUVERTURE)
     BoxWithConstraints(
         modifier

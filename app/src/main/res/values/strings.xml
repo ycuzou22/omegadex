@@ -345,4 +345,9 @@
     <string name="debloqueur_devon_scope">Devon Scope</string>
     <string name="debloqueur_apres_ligue">après la Ligue</string>
     <string name="debloqueur_apres_delta">après l\'Épisode Delta</string>
+    <string name="reglages_sons_titre">Sons et vibrations</string>
+    <string name="reglages_sons">Sons</string>
+    <string name="reglages_vibrations">Vibrations</string>
+    <string name="reglages_ambiance">Ambiance dans l\'Aventure</string>
+    <string name="reglages_ambiance_aide">Grondement volcanique discret, en boucle</string>
 </resources>

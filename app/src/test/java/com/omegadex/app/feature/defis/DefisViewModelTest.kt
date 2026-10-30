@@ -119,15 +119,16 @@ class DefisViewModelTest {
     }
 
     @Test
-    fun `la page d'un pokemon ne montre que ses defis et refuse un second defi actif`() = runTest {
+    fun `la page d'un pokemon montre son defi tire au sort et refuse un second defi actif`() = runTest {
         val vm = fabrique(SavedStateHandle(mapOf(DefisViewModel.ARGUMENT_ESPECE to 252)))
-        val page = vm.espace { it.especeNom != null && it.disponibles.size >= 2 }
+        val page = vm.espace { it.especeNom != null && it.disponibles.isNotEmpty() }
         assertEquals("Arcko", page.especeNom)
-        assertTrue(page.disponibles.all { it.especeId == 252 })
+        val tire = page.disponibles.single()
+        assertEquals(252, tire.especeId)
 
-        vm.relever(page.disponibles[0].cle)
-        vm.espace { it.actifs.size == 1 }
-        vm.relever(page.disponibles[1].cle)
+        vm.relever(tire.cle)
+        vm.espace { it.actifs.size == 1 && it.disponibles.isEmpty() }
+        vm.relever(tire.cle)
         vm.refusEspece.first()
         assertEquals(1, vm.espace().actifs.size)
     }

@@ -43,6 +43,8 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.omegadex.app.ui.sons.Son
+import com.omegadex.app.ui.sons.SonsAuxReperes
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
 import com.omegadex.app.ui.theme.FormeGemme
@@ -79,6 +81,9 @@ private object Chrono {
     const val FIN = 3_550f
     const val ATTENTE_REDUITE_MS = 2_500L
 }
+
+/** Accord ascendant dès l'ouverture de l'animation « Étape validée ». */
+private val REPERES_SONS_ETAPE = listOf(0f to Son.ETAPE_VALIDEE)
 
 private val EASE_ATTERRISSAGE = CubicBezierEasing(0.2f, 0.8f, 0.2f, 1f)
 private val EASE_OUT = LinearOutSlowInEasing
@@ -127,6 +132,7 @@ fun AnimationEtapeValidee(textes: TextesEtapeValidee, onFin: () -> Unit, modifie
         }
         onFin()
     }
+    SonsAuxReperes(temps.value, REPERES_SONS_ETAPE)
     ContenuEtapeValidee(textes, temps.value, modifier)
 }
 

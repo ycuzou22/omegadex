@@ -28,7 +28,11 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
 3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
 
-Version actuelle des données : **8** (schéma Room v7, 60 modèles de défis, quêtes d'échange pour les exclusivités Saphir Alpha, 248 quêtes d'objets).
+Version actuelle des données : **9** (schéma Room v7, 60 modèles de défis, banque de 45 480 défis pour 229 familles, quêtes d'échange pour les exclusivités Saphir Alpha, 248 quêtes d'objets).
+
+## Banque de défis par famille
+
+`import_banque_defis.py` génère environ 200 défis pour chaque famille d'évolution capturable dans Rubis Oméga (Pokédex national compris), à partir des données déjà importées. Il tourne à la fin de `importer.py`, après les corrections, et peut se relancer seul sur la base existante : `python3 tools/import/import_banque_defis.py`. Le format est décrit dans `docs/modeles-defis.md` (section « Banque de défis par famille »).
 
 ## Quêtes d'objets
 

@@ -53,6 +53,8 @@ import com.omegadex.app.ui.components.BoiteBadges
 import com.omegadex.app.ui.components.ChronoEnvolBadge
 import com.omegadex.app.ui.components.dessinerGemme
 import com.omegadex.app.ui.components.nomBadge
+import com.omegadex.app.ui.sons.Son
+import com.omegadex.app.ui.sons.SonsAuxReperes
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.LueurMagma
 import com.omegadex.app.ui.theme.OmegadexTheme
@@ -92,6 +94,15 @@ private val COUVERCLE_BAS = Color(0xFF1F181B)
 private val COUVERCLE_TRAIT = Color(0xFF4E4247)
 private const val ZOOM_CAMERA = 2f
 
+/** Sons de la boîte à badges : l'écrin s'ouvre, le badge forgé se pose dans sa niche, puis refroidit. */
+private val REPERES_SONS_BOITE = listOf(
+    ChronoBoite.COUVERCLE to Son.BADGE_COUVERCLE,
+    ChronoBoite.ENVOL + ChronoEnvolBadge.ENVOL_DUREE * PART_POSE to Son.BADGE_IMPACT,
+    ChronoBoite.ENVOL + ChronoEnvolBadge.ENVOL_DUREE * PART_POSE + DELAI_VAPEUR to Son.BADGE_VAPEUR,
+)
+private const val PART_POSE = 0.85f
+private const val DELAI_VAPEUR = 120f
+
 private fun phase(t: Float, debut: Float, duree: Float, easing: Easing = EASE_OUT): Float =
     easing.transform(((t - debut) / duree).coerceIn(0f, 1f))
 
@@ -129,6 +140,7 @@ fun AnimationBoiteBadges(
         }
     }
     val t = if (passe) ChronoBoite.FIN else temps.value
+    SonsAuxReperes(t, REPERES_SONS_BOITE)
     ContenuBoiteBadges(
         obtenus = obtenus,
         nouveau = nouveau,
