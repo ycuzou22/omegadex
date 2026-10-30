@@ -1,6 +1,7 @@
 package com.omegadex.app.feature.equipe
 
 import com.omegadex.app.domain.equipe.Affinite
+import com.omegadex.app.domain.equipe.MethodeEvolution
 import com.omegadex.app.domain.model.Difficulte
 
 /** Nombre d'emplacements de l'équipe. */
@@ -39,6 +40,16 @@ data class MembreVue(
     val ecartPlafond: Int?,
     /** Titre du défi actif de ce Pokémon, s'il en relève un. */
     val defiActif: String?,
+    /** Évolutions sans niveau (pierre, bonheur, échange…) : chacune a son bouton sous le ruban de la carte. */
+    val evolutions: List<EvolutionVue> = emptyList(),
+)
+
+/** Évolution manuelle proposée sur la carte d'un membre ; [detail] et [moment] précisent le bouton. */
+data class EvolutionVue(
+    val cible: EspeceVue,
+    val methode: MethodeEvolution,
+    val detail: String?,
+    val moment: String?,
 )
 
 /** Évolution proposée après la saisie d'un niveau ; le joueur confirme ou remet à plus tard. */

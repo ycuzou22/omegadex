@@ -11,6 +11,7 @@ import com.omegadex.app.domain.defi.ObserverDefisUseCase
 import com.omegadex.app.domain.equipe.AjouterMembreUseCase
 import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
+import com.omegadex.app.domain.equipe.MethodeEvolution
 import com.omegadex.app.domain.equipe.ObserverSuggestionsRotationUseCase
 import com.omegadex.app.domain.equipe.RetirerMembreUseCase
 import com.omegadex.app.domain.model.Difficulte
@@ -132,6 +133,25 @@ class EquipeViewModelTest {
         val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } }
         assertEquals(plafond, etat.membres.first { it.especeId == 253 }.niveau)
         assertTrue(etat.suggestions.none { it.especeId == 253 })
+    }
+
+    @Test
+    fun `une evolution par bonheur a son bouton et monte le membre d'un niveau en evoluant`() = runTest {
+        // Évolution fictive par bonheur, sans précision d'heure : Massko → Bulbizarre.
+        jeuBase.openHelper.writableDatabase.execSQL("INSERT INTO evolution VALUES (90, 253, 1, 'BONHEUR', NULL)")
+        val run = nouvelleRun()
+        progression.placerMembre(run, MembreEquipe(2, 253, null, 20))
+        val vm = equipe()
+
+        val massko = vm.equipe { e -> e.membres.any { it.especeId == 253 } }.membres.first { it.especeId == 253 }
+        val bonheur = massko.evolutions.single()
+        assertEquals(MethodeEvolution.BONHEUR to "Bulbizarre", bonheur.methode to bonheur.cible.nom)
+
+        vm.evoluerManuellement(2, bonheur)
+        val apres = vm.equipe { e -> e.membres.any { it.especeId == 1 } }.membres.first { it.especeId == 1 }
+        assertEquals(21, apres.niveau)
+        val animation = vm.evolutionEnCours.first { it != null }!!
+        assertEquals("Massko" to "Bulbizarre", animation.avant.nom to animation.apres.nom)
     }
 
     @Test

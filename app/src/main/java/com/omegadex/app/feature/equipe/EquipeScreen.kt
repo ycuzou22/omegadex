@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -184,17 +185,26 @@ private fun CarteMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
     val couleurs = OmegadexTheme.couleurs
     val ecart = membre.ecartPlafond
     val auDessus = ecart != null && ecart > 0
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(if (auDessus) 2.dp else 1.dp, if (auDessus) couleurs.magma else couleurs.trait),
-        onClick = { actions.onEspece(membre.especeId) },
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(Modifier.padding(start = 14.dp, top = 12.dp, bottom = 4.dp, end = 6.dp)) {
-            LigneMembre(numero, membre, plafond, actions)
-            ActionsMembre(numero, membre, actions)
+    val evolutive = membre.evolutions.isNotEmpty()
+    // Ruban « Peut évoluer » posé sur le bord haut de la carte, qui prend alors une bordure magma.
+    Box(Modifier.fillMaxWidth().padding(top = if (evolutive) 10.dp else 0.dp)) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(
+                if (auDessus || evolutive) 2.dp else 1.dp,
+                if (auDessus || evolutive) couleurs.magma else couleurs.trait,
+            ),
+            onClick = { actions.onEspece(membre.especeId) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Column(Modifier.padding(start = 14.dp, top = if (evolutive) 16.dp else 12.dp, bottom = 4.dp, end = 6.dp)) {
+                LigneMembre(numero, membre, plafond, actions)
+                if (evolutive) BoutonsEvolution(membre) { actions.onEvoluer(numero, it) }
+                ActionsMembre(numero, membre, actions)
+            }
         }
+        if (evolutive) RubanEvolution(membre, Modifier.align(Alignment.TopStart).offset(x = 16.dp, y = (-10).dp))
     }
 }
 
