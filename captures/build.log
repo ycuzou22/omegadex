@@ -1,0 +1,214 @@
+Calculating task graph as no cached configuration is available for tasks: build lint ktlintCheck detekt test createDebugUnitTestCoverageReport
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:javaPreCompileDebug FROM-CACHE
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:processDebugNavigationResources
+> Task :app:checkDebugAarMetadata
+> Task :app:compileDebugNavigationResources FROM-CACHE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug FROM-CACHE
+> Task :app:processDebugMainManifest FROM-CACHE
+> Task :app:processDebugManifest FROM-CACHE
+> Task :app:processDebugManifestForPackage FROM-CACHE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest FROM-CACHE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:generateReleaseResources FROM-CACHE
+> Task :app:packageReleaseResources
+> Task :app:processReleaseNavigationResources FROM-CACHE
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:parseReleaseLocalResources FROM-CACHE
+> Task :app:generateReleaseRFile FROM-CACHE
+> Task :app:mergeDebugResources
+> Task :app:processDebugResources
+> Task :app:javaPreCompileRelease FROM-CACHE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets FROM-CACHE
+> Task :app:generateDebugGlobalSynthetics FROM-CACHE
+> Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies FROM-CACHE
+> Task :app:mergeExtDexDebug FROM-CACHE
+> Task :app:mergeLibDexDebug FROM-CACHE
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugNativeLibs
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libsqlcipher.so. Run with --info option to learn more.
+
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:mergeReleaseNativeLibs
+
+> Task :app:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libsqlcipher.so. Run with --info option to learn more.
+
+> Task :app:extractReleaseNativeSymbolTables FROM-CACHE
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:mergeReleaseArtProfile
+> Task :app:checkReleaseAarMetadata
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:compileReleaseNavigationResources FROM-CACHE
+> Task :app:mergeReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease FROM-CACHE
+> Task :app:processReleaseMainManifest FROM-CACHE
+> Task :app:processReleaseManifest FROM-CACHE
+> Task :app:processReleaseManifestForPackage FROM-CACHE
+> Task :app:processReleaseResources
+> Task :app:extractProguardFiles
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets FROM-CACHE
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:loadKtlintReporters UP-TO-DATE
+> Task :app:runKtlintCheckOverAndroidTestDebugSourceSet NO-SOURCE
+> Task :app:ktlintAndroidTestDebugSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverAndroidTestReleaseSourceSet NO-SOURCE
+> Task :app:ktlintAndroidTestReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverAndroidTestSourceSet FROM-CACHE
+> Task :app:ktlintAndroidTestSourceSetCheck FROM-CACHE
+> Task :app:runKtlintCheckOverDebugSourceSet NO-SOURCE
+> Task :app:ktlintDebugSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverKotlinScripts FROM-CACHE
+> Task :app:ktlintKotlinScriptCheck FROM-CACHE
+> Task :app:detekt
+> Task :app:runKtlintCheckOverReleaseSourceSet NO-SOURCE
+> Task :app:ktlintReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestDebugSourceSet NO-SOURCE
+> Task :app:ktlintTestDebugSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestFixturesDebugSourceSet NO-SOURCE
+> Task :app:ktlintTestFixturesDebugSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestFixturesReleaseSourceSet NO-SOURCE
+> Task :app:ktlintTestFixturesReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestFixturesSourceSet NO-SOURCE
+> Task :app:ktlintTestFixturesSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestReleaseSourceSet NO-SOURCE
+> Task :app:ktlintTestReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestSourceSet
+> Task :app:ktlintTestSourceSetCheck
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:mergeDebugUnitTestManifest
+> Task :app:processDebugUnitTestManifest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:runKtlintCheckOverMainSourceSet
+> Task :app:ktlintMainSourceSetCheck
+> Task :app:ktlintCheck
+> Task :app:kspDebugKotlin
+> Task :app:kspReleaseKotlin
+> Task :app:compileDebugKotlin
+> Task :app:compileReleaseKotlin
+w: file:///home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/domain/compte/CompteUseCases.kt:79:24 Condition is always 'false'.
+
+> Task :app:compileDebugKotlin
+w: file:///home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/domain/compte/CompteUseCases.kt:79:24 Condition is always 'false'.
+
+> Task :app:processReleaseJavaRes
+> Task :app:processDebugJavaRes
+> Task :app:mergeReleaseJavaResource
+> Task :app:mergeDebugJavaResource
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:hiltCollectClassesRelease
+> Task :app:compileDebugJavaWithJavac
+> Task :app:hiltCollectClassesDebug
+> Task :app:hiltAggregateDepsRelease FROM-CACHE
+> Task :app:hiltAggregateDepsDebug FROM-CACHE
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:generateDebugLintReportModel
+> Task :app:hiltJavaCompileRelease
+> Task :app:hiltJavaCompileDebug
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:transformReleaseClassesWithAsm
+> Task :app:transformDebugClassesWithAsm
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///home/runner/work/omegadex/omegadex/app/src/test/java/com/omegadex/app/data/repository/ReglagesDataStoreTest.kt:21:32 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:copyRoomSchemas NO-SOURCE
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintAnalyzeDebug
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :app:produceReleaseComposeMapping
+> Task :app:reportReleaseComposeMappingErrors
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:minifyReleaseWithR8
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintVitalReportRelease SKIPPED
+> Task :app:lintVitalRelease SKIPPED
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:hiltCollectClassesDebugUnitTest
+> Task :app:hiltAggregateDepsDebugUnitTest FROM-CACHE
+> Task :app:hiltJavaCompileDebugUnitTest NO-SOURCE
+> Task :app:transformDebugUnitTestClassesWithAsm
+> Task :app:testDebugUnitTest
+> Task :app:convertShrunkResourcesToBinaryRelease
+> Task :app:optimizeReleaseResources
+> Task :app:mergeReleaseComposeMapping
+> Task :app:compileReleaseArtProfile
+> Task :app:packageRelease
+> Task :app:assembleRelease
+> Task :app:assemble
+> Task :app:createReleaseApkListingFileRedirect
+
+> Task :app:testDebugUnitTest
+
+PcViewModelTest > deposer puis reprendre un membre, avec sa fiche FAILED
+    kotlinx.coroutines.test.UncompletedCoroutinesError at TestBuilders.kt:353
+
+235 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///home/runner/work/omegadex/omegadex/app/build/reports/lint-results-debug.html
+Wrote SARIF report to file:///home/runner/work/omegadex/omegadex/app/build/reports/lint-results-debug.sarif
+
+> Task :app:lintDebug
+> Task :app:lint
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1793372239518.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/omegadex/omegadex/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/runner/work/omegadex/omegadex/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 5m 11s
+124 actionable tasks: 92 executed, 31 from cache, 1 up-to-date
+Configuration cache entry stored.
