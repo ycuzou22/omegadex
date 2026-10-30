@@ -51,8 +51,9 @@ object SuggestionsRotation {
     /** Affinité d'une espèce de types [types] face au type [adverse] (null : pas de type dominant). */
     fun affinite(types: List<String>, adverse: String?): Affinite {
         if (adverse == null) return Affinite.NEUTRE
-        val frappe = types.maxOfOrNull { TableDesTypes.multiplicateur(it, adverse) } ?: 1f
-        val recoit = TableDesTypes.efficacites(types)[adverse] ?: 1f
+        val cle = adverse.lowercase()
+        val frappe = types.maxOfOrNull { TableDesTypes.multiplicateur(it.lowercase(), cle) } ?: 1f
+        val recoit = TableDesTypes.efficacites(types.map { it.lowercase() })[cle] ?: 1f
         return when {
             frappe > 1f && recoit <= 1f -> Affinite.AVANTAGE
             recoit > 1f -> Affinite.FAIBLESSE
