@@ -21,6 +21,7 @@ import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.Starter
 import com.omegadex.app.testutil.FausseRunActive
 import com.omegadex.app.testutil.FausseSession
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -85,12 +86,12 @@ class PcViewModelTest {
         uiState.first { it is PcUiState.Pc && condition(it) } as PcUiState.Pc
 
     @Test
-    fun `sans run, pas de PC`() = runTest {
+    fun `sans run, pas de PC`() = runTest(timeout = DELAI_CI) {
         assertEquals(PcUiState.AucuneRun, pc().uiState.first { it != PcUiState.Chargement })
     }
 
     @Test
-    fun `deposer puis reprendre un membre, avec sa fiche`() = runTest {
+    fun `deposer puis reprendre un membre, avec sa fiche`() = runTest(timeout = DELAI_CI) {
         val run = nouvelleRun()
         progression.equipe(run).first().forEach { progression.retirerMembre(run, it.emplacement) }
         progression.placerMembre(run, MembreEquipe(1, 252, null, 10))
@@ -119,7 +120,7 @@ class PcViewModelTest {
     }
 
     @Test
-    fun `le dernier membre ne peut pas partir et les boites tournent en boucle`() = runTest {
+    fun `le dernier membre ne peut pas partir et les boites tournent en boucle`() = runTest(timeout = DELAI_CI) {
         val run = nouvelleRun()
         progression.equipe(run).first().forEach { progression.retirerMembre(run, it.emplacement) }
         progression.placerMembre(run, MembreEquipe(1, 252, null, 10))
@@ -135,5 +136,10 @@ class PcViewModelTest {
         assertEquals(NOMBRE_BOITES, vm.etat { it.boite == NOMBRE_BOITES }.boite)
         vm.boiteSuivante()
         assertEquals(1, vm.etat { it.boite == 1 }.boite)
+    }
+
+    private companion object {
+        /** Room et Robolectric sont lents sur la CI : les 10 s par défaut de runTest ne suffisent pas toujours. */
+        val DELAI_CI = 60.seconds
     }
 }

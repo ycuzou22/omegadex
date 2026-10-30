@@ -49,7 +49,8 @@ class ChangerNiveauUseCase @Inject constructor(
 }
 
 /**
- * Fait évoluer un membre de l'équipe : il change d'espèce en gardant son surnom et son niveau.
+ * Fait évoluer un membre de l'équipe : il change d'espèce en gardant son surnom et son niveau
+ * (augmenté d'un niveau si [monterDUnNiveau] : bonheur, objet tenu, lieu, beauté, attaque apprise).
  * L'espèce d'origine passe au statut « évoluée » et la nouvelle au moins à « capturée » ;
  * un statut n'est jamais abaissé.
  */
@@ -57,7 +58,12 @@ class FaireEvoluerUseCase @Inject constructor(
     private val progression: ProgressionRepository,
     private val jeu: JeuRepository,
 ) {
-    suspend operator fun invoke(runId: Long, emplacement: Int, especeCibleId: Int): ResultatEvolution {
+    suspend operator fun invoke(
+        runId: Long,
+        emplacement: Int,
+        especeCibleId: Int,
+        monterDUnNiveau: Boolean = false,
+    ): ResultatEvolution {
         val membre = progression.equipe(runId).first().firstOrNull { it.emplacement == emplacement }
             ?: return ResultatEvolution.MembreAbsent
         val possible = jeu.famille(membre.especeId).first().any {
@@ -65,11 +71,16 @@ class FaireEvoluerUseCase @Inject constructor(
         }
         if (!possible) return ResultatEvolution.EvolutionImpossible
 
-        progression.placerMembre(runId, membre.copy(especeId = especeCibleId))
+        val niveau = if (monterDUnNiveau) (membre.niveau + 1).coerceAtMost(NIVEAU_MAX) else membre.niveau
+        progression.placerMembre(runId, membre.copy(especeId = especeCibleId, niveau = niveau))
         val statuts = progression.statuts(runId).first()
         relever(runId, membre.especeId, statuts[membre.especeId], StatutEspece.EVOLUEE)
         relever(runId, especeCibleId, statuts[especeCibleId], StatutEspece.CAPTUREE)
         return ResultatEvolution.Evolue(membre.especeId, especeCibleId)
+    }
+
+    private companion object {
+        const val NIVEAU_MAX = 100
     }
 
     private suspend fun relever(runId: Long, especeId: Int, actuel: StatutEspece?, minimum: StatutEspece) {
