@@ -104,14 +104,6 @@ fun PcPleinEcran(onFermer: () -> Unit, viewModel: PcViewModel = hiltViewModel())
             sons.jouer(Son.CLIC)
             viewModel.choisirBoite(it)
         },
-        onPrecedente = {
-            sons.jouer(Son.CLIC)
-            viewModel.boitePrecedente()
-        },
-        onSuivante = {
-            sons.jouer(Son.CLIC)
-            viewModel.boiteSuivante()
-        },
         onChoisir = {
             sons.jouer(Son.CLIC)
             viewModel.selectionner(it)
@@ -236,7 +228,7 @@ private fun Boite(etat: PcUiState.Pc, actions: ActionsPc) {
     ) {
         Bandeau(etat, nomFond, actions)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            (1..etat.nombreBoites).forEach { numero ->
+            for (numero in 1..etat.nombreBoites) {
                 Vignette(
                     numero,
                     active = numero == etat.boite,
@@ -276,7 +268,8 @@ private fun Bandeau(etat: PcUiState.Pc, nomFond: String, actions: ActionsPc) {
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Fleche("‹", stringResource(R.string.pc_boite_precedente), actions.onPrecedente)
+        val precedente = (etat.boite + etat.nombreBoites - 2) % etat.nombreBoites + 1
+        Fleche("‹", stringResource(R.string.pc_boite_precedente)) { actions.onBoite(precedente) }
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 stringResource(R.string.pc_nom_boite, etat.boite, nomFond),
@@ -291,7 +284,8 @@ private fun Bandeau(etat: PcUiState.Pc, nomFond: String, actions: ActionsPc) {
                 color = ENCRE.copy(alpha = 0.7f),
             )
         }
-        Fleche("›", stringResource(R.string.pc_boite_suivante), actions.onSuivante)
+        val suivante = etat.boite % etat.nombreBoites + 1
+        Fleche("›", stringResource(R.string.pc_boite_suivante)) { actions.onBoite(suivante) }
     }
 }
 
@@ -535,5 +529,5 @@ private fun PcContenuPreview() {
         fiche = FichePc(gecko, listOf("Engrais", "Délestage")),
         refus = null,
     )
-    OmegadexTheme { PcContenu(etat, ActionsPc({}, {}, {}, {}, {}, {}, {}, {})) }
+    OmegadexTheme { PcContenu(etat, ActionsPc({}, {}, {}, {}, {}, {})) }
 }
