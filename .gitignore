@@ -37,3 +37,7 @@ __pycache__/
 # Images des espèces fournies localement par le propriétaire du projet (jamais versionnées)
 app/src/main/assets/sprites/*
 !app/src/main/assets/sprites/LISEZMOI.md
+
+# Images des badges d'arène fournies localement (jamais versionnées)
+app/src/main/assets/badges/*
+!app/src/main/assets/badges/LISEZMOI.md

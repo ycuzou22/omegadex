@@ -217,6 +217,7 @@ private fun NicheBadge(
 /** Le badge, posé ([t] null) ou en vol : il tombe en tournant avec une traînée de lave, puis refroidit. */
 @Composable
 private fun BadgeEnVol(badge: BadgeArene, t: Float?) {
+    val image = rememberImageBadge(badge)
     if (t != null) {
         Canvas(
             Modifier
@@ -236,7 +237,7 @@ private fun BadgeEnVol(badge: BadgeArene, t: Float?) {
             t < DEBUT_REFROIDISSEMENT -> 1f
             else -> 1f - avancementBadge(t, DEBUT_REFROIDISSEMENT, DUREE_REFROIDISSEMENT)
         }
-        dessinerBadge(badge, chaleur)
+        dessinerBadge(badge, chaleur, image)
     }
 }
 
