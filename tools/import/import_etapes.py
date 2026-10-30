@@ -27,7 +27,8 @@ METHODES_CAPTURE = ("HERBE", "HORDE", "SURF", "PLONGEE", "PECHE", "NAVI_DEX", "R
 CONDITIONS_ETAPE = [("Groudon", 8), ("Pokédex National", 10), ("Ligue", 10), ("Delta", 11)]
 # Étape à partir de laquelle chaque méthode est utilisable (CS ou canne obtenue à l'étape précédente).
 METHODES_ETAPE = {"SURF": 6, "PLONGEE": 8, "ROCHE_FRACASSEE": 3}
-CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 3), ("Canne", 2)]
+# Super Canne : pêcheur de la rive est de la Route 118, rejointe en Surf (même règle que DisponibiliteRencontre).
+CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 6), ("Canne", 2)]
 # Étape à partir de laquelle chaque capacité de terrain ouvre le chemin : CS en poche et badge qui l'autorise.
 CS_ETAPE = {
     "COUPE": 2,
@@ -203,9 +204,21 @@ def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> int:
     return sum(1 for q in quetes if q[1] == 1)
 
 
-def etape_objet(etape_lieu: int, cs: str | None, condition: str | None) -> int:
-    """Étape où l'objet devient récupérable : lieu débloqué, capacité de terrain utilisable, histoire avancée."""
-    etape = max(etape_lieu, CS_ETAPE.get(cs, 0) if cs else 0)
+def capacites_objet(objet: dict) -> list[str]:
+    """Capacités de terrain qu'il faut pour atteindre l'objet : « cs » vaut un code, une liste de codes ou rien."""
+    cs = objet.get("cs")
+    if not cs:
+        return []
+    return [cs] if isinstance(cs, str) else list(cs)
+
+
+def etape_objet(etape_lieu: int, cs: str | list[str] | None, condition: str | None) -> int:
+    """Étape où l'objet devient récupérable : lieu débloqué, capacités de terrain utilisables, histoire avancée.
+
+    Avec plusieurs capacités (Surf puis Vélo Cross…), c'est la dernière devenue utilisable qui compte.
+    """
+    capacites = capacites_objet({"cs": cs})
+    etape = max([etape_lieu, *(CS_ETAPE.get(c, 0) for c in capacites)])
     for mot, minimum in CONDITIONS_OBJET:
         if condition and mot in condition:
             etape = max(etape, minimum)
@@ -216,8 +229,9 @@ def description_objet(objet: dict) -> str:
     """« Récupérer CT39 Tomberoche (Mérouville) », « Acheter … », avec la capacité de terrain requise."""
     verbe = VERBES_OBJET.get(objet.get("methode") or "SOL", "Récupérer")
     texte = f"{verbe} {objet['nom']} ({objet.get('lieu') or objet['lieuLibre']})"
-    if objet.get("cs"):
-        texte += f" · {NOMS_CS[objet['cs']]}"
+    capacites = capacites_objet(objet)
+    if capacites:
+        texte += " · " + " + ".join(NOMS_CS[c] for c in capacites)
     return texte
 
 
@@ -248,8 +262,9 @@ def generer_quetes_objets(con: sqlite3.Connection, fichier: pathlib.Path | None 
             continue
         if objet["lieu"] not in lieux:
             raise ValueError(f"Objet « {objet['nom']} » : lieu inconnu « {objet['lieu']} »")
-        if objet.get("cs") and objet["cs"] not in CS_ETAPE:
-            raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {objet['cs']} »")
+        for cs in capacites_objet(objet):
+            if cs not in CS_ETAPE:
+                raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {cs} »")
         lieu_id, etape_lieu = lieux[objet["lieu"]]
         etape = objet.get("etape")
         if etape is None:

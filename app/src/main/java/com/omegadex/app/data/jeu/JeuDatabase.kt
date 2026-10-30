@@ -62,7 +62,7 @@ abstract class JeuDatabase : RoomDatabase() {
     abstract fun modeleDefiDao(): ModeleDefiDao
 
     companion object {
-        const val VERSION = 7
+        const val VERSION = 8
         const val NOM_FICHIER = "omegadex_jeu.db"
         const val CHEMIN_ASSET = "database/omegadex_jeu.db"
     }

@@ -28,7 +28,7 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
 3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
 
-Version actuelle des données : **9** (schéma Room v7, 60 modèles de défis, banque de 45 480 défis pour 229 familles, quêtes d'échange pour les exclusivités Saphir Alpha, 248 quêtes d'objets, plus de quêtes « Capturer » : le bouton « Attraper » des rencontres les remplace).
+Version actuelle des données : **10** (schéma Room v8, 60 modèles de défis, banque de 45 480 défis pour 229 familles, quêtes d'échange pour les exclusivités Saphir Alpha, 248 quêtes d'objets, plus de quêtes « Capturer » : le bouton « Attraper » des rencontres les remplace).
 
 ## Banque de défis par famille
 
@@ -36,7 +36,7 @@ Version actuelle des données : **9** (schéma Room v7, 60 modèles de défis, b
 
 ## Quêtes d'objets
 
-Les objets utiles (`donnees/objets_rosa.json`) deviennent des quêtes annexes « Récupérer / Acheter / Recevoir / Gagner X (lieu) », placées à l'étape où l'objet est accessible : lieu débloqué, capacité de terrain utilisable (`CS_ETAPE`) et condition d'histoire (`CONDITIONS_OBJET`). Les récompenses déjà listées dans une quête principale sont ignorées. Exceptions fixées dans les données : `etape` impose l'étape (Méga-Bracelet à l'étape 6), `lieuLibre` nomme un lieu absent de la base (objets des lieux mirages, en post-game). Pour rejouer seulement ces quêtes sur la base embarquée, sans réseau :
+Les objets utiles (`donnees/objets_rosa.json`) deviennent des quêtes annexes « Récupérer / Acheter / Recevoir / Gagner X (lieu) », placées à l'étape où l'objet est accessible : lieu débloqué, capacités de terrain utilisables (`CS_ETAPE` ; `cs` peut lister plusieurs codes, par exemple `["SURF", "VELO_COURSE"]` : la dernière devenue utilisable fixe l'étape) et condition d'histoire (`CONDITIONS_OBJET`). Les récompenses déjà listées dans une quête principale sont ignorées. Exceptions fixées dans les données : `etape` impose l'étape (Méga-Bracelet à l'étape 6), `lieuLibre` nomme un lieu absent de la base (objets des lieux mirages, en post-game). Pour rejouer seulement ces quêtes sur la base embarquée, sans réseau :
 
 ```bash
 python3 tools/import/import_etapes.py --objets
