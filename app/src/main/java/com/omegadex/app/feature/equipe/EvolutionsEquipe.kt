@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -45,7 +45,7 @@ internal fun RubanEvolution(membre: MembreVue, modifier: Modifier = Modifier) {
         fontWeight = FontWeight.ExtraBold,
         color = TexteSurMagma,
         modifier = modifier
-            .background(Brush.verticalGradient(listOf(couleurs.lueurMagma, couleurs.magma)), RoundedCornerShape(50))
+            .background(Brush.verticalGradient(listOf(couleurs.lueurMagma, couleurs.magma)), CircleShape)
             .padding(horizontal = 10.dp, vertical = 3.dp),
     )
 }
@@ -111,7 +111,7 @@ private fun BoutonMagma(texte: String, onClick: () -> Unit) {
         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
         modifier = Modifier.background(
             Brush.verticalGradient(listOf(couleurs.lueurMagma, couleurs.magma)),
-            RoundedCornerShape(50),
+            CircleShape,
         ),
     ) {
         Text(texte, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.ExtraBold)
@@ -122,21 +122,25 @@ private fun BoutonMagma(texte: String, onClick: () -> Unit) {
 @Composable
 internal fun libelleEvolution(evolution: EvolutionVue): String {
     val detail = evolution.detail.orEmpty()
-    return when (evolution.methode) {
-        MethodeEvolution.PIERRE -> stringResource(R.string.equipe_evo_pierre, detail)
-        MethodeEvolution.BONHEUR -> stringResource(R.string.equipe_evo_bonheur)
-        MethodeEvolution.BONHEUR_JOUR -> stringResource(R.string.equipe_evo_bonheur_jour)
-        MethodeEvolution.BONHEUR_NUIT -> stringResource(R.string.equipe_evo_bonheur_nuit)
-        MethodeEvolution.OBJET_TENU ->
-            evolution.moment
-                ?.let { stringResource(R.string.equipe_evo_objet_tenu_moment, detail, it) }
-                ?: stringResource(R.string.equipe_evo_objet_tenu, detail)
-        MethodeEvolution.CHAMP_MAGNETIQUE -> stringResource(R.string.equipe_evo_champ_magnetique)
-        MethodeEvolution.LIEU -> stringResource(R.string.equipe_evo_lieu, detail)
-        MethodeEvolution.ECHANGE -> stringResource(R.string.equipe_evo_echange)
-        MethodeEvolution.ECHANGE_OBJET -> stringResource(R.string.equipe_evo_echange_objet, detail)
-        MethodeEvolution.BEAUTE -> stringResource(R.string.equipe_evo_beaute)
-        MethodeEvolution.ATTAQUE -> stringResource(R.string.equipe_evo_attaque, detail)
-        MethodeEvolution.AUTRE -> stringResource(R.string.equipe_evo_autre, detail)
+    val moment = evolution.moment
+    if (evolution.methode == MethodeEvolution.OBJET_TENU && moment != null) {
+        return stringResource(R.string.equipe_evo_objet_tenu_moment, detail, moment)
     }
+    return stringResource(ressourceLibelle(evolution.methode), detail)
+}
+
+/** Texte du bouton de chaque méthode ; « %1$s » reçoit la pierre, l'objet, le lieu ou l'attaque. */
+private fun ressourceLibelle(methode: MethodeEvolution): Int = when (methode) {
+    MethodeEvolution.PIERRE -> R.string.equipe_evo_pierre
+    MethodeEvolution.BONHEUR -> R.string.equipe_evo_bonheur
+    MethodeEvolution.BONHEUR_JOUR -> R.string.equipe_evo_bonheur_jour
+    MethodeEvolution.BONHEUR_NUIT -> R.string.equipe_evo_bonheur_nuit
+    MethodeEvolution.OBJET_TENU -> R.string.equipe_evo_objet_tenu
+    MethodeEvolution.CHAMP_MAGNETIQUE -> R.string.equipe_evo_champ_magnetique
+    MethodeEvolution.LIEU -> R.string.equipe_evo_lieu
+    MethodeEvolution.ECHANGE -> R.string.equipe_evo_echange
+    MethodeEvolution.ECHANGE_OBJET -> R.string.equipe_evo_echange_objet
+    MethodeEvolution.BEAUTE -> R.string.equipe_evo_beaute
+    MethodeEvolution.ATTAQUE -> R.string.equipe_evo_attaque
+    MethodeEvolution.AUTRE -> R.string.equipe_evo_autre
 }
