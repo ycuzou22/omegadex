@@ -50,8 +50,8 @@ import com.omegadex.app.domain.model.MethodeRencontre.HERBE
 import com.omegadex.app.domain.model.MethodeRencontre.SURF
 import com.omegadex.app.domain.rencontre.Debloqueur
 import com.omegadex.app.ui.animations.AnimationCapture
-import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.animations.AnimationFinAventure
+import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.components.CarteRubis
 import com.omegadex.app.ui.components.GemCheckbox
 import com.omegadex.app.ui.components.TypeChip
