@@ -93,21 +93,24 @@ class QuetesAnnexesTest(unittest.TestCase):
         self.assertEqual([270, 271, 272], self.echange_requis)
 
     def test_les_quetes_d_echange_remplacent_les_captures_impossibles(self):
-        captures, echanges = import_etapes.generer_quetes_annexes(self.con, 1)
+        echanges = import_etapes.generer_quetes_annexes(self.con, 1)
 
-        self.assertEqual((3, 2), (captures, echanges))
+        self.assertEqual(2, echanges)
+        # Zigzaton, Grainipiot et Ténéfix se capturent dans Rubis Oméga : pas de quête, le bouton « Attraper » suffit.
         self.assertEqual(
             [
-                (0, 1, 1, "Capturer Zigzaton (Route 101)"),
-                (0, 2, 2, "Capturer Grainipiot (Route 102)"),
                 (0, 3, None, "Obtenir Nénupiot par échange (exclusif à Saphir Alpha)"),
                 (4, 1, None, "Obtenir Lombre par échange (exclusif à Saphir Alpha)"),
-                (8, 1, 5, "Capturer Ténéfix (Grotte Origine)"),
             ],
             self.quetes(),
         )
 
-    def test_le_controle_refuse_une_capture_reservee_a_saphir_alpha(self):
+    def test_les_captures_gardent_leur_numero_reserve(self):
+        import_etapes.generer_quetes_annexes(self.con, 1)
+        # Numéros 1 et 2 : captures de l'étape 0 ; 3 : l'échange de Nénupiot ; 4 : l'échange de Lombre.
+        self.assertEqual([3, 4], [i for (i,) in self.con.execute("SELECT id FROM quete ORDER BY id")])
+
+    def test_le_controle_refuse_une_quete_de_capture_et_un_echange_injustifie(self):
         import_etapes.generer_quetes_annexes(self.con, 1)
         controle = verifier.Controle()
         verifier.controler_quetes_annexes(self.con, controle)

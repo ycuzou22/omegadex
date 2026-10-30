@@ -141,23 +141,25 @@ def importer(con: sqlite3.Connection) -> dict[str, int]:
                 (numero, e["id"], lieux[q["lieu"]], "PRINCIPALE", ordre, q["description"], q["recompense"]),
             )
 
-    captures, echanges = generer_quetes_annexes(con, numero + 1)
+    echanges = generer_quetes_annexes(con, numero + 1)
     objets = generer_quetes_objets(con)
     return {
         "etapes": len(etapes),
         "quetes principales": numero,
-        "quetes de capture": captures,
         "quetes d'echange (Saphir Alpha)": echanges,
         "quetes d'objets": objets,
     }
 
 
-def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> tuple[int, int]:
-    """Quêtes annexes, numérotées à partir de [premier_numero] : (nombre de captures, nombre d'échanges).
+def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> int:
+    """Quêtes annexes d'échange, numérotées à partir de [premier_numero] ; renvoie leur nombre.
 
-    - « Capturer X (lieu) » : la première occasion de capturer chaque espèce sauvage dans Rubis Oméga ;
-    - « Obtenir X par échange » : une espèce sauvage seulement dans Saphir Alpha (et que Rubis Oméga
-      n'obtient pas non plus par évolution ou reproduction), à l'étape de sa première apparition.
+    « Obtenir X par échange » : une espèce sauvage seulement dans Saphir Alpha (et que Rubis Oméga
+    n'obtient pas non plus par évolution ou reproduction), à l'étape de sa première apparition.
+
+    Les captures (« Capturer X (lieu) », première occasion de capturer chaque espèce) ne deviennent plus des quêtes :
+    le bouton « Attraper » des rencontres les enregistre déjà. Elles gardent leur numéro réservé, pour que les quêtes
+    suivantes conservent leur identifiant et que les coches des runs existantes restent sur les bonnes quêtes.
     """
     capture: dict[int, tuple[int, int, str]] = {}
     autre_version: dict[int, int] = {}
@@ -192,13 +194,13 @@ def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> tupl
     par_etape: dict[int, int] = {}
     for etape, rang, _, _, lieu_id, description in sorted(quetes, key=lambda q: q[:4]):
         par_etape[etape] = par_etape.get(etape, 0) + 1
-        con.execute(
-            "INSERT INTO quete VALUES (?,?,?,?,?,?,?)",
-            (numero, etape, lieu_id, "ANNEXE", par_etape[etape], description, None),
-        )
+        if rang == 1:
+            con.execute(
+                "INSERT INTO quete VALUES (?,?,?,?,?,?,?)",
+                (numero, etape, lieu_id, "ANNEXE", par_etape[etape], description, None),
+            )
         numero += 1
-    echanges = sum(1 for q in quetes if q[1] == 1)
-    return len(quetes) - echanges, echanges
+    return sum(1 for q in quetes if q[1] == 1)
 
 
 def etape_objet(etape_lieu: int, cs: str | None, condition: str | None) -> int:
