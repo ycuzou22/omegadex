@@ -104,7 +104,7 @@ class PcViewModelTest {
         assertEquals(18, fiche.pokemon.niveau)
 
         vm.deplacer()
-        val apres = vm.etat { it.occupees == 1 }
+        val apres = vm.etat { it.occupees == 1 && it.equipe[1] == null && it.fiche == null }
         assertNull(apres.fiche)
         assertNull(apres.equipe[1])
         val range = requireNotNull(apres.cases.first())
@@ -115,7 +115,7 @@ class PcViewModelTest {
         assertEquals(Nature.JOVIAL, vm.etat { it.fiche?.pokemon?.nature != null }.fiche?.pokemon?.nature)
 
         vm.deplacer()
-        assertEquals(253, vm.etat { it.occupees == 0 }.equipe[1]?.especeId)
+        assertEquals(253, vm.etat { it.occupees == 0 && it.equipe[1] != null }.equipe[1]?.especeId)
     }
 
     @Test
