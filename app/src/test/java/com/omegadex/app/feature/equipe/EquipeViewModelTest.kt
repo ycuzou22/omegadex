@@ -8,12 +8,15 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
+import com.omegadex.app.domain.equipe.AjouterMembreUseCase
 import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
+import com.omegadex.app.domain.equipe.ObserverSuggestionsRotationUseCase
 import com.omegadex.app.domain.equipe.RetirerMembreUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.Starter
@@ -29,6 +32,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -73,7 +77,11 @@ class EquipeViewModelTest {
             ObserverDefisUseCase(runEnCours, progression, jeu),
             ChangerNiveauUseCase(progression, jeu),
             FaireEvoluerUseCase(progression, jeu),
-            RetirerMembreUseCase(progression),
+            CompositionEquipe(
+                AjouterMembreUseCase(progression),
+                RetirerMembreUseCase(progression),
+                ObserverSuggestionsRotationUseCase(ObserverPokedexUseCase(jeu, progression), progression),
+            ),
         )
     }
 
@@ -107,6 +115,23 @@ class EquipeViewModelTest {
         assertEquals(2, arcko.ecartPlafond)
         assertEquals(0, etat.emplacements[2].membre?.ecartPlafond)
         assertEquals(1, etat.auDessusDuPlafond)
+    }
+
+    @Test
+    fun `une capture jamais utilisee est suggeree et entre dans l'equipe au plafond`() = runTest {
+        val run = nouvelleRun()
+        progression.definirStatut(run, 253, StatutEspece.CAPTUREE)
+        val vm = equipe()
+
+        val suggestion = vm.equipe { e -> e.suggestions.any { it.especeId == 253 } }
+            .suggestions.first { it.especeId == 253 }
+        val plafond = requireNotNull(vm.equipe().plafond)
+        assertEquals("Massko" to plafond, suggestion.nom to suggestion.niveau)
+
+        vm.ajouterSuggestion(suggestion, emplacement = null)
+        val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } }
+        assertEquals(plafond, etat.membres.first { it.especeId == 253 }.niveau)
+        assertTrue(etat.suggestions.none { it.especeId == 253 })
     }
 
     @Test

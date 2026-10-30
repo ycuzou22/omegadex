@@ -36,11 +36,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.feature.pc.PcPleinEcran
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.animations.EspeceAnimee
 import com.omegadex.app.ui.animations.EvolutionPleinEcran
 import com.omegadex.app.ui.components.IconeType
+import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.SpriteEspece
+import com.omegadex.app.ui.components.VarianteBouton
 import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
 import com.omegadex.app.ui.sons.LocalSons
@@ -61,6 +64,8 @@ fun EquipeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val proposee by viewModel.evolutionProposee.collectAsStateWithLifecycle()
     val enCours by viewModel.evolutionEnCours.collectAsStateWithLifecycle()
+    var pcOuvert by rememberSaveable { mutableStateOf(false) }
+    val sons = LocalSons.current
     EquipeContenu(
         uiState,
         ActionsEquipe(
@@ -68,9 +73,15 @@ fun EquipeScreen(
             onNiveau = viewModel::changerNiveau,
             onChoisir = onChoisir,
             onRetirer = viewModel::retirer,
+            onAjouterSuggestion = viewModel::ajouterSuggestion,
+            onPc = {
+                sons.jouer(Son.NAVIGATION)
+                pcOuvert = true
+            },
         ),
         modifier,
     )
+    if (pcOuvert) PcPleinEcran(onFermer = { pcOuvert = false })
     proposee?.let {
         DialogueEvolution(it, onEvoluer = viewModel::faireEvoluer, onPlusTard = viewModel::reporterEvolution)
     }
@@ -96,7 +107,7 @@ internal fun EquipeContenu(uiState: EquipeUiState, actions: ActionsEquipe, modif
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 22.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item { EnTete(uiState) }
+                item { EnTete(uiState, actions.onPc) }
                 if (uiState.auDessusDuPlafond > 0) item { AlertePlafond(uiState.auDessusDuPlafond) }
                 items(uiState.emplacements, key = { it.numero }) { emplacement ->
                     val membre = emplacement.membre
@@ -106,19 +117,31 @@ internal fun EquipeContenu(uiState: EquipeUiState, actions: ActionsEquipe, modif
                         CarteMembre(emplacement.numero, membre, uiState.plafond, actions)
                     }
                 }
+                if (uiState.suggestions.isNotEmpty()) {
+                    item(key = "suggestions") { CarteSuggestions(uiState, actions.onAjouterSuggestion) }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun EnTete(equipe: EquipeUiState.Equipe) {
+private fun EnTete(equipe: EquipeUiState.Equipe, onPc: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            stringResource(R.string.equipe_titre_compte, equipe.membres.size, TAILLE_EQUIPE),
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.semantics { heading() },
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.equipe_titre_compte, equipe.membres.size, TAILLE_EQUIPE),
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.weight(1f).semantics { heading() },
+            )
+            val description = stringResource(R.string.pc_ouvrir_description)
+            OmegaButton(
+                texte = stringResource(R.string.pc_ouvrir),
+                onClick = onPc,
+                variante = VarianteBouton.SOMBRE,
+                modifier = Modifier.semantics { contentDescription = description },
+            )
+        }
         val plafond = equipe.plafond
         Text(
             if (plafond != null && equipe.etapeTitre != null) {

@@ -1,5 +1,6 @@
 package com.omegadex.app.feature.equipe
 
+import com.omegadex.app.domain.equipe.Affinite
 import com.omegadex.app.domain.model.Difficulte
 
 /** Nombre d'emplacements de l'équipe. */
@@ -16,6 +17,10 @@ sealed interface EquipeUiState {
         val plafond: Int?,
         /** Les [TAILLE_EQUIPE] emplacements, dans l'ordre ; un emplacement libre a un membre null. */
         val emplacements: List<EmplacementVue>,
+        /** Type dominant de l'adversaire de l'étape en cours (clé de type), s'il en a un. */
+        val typeAdverse: String? = null,
+        /** Captures jamais utilisées à faire entrer dans l'équipe (F10). */
+        val suggestions: List<SuggestionVue> = emptyList(),
     ) : EquipeUiState {
         val membres: List<MembreVue> get() = emplacements.mapNotNull { it.membre }
         val auDessusDuPlafond: Int get() = membres.count { it.ecartPlafond != null && it.ecartPlafond > 0 }
@@ -45,3 +50,12 @@ data class CibleEvolution(val espece: EspeceVue, val niveauRequis: Int, val prec
 
 /** Évolution confirmée, jouée en plein écran. */
 data class EvolutionEnCours(val avant: EspeceVue, val apres: EspeceVue)
+
+/** Suggestion de rotation : espèce capturée jamais utilisée, à ajouter au [niveau] du plafond. */
+data class SuggestionVue(
+    val especeId: Int,
+    val nom: String,
+    val types: List<String>,
+    val affinite: Affinite,
+    val niveau: Int,
+)

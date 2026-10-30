@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PC de stockage. Fichier séparé de strings.xml pour limiter les conflits entre branches. -->
+<resources>
+    <string name="pc_ouvrir">PC</string>
+    <string name="pc_ouvrir_description">Ouvrir le PC de stockage</string>
+    <string name="pc_titre">PC de stockage</string>
+    <string name="pc_fermer">Fermer</string>
+    <string name="pc_equipe">Équipe</string>
+    <string name="pc_aide">Touche un Pokémon pour voir son niveau, sa nature et son talent.</string>
+    <string name="pc_boite_precedente">Boîte précédente</string>
+    <string name="pc_boite_suivante">Boîte suivante</string>
+    <string name="pc_nom_boite">Boîte %1$d · %2$s</string>
+    <string name="pc_compte_boite">%1$d / %2$d</string>
+    <string name="pc_case">%1$s, niveau %2$d</string>
+    <string name="pc_case_libre">Place libre</string>
+    <string name="pc_dans_equipe">%1$s · dans l\'équipe</string>
+    <string name="pc_dans_boite">%1$s · boîte %2$d</string>
+    <string name="pc_niveau">Niveau</string>
+    <string name="pc_nature">Nature</string>
+    <string name="pc_talent">Talent</string>
+    <string name="pc_a_renseigner">À renseigner</string>
+    <string name="pc_effacer">Effacer</string>
+    <string name="pc_deposer">Déposer au PC</string>
+    <string name="pc_reprendre">Mettre dans l\'équipe</string>
+    <string name="pc_refus_dernier">L\'équipe doit garder au moins un Pokémon.</string>
+    <string name="pc_refus_boite_pleine">Cette boîte est pleine : choisis-en une autre.</string>
+    <string name="pc_refus_equipe_pleine">L\'équipe est complète : dépose d\'abord un membre au PC.</string>
+    <string name="pc_refus_introuvable">Ce Pokémon a déjà été déplacé.</string>
+    <string name="pc_fond_foret">Forêt</string>
+    <string name="pc_fond_mer">Mer</string>
+    <string name="pc_fond_grotte">Grotte</string>
+    <string name="pc_fond_volcan">Volcan</string>
+    <string name="pc_fond_ciel">Ciel</string>
+    <string name="pc_fond_desert">Désert</string>
+    <string name="pc_fond_neige">Neige</string>
+    <string name="pc_fond_rubis">Rubis</string>
+</resources>

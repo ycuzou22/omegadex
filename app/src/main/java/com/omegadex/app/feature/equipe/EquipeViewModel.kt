@@ -3,8 +3,10 @@ package com.omegadex.app.feature.equipe
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
+import com.omegadex.app.domain.equipe.AjouterMembreUseCase
 import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
+import com.omegadex.app.domain.equipe.ObserverSuggestionsRotationUseCase
 import com.omegadex.app.domain.equipe.ResultatEvolution
 import com.omegadex.app.domain.equipe.ResultatNiveau
 import com.omegadex.app.domain.equipe.RetirerMembreUseCase
@@ -41,7 +43,7 @@ class EquipeViewModel @Inject constructor(
     observerDefis: ObserverDefisUseCase,
     private val changerNiveau: ChangerNiveauUseCase,
     private val faireEvoluer: FaireEvoluerUseCase,
-    private val retirerMembre: RetirerMembreUseCase,
+    private val composition: CompositionEquipe,
 ) : ViewModel() {
     private val ecritures = Mutex()
 
@@ -53,11 +55,13 @@ class EquipeViewModel @Inject constructor(
 
     val uiState: StateFlow<EquipeUiState> = observerRunEnCours().flatMapLatest { enCours ->
         if (enCours == null) return@flatMapLatest flowOf(EquipeUiState.AucuneRun)
+        val etape = enCours.etape
         combine(
             progression.equipe(enCours.run.id),
             jeu.pokedexNational(),
             observerDefis(),
-        ) { equipe, especes, defis ->
+            if (etape == null) flowOf(emptyList()) else composition.suggestions(enCours.run.id, etape),
+        ) { equipe, especes, defis, suggestions ->
             val parId = especes.associateBy { it.id }
             val plafond = enCours.etape?.plafond
             val actifs = defis?.actifs.orEmpty()
@@ -83,6 +87,10 @@ class EquipeViewModel @Inject constructor(
                             )
                         },
                     )
+                },
+                typeAdverse = etape?.typeDominant,
+                suggestions = suggestions.map {
+                    SuggestionVue(it.espece.id, it.espece.nom, it.espece.types, it.affinite, it.niveau)
                 },
             )
         }
@@ -116,8 +124,13 @@ class EquipeViewModel @Inject constructor(
         }
     }
 
+    /** Fait entrer la [suggestion] au niveau du plafond, dans l'[emplacement] donné ou le premier libre. */
+    fun ajouterSuggestion(suggestion: SuggestionVue, emplacement: Int?) = surLaRun { runId ->
+        composition.ajouter(runId, suggestion.especeId, suggestion.niveau, emplacement)
+    }
+
     /** Retire le membre de l'[emplacement], qui redevient libre. */
-    fun retirer(emplacement: Int) = surLaRun { runId -> retirerMembre(runId, emplacement) }
+    fun retirer(emplacement: Int) = surLaRun { runId -> composition.retirer(runId, emplacement) }
 
     fun reporterEvolution() {
         _evolutionProposee.value = null
@@ -144,3 +157,10 @@ class EquipeViewModel @Inject constructor(
         const val ARRET_MS = 5_000L
     }
 }
+
+/** Ce qui change la composition de l'équipe : ajout, retrait et suggestions de rotation. */
+class CompositionEquipe @Inject constructor(
+    val ajouter: AjouterMembreUseCase,
+    val retirer: RetirerMembreUseCase,
+    val suggestions: ObserverSuggestionsRotationUseCase,
+)

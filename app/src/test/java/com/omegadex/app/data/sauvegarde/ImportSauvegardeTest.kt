@@ -9,6 +9,7 @@ import com.omegadex.app.data.repository.SauvegardeRepositoryImpl
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
+import com.omegadex.app.domain.model.Nature
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.repository.FichiersSauvegarde
 import com.omegadex.app.domain.sauvegarde.ExporterProgressionUseCase
@@ -84,8 +85,10 @@ class ImportSauvegardeTest {
         progression.cocherQuete(run, 3, cochee = true)
         progression.definirStatut(run, 252, StatutEspece.EVOLUEE)
         progression.definirStatut(run, 263, StatutEspece.VUE)
-        progression.placerMembre(run, MembreEquipe(1, 253, "Gecko", 18))
+        progression.placerMembre(run, MembreEquipe(1, 253, "Gecko", 18, Nature.RIGIDE, "Engrais"))
         progression.placerMembre(run, MembreEquipe(4, 263, null, 3))
+        progression.placerMembre(run, MembreEquipe(5, 270, "Nénu", 9, Nature.CALME, null))
+        progression.deposerAuPc(run, emplacement = 5, boite = 2)
         val reussi = progression.ajouterDefi(run, modeleId = 3, especeId = 252, etapeId = null)
         progression.changerEtatDefi(run, reussi, EtatDefi.REUSSI)
         progression.ajouterDefi(run, modeleId = 7, especeId = null, etapeId = 1)
@@ -104,6 +107,44 @@ class ImportSauvegardeTest {
 
         assertEquals(avant, sauvegardes.runs(neuf))
         assertEquals(2, comptes.runs(neuf).first().size)
+    }
+
+    @Test
+    fun `un fichier version 1 s'importe sans PC ni nature`() = runTest {
+        remplir(nouveauCompte("yamao"))
+        exporter("content://yamao.json")
+        val json = JSONObject(requireNotNull(fichiers.contenus["content://yamao.json"]))
+        json.put(SauvegardeJson.Cles.VERSION, 1)
+        val runs = json.getJSONArray(SauvegardeJson.Cles.RUNS)
+        for (i in 0 until runs.length()) {
+            val run = runs.getJSONObject(i)
+            run.remove(SauvegardeJson.Cles.PC)
+            val equipe = run.getJSONArray(SauvegardeJson.Cles.EQUIPE)
+            for (j in 0 until equipe.length()) {
+                equipe.getJSONObject(j).remove(SauvegardeJson.Cles.NATURE)
+                equipe.getJSONObject(j).remove(SauvegardeJson.Cles.TALENT)
+            }
+        }
+        fichiers.contenus["content://v1.json"] = json.toString()
+        val neuf = nouveauCompte("ancien-fichier")
+
+        assertEquals(ResultatImport.Reussi(runsImportees = 2, runsIgnorees = 0), importer("content://v1.json"))
+
+        val run = sauvegardes.runs(neuf).first { it.nom == "Nuzlocke" }
+        assertTrue(run.pc.isEmpty())
+        assertEquals(MembreEquipe(1, 253, "Gecko", 18), run.equipe.first { it.emplacement == 1 })
+    }
+
+    @Test
+    fun `le PC et les natures font partie de la sauvegarde`() = runTest {
+        remplir(nouveauCompte("yamao"))
+        val run = requireNotNull(exporter.construire()).runs.first { it.nom == "Nuzlocke" }
+
+        val gecko = run.equipe.first { it.emplacement == 1 }
+        assertEquals(Nature.RIGIDE to "Engrais", gecko.nature to gecko.talent)
+        val range = run.pc.single()
+        assertEquals(2 to 270, range.boite to range.especeId)
+        assertEquals("Nénu" to Nature.CALME, range.surnom to range.nature)
     }
 
     @Test
