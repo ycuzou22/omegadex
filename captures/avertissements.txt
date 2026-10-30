@@ -1,0 +1,3 @@
+w: file:///home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/domain/compte/CompteUseCases.kt:79:24 Condition is always 'false'.
+w: file:///home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/domain/compte/CompteUseCases.kt:79:24 Condition is always 'false'.
+w: file:///home/runner/work/omegadex/omegadex/app/src/test/java/com/omegadex/app/data/repository/ReglagesDataStoreTest.kt:21:32 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
