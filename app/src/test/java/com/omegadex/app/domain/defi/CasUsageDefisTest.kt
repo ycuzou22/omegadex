@@ -12,6 +12,9 @@ import com.omegadex.app.domain.model.Evolution
 import com.omegadex.app.domain.model.Lieu
 import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.model.ModeleDefi
+import com.omegadex.app.domain.model.Nature
+import com.omegadex.app.domain.model.PlacePokemon
+import com.omegadex.app.domain.model.PokemonPc
 import com.omegadex.app.domain.model.ProgressionEtape
 import com.omegadex.app.domain.model.Quete
 import com.omegadex.app.domain.model.Rencontre
@@ -297,6 +300,14 @@ private class FausseProgression : ProgressionRepository {
     override suspend fun retirerMembre(runId: Long, emplacement: Int) {
         equipeFlux.value = equipeFlux.value.filterNot { it.emplacement == emplacement }
     }
+
+    override fun pc(runId: Long) = flowOf(emptyList<PokemonPc>())
+
+    override suspend fun deposerAuPc(runId: Long, emplacement: Int, boite: Int) = Unit
+
+    override suspend fun retirerDuPc(runId: Long, pcId: Long, emplacement: Int) = Unit
+
+    override suspend fun definirDetails(runId: Long, place: PlacePokemon, nature: Nature?, talent: String?) = Unit
 
     override fun defis(runId: Long): Flow<List<Defi>> = defisFlux
 

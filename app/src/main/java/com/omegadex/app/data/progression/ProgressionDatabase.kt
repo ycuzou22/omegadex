@@ -6,10 +6,12 @@ import com.omegadex.app.data.progression.dao.AventureDao
 import com.omegadex.app.data.progression.dao.CompteDao
 import com.omegadex.app.data.progression.dao.DefiDao
 import com.omegadex.app.data.progression.dao.EquipeDao
+import com.omegadex.app.data.progression.dao.PcDao
 import com.omegadex.app.data.progression.dao.PokedexDao
 import com.omegadex.app.data.progression.dao.SauvegardeDao
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
+import com.omegadex.app.data.progression.entity.PokemonPcEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
 import com.omegadex.app.data.progression.entity.ProgressionEtapeEntity
 import com.omegadex.app.data.progression.entity.QueteCocheeEntity
@@ -30,6 +32,7 @@ import com.omegadex.app.data.progression.entity.UtilisateurEntity
         ProgressionEspeceEntity::class,
         DefiEntity::class,
         MembreEquipeEntity::class,
+        PokemonPcEntity::class,
     ],
     version = ProgressionDatabase.VERSION,
     exportSchema = true,
@@ -43,11 +46,13 @@ abstract class ProgressionDatabase : RoomDatabase() {
 
     abstract fun equipeDao(): EquipeDao
 
+    abstract fun pcDao(): PcDao
+
     abstract fun defiDao(): DefiDao
     abstract fun sauvegardeDao(): SauvegardeDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
         const val NOM_FICHIER = "omegadex_progression.db"
     }
 }

@@ -9,4 +9,6 @@ class ActionsEquipe(
     val onRetirer: (emplacement: Int) -> Unit,
     /** Fait entrer une suggestion de rotation : dans l'[emplacement] donné (échange) ou le premier libre. */
     val onAjouterSuggestion: (suggestion: SuggestionVue, emplacement: Int?) -> Unit = { _, _ -> },
+    /** Ouvre le PC de stockage. */
+    val onPc: () -> Unit = {},
 )
