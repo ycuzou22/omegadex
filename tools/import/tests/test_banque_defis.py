@@ -102,6 +102,27 @@ class BanqueDefisTest(unittest.TestCase):
         con.close()
         self.assertEqual([(d["id"], d["gabarit"], d["parametres"]) for d in self.defis], embarquee)
 
+    def test_un_defi_qui_vise_un_type_attend_qu_on_puisse_en_croiser_un_sauvage(self):
+        sauvages = banque.etapes_des_types_sauvages(self.donnees)
+        noms_types = {nom: t for t, nom in banque.NOMS_TYPES.items()}
+        motif = re.compile(r"(?:Pokémon de type|Pokémon sauvage de type) ([A-Za-zÀ-ÿ]+)")
+        for d in self.defis:
+            if d["parametres"]["categorie"] not in ("type", "capture"):
+                continue
+            for nom in motif.findall(d["gabarit"]):
+                self.assertGreaterEqual(d["etapeMin"], sauvages[noms_types[nom]], d["gabarit"])
+
+    def test_pas_de_type_glace_ni_spectre_a_croiser_avant_l_etape_7(self):
+        sauvages = banque.etapes_des_types_sauvages(self.donnees)
+        self.assertEqual(7, sauvages["glace"])
+        self.assertEqual(7, sauvages["spectre"])
+
+    def test_la_base_embarquee_a_les_etapes_de_deblocage_a_jour(self):
+        con = sqlite3.connect(f"file:{banque.BASE}?mode=ro", uri=True)
+        embarquee = dict(con.execute("SELECT id, etapeMin FROM modele_defi WHERE id >= ?", (banque.ID_BANQUE,)))
+        con.close()
+        self.assertEqual({d["id"]: d["etapeMin"] for d in self.defis}, embarquee)
+
     def test_elision_des_noms(self):
         self.assertEqual("d'Arcko", banque.de("Arcko"))
         self.assertEqual("de Massko", banque.de("Massko"))

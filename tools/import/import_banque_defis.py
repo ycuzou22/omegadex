@@ -49,6 +49,8 @@ DONNEUR = 12  # Donneurs de capacités de l'Atoll de Combat (PCo)
 DERNIERE_ETAPE = 12
 
 SAPHIR_ALPHA = "Saphir Alpha uniquement"
+# Rencontres de Pokémon sauvages (les cadeaux, échanges et Pokémon fixes uniques ne comptent pas).
+METHODES_SAUVAGES = {"HERBE", "HORDE", "SURF", "PECHE", "PLONGEE", "ROCHE_FRACASSEE", "NAVI_DEX"}
 RE_GROUDON = re.compile(r"après avoir (vaincu|capturé) Groudon", re.IGNORECASE)
 RE_DELTA = re.compile(r"après l'Épisode Delta|Ligue une deuxième fois", re.IGNORECASE)
 
@@ -431,7 +433,27 @@ def etape_de_l_attaque(a: dict, regles: Regles) -> int | None:
     return None
 
 
-def defis_de_types(p: Pool, attaques: list[dict], regles: Regles) -> None:
+def etapes_des_types_sauvages(donnees: dict) -> dict[str, int]:
+    """Première étape où l'on croise un Pokémon sauvage de chaque type (même règle que les rencontres).
+
+    Les défis « Chasse au type », « Capture », « Face au type » et « X contre Y » visent des Pokémon de ce
+    type : ils n'arrivent pas avant qu'on puisse en rencontrer un. Un type jamais sauvage n'a pas d'étape.
+    """
+    etapes: dict[str, int] = {}
+    for r in donnees["rencontres"]:
+        if r["methode"] not in METHODES_SAUVAGES:
+            continue
+        etape = etape_de_la_rencontre(r)
+        if etape is None:
+            continue
+        sp = donnees["especes"][r["especeId"]]
+        for t in (sp["type1"], sp["type2"]):
+            if t and etape < etapes.get(t, 99):
+                etapes[t] = etape
+    return etapes
+
+
+def defis_de_types(p: Pool, attaques: list[dict], regles: Regles, sauvages: dict[str, int]) -> None:
     s, sp = p.espece["nom"], p.espece
     types = [t for t in (sp["type1"], sp["type2"]) if t]
     offensifs: dict[str, int] = {}  # type d'attaque -> première étape où l'espèce en connaît une
@@ -446,21 +468,29 @@ def defis_de_types(p: Pool, attaques: list[dict], regles: Regles) -> None:
                       f"Battre {{adversaire}} avec {s} en n'utilisant que des attaques de type {nom_t}",
                       offensifs[t])  # fmt: skip
             for cible in SUPER_EFFICACE[t]:
+                if cible not in sauvages:
+                    continue
                 p.ajouter("type", "ESPECE", N, f"{nom_t} contre {NOMS_TYPES[cible]}",
                           f"Mettre K.O. 3 Pokémon de type {NOMS_TYPES[cible]} avec une attaque {nom_t} {de(s)}",
-                          offensifs[t])  # fmt: skip
+                          max(offensifs[t], sauvages[cible]))  # fmt: skip
     faiblesses = sorted({x for x, cibles in SUPER_EFFICACE.items() for t in types if t in cibles})
     for x in faiblesses:
+        if x not in sauvages:
+            continue
         p.ajouter("type", "ESPECE", D, f"Face au type {NOMS_TYPES[x]}",
-                  f"Gagner un combat contre un Pokémon de type {NOMS_TYPES[x]} avec {s}, sans le changer")  # fmt: skip
+                  f"Gagner un combat contre un Pokémon de type {NOMS_TYPES[x]} avec {s}, sans le changer",
+                  sauvages[x])  # fmt: skip
     for x in sorted(offensifs.keys() - set(types)):
         p.ajouter("type", "ESPECE", N, f"Couverture {NOMS_TYPES[x]}",
                   f"Mettre K.O. un Pokémon de {{adversaire}} avec une attaque de type {NOMS_TYPES[x]} {de(s)}",
                   offensifs[x])  # fmt: skip
     for x, nom_x in NOMS_TYPES.items():
-        p.ajouter("type", "ESPECE", N, f"Chasse au type {nom_x}", f"Mettre K.O. 5 Pokémon de type {nom_x} avec {s}")
+        if x not in sauvages:
+            continue
+        p.ajouter("type", "ESPECE", N, f"Chasse au type {nom_x}", f"Mettre K.O. 5 Pokémon de type {nom_x} avec {s}",
+                  sauvages[x])  # fmt: skip
         p.ajouter("capture", "ESPECE", N, f"Capture {nom_x}",
-                  f"Capturer un Pokémon de type {nom_x} après l'avoir affaibli avec {s}")  # fmt: skip
+                  f"Capturer un Pokémon de type {nom_x} après l'avoir affaibli avec {s}", sauvages[x])  # fmt: skip
 
 
 def defis_de_talents(p: Pool, talents: list[tuple[str, bool]], navi: bool) -> None:
@@ -644,6 +674,7 @@ def generer(donnees: dict, objets: dict[str, int]) -> list[dict]:
     regles = Regles(donnees["etapes"], objets, donnees["lieux"])
     obtention = etapes_d_obtention(donnees, regles)
     niveaux = niveaux_d_obtention(donnees, regles)
+    sauvages = etapes_des_types_sauvages(donnees)
     noms = {i: e["nom"] for i, e in donnees["especes"].items()}
     par_source = collections.defaultdict(list)
     for ev in donnees["evolutions"]:
@@ -663,7 +694,7 @@ def generer(donnees: dict, objets: dict[str, int]) -> list[dict]:
             navi = any(r["methode"] == "NAVI_DEX" and etape_de_la_rencontre(r) is not None for r in rencontres[m])
             defis_de_combat(p)
             defis_d_attaques(p, donnees["attaques"][m], regles)
-            defis_de_types(p, donnees["attaques"][m], regles)
+            defis_de_types(p, donnees["attaques"][m], regles, sauvages)
             defis_de_talents(p, donnees["talents"][m], navi)
             defis_d_evolution(p, par_source[m], obtention, noms, regles)
             defis_de_statistiques(p)
