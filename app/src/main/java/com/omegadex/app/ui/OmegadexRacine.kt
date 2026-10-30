@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -19,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.omegadex.app.feature.comptes.ConnexionScreen
 import com.omegadex.app.feature.comptes.InscriptionScreen
 import com.omegadex.app.feature.runs.CreationRunScreen
+import com.omegadex.app.ui.animations.AnimationDemarrage
 import com.omegadex.app.ui.sons.LocalSons
 import com.omegadex.app.ui.sons.Son
 
@@ -40,6 +42,16 @@ fun OmegadexRacine(modifier: Modifier = Modifier, viewModel: RacineViewModel = h
         if (etaitDeconnecte && connecte) sons.jouer(Son.CONFIRMATION)
         if (etat != EtatRacine.Chargement) etaitDeconnecte = etat == EtatRacine.Deconnecte
     }
+    // Le logo animé ne joue qu'une fois par lancement : une rotation de l'écran ne le relance pas.
+    var demarrageJoue by rememberSaveable { mutableStateOf(false) }
+    Box(modifier.fillMaxSize()) {
+        EcranRacine(etat, Modifier.fillMaxSize())
+        if (!demarrageJoue) AnimationDemarrage(onFin = { demarrageJoue = true })
+    }
+}
+
+@Composable
+private fun EcranRacine(etat: EtatRacine, modifier: Modifier) {
     when (etat) {
         // Le temps de relire la session enregistrée : simple fond, pour ne pas montrer la connexion à tort.
         EtatRacine.Chargement -> Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
