@@ -64,6 +64,8 @@ import com.omegadex.app.ui.components.IconesTypes
 import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 import com.omegadex.app.ui.theme.texteLisibleSur
@@ -130,6 +132,7 @@ private fun PokedexContenu(uiState: PokedexUiState, actions: ActionsPokedex, mod
 
 @Composable
 private fun GrillePokedex(etat: PokedexUiState.Pret, actions: ActionsPokedex, modifier: Modifier = Modifier) {
+    val sons = LocalSons.current
     LazyVerticalGrid(
         columns = GridCells.Adaptive(LARGEUR_CASE),
         modifier = modifier.fillMaxSize(),
@@ -154,8 +157,14 @@ private fun GrillePokedex(etat: PokedexUiState.Pret, actions: ActionsPokedex, mo
             CaseEspece(
                 espece = espece,
                 onOuvrir = { actions.onOuvrir(espece.id) },
-                onAvancer = { actions.onAvancer(espece.id) },
-                onReculer = { actions.onReculer(espece.id) },
+                onAvancer = {
+                    if (espece.statut != StatutEspece.MAITRISEE) sons.jouer(Son.statut(espece.statut.ordinal + 1))
+                    actions.onAvancer(espece.id)
+                },
+                onReculer = {
+                    if (espece.statut != StatutEspece.NON_VUE) sons.jouer(Son.STATUT_RECULE)
+                    actions.onReculer(espece.id)
+                },
             )
         }
     }
@@ -252,9 +261,9 @@ private fun CaseEspece(espece: EspeceAffichee, onOuvrir: () -> Unit, onAvancer: 
     ) {
         // Les textes de la case sont déjà lus d'un bloc par la description de la case.
         Column(Modifier.clearAndSetSemantics {}) {
+            // La partie haute prend la hauteur de son contenu (image, types) : pondérée, elle était rognée.
             Column(
                 Modifier
-                    .weight(1f, fill = true)
                     .fillMaxWidth()
                     .clickable(onClick = onOuvrir)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp),
@@ -335,6 +344,7 @@ private fun RubisStatut(statut: StatutEspece) {
 /** Champ de recherche, puis une ligne de filtres par statut et une ligne de filtres par type. */
 @Composable
 private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
+    val sons = LocalSons.current
     val clavier = LocalSoftwareKeyboardController.current
     val filtres = etat.filtres
     Column(
@@ -354,7 +364,10 @@ private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
                 PuceFiltre(
                     libelle = stringResource(libelleStatut(statut)),
                     choisie = statut in filtres.statuts,
-                    onBascule = { actions.onStatut(statut) },
+                    onBascule = {
+                        sons.jouer(Son.CLIC)
+                        actions.onStatut(statut)
+                    },
                 )
             }
         }
@@ -364,7 +377,10 @@ private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
                     type = type,
                     nom = nomDuType(cleType(type))?.let { stringResource(it) } ?: type,
                     choisie = type == filtres.type,
-                    onBascule = { actions.onType(type) },
+                    onBascule = {
+                        sons.jouer(Son.CLIC)
+                        actions.onType(type)
+                    },
                 )
             }
             if (filtres.actifs) {

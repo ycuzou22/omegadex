@@ -17,24 +17,26 @@ data class GroupeRencontres(val lieu: Lieu, val debloqueur: Debloqueur?, val ren
 data class RencontreDisponible(val rencontre: Rencontre, val echange: Echange?)
 
 class RencontresDeLEtapeUseCase @Inject constructor(private val jeu: JeuRepository) {
-    operator fun invoke(etape: Int): Flow<List<GroupeRencontres>> = jeu.toutesLesRencontres().map { rencontres ->
-        grouper(rencontres, etape)
-    }
+    /** [starterId] : starter choisi pour la run ; les autres « Pokémon de départ » ne sont pas proposés. */
+    operator fun invoke(etape: Int, starterId: Int? = null): Flow<List<GroupeRencontres>> =
+        jeu.toutesLesRencontres().map { rencontres -> grouper(rencontres, etape, starterId) }
 
     companion object {
-        fun grouper(rencontres: List<Rencontre>, etape: Int): List<GroupeRencontres> = rencontres
-            .map { it to DisponibiliteRencontre.de(it) }
-            .filter { (_, dispo) -> dispo.etape == etape }
-            .groupBy { (rencontre, dispo) -> rencontre.lieu to dispo.debloqueur }
-            .map { (cle, liste) ->
-                GroupeRencontres(
-                    lieu = cle.first,
-                    debloqueur = cle.second,
-                    rencontres = liste
-                        .distinctBy { (rencontre, _) -> rencontre.especeId }
-                        .map { (rencontre, dispo) -> RencontreDisponible(rencontre, dispo.echange) },
-                )
-            }
-            .sortedWith(compareBy({ it.debloqueur != null }, { it.debloqueur?.ordinal ?: -1 }, { it.lieu.nom }))
+        fun grouper(rencontres: List<Rencontre>, etape: Int, starterId: Int? = null): List<GroupeRencontres> =
+            rencontres
+                .filterNot { DisponibiliteRencontre.estUnAutreStarter(it, starterId) }
+                .map { it to DisponibiliteRencontre.de(it) }
+                .filter { (_, dispo) -> dispo.etape == etape }
+                .groupBy { (rencontre, dispo) -> rencontre.lieu to dispo.debloqueur }
+                .map { (cle, liste) ->
+                    GroupeRencontres(
+                        lieu = cle.first,
+                        debloqueur = cle.second,
+                        rencontres = liste
+                            .distinctBy { (rencontre, _) -> rencontre.especeId }
+                            .map { (rencontre, dispo) -> RencontreDisponible(rencontre, dispo.echange) },
+                    )
+                }
+                .sortedWith(compareBy({ it.debloqueur != null }, { it.debloqueur?.ordinal ?: -1 }, { it.lieu.nom }))
     }
 }

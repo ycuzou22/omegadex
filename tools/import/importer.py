@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import creer_base_jeu  # noqa: E402
 import import_attaques  # noqa: E402
+import import_banque_defis  # noqa: E402
 import import_defis  # noqa: E402
 import import_especes  # noqa: E402
 import import_etapes  # noqa: E402
@@ -51,6 +52,12 @@ def main() -> None:
             raise SystemExit(f"Modèle de défi invalide : {erreur}") from None
         print(f"- {nom} : " + ", ".join(f"{k} {v}" for k, v in compteurs.items()))
     corrections = appliquer_corrections(con)
+    # La banque de défis par famille se calcule sur les données corrigées (rencontres, évolutions).
+    try:
+        compteurs = import_banque_defis.importer(con)
+    except import_defis.ModeleInvalide as erreur:
+        raise SystemExit(f"Banque de défis invalide : {erreur}") from None
+    print("- Banque de défis par famille : " + ", ".join(f"{k} {v}" for k, v in compteurs.items()))
     con.commit()
     controle = verifier.verifier(con, corrections)
     print(f"Rapport : {verifier.RAPPORT.name} ({len(controle.erreurs)} erreurs bloquantes, {len(controle.avertissements)} avertissements)")

@@ -1,7 +1,6 @@
 package com.omegadex.app.feature.equipe
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -41,10 +39,12 @@ import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.feature.runs.titreDifficulte
 import com.omegadex.app.ui.animations.EspeceAnimee
 import com.omegadex.app.ui.animations.EvolutionPleinEcran
-import com.omegadex.app.ui.components.TypeChip
-import com.omegadex.app.ui.components.brosseGemmeEspece
+import com.omegadex.app.ui.components.IconeType
+import com.omegadex.app.ui.components.SpriteEspece
+import com.omegadex.app.ui.components.cleType
 import com.omegadex.app.ui.components.nomDuType
-import com.omegadex.app.ui.theme.FormeGemme
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 /**
@@ -76,8 +76,8 @@ fun EquipeScreen(
     }
     enCours?.let {
         EvolutionPleinEcran(
-            avant = EspeceAnimee(it.avant.nom, it.avant.types),
-            apres = EspeceAnimee(it.apres.nom, it.apres.types),
+            avant = EspeceAnimee(it.avant.id, it.avant.nom, it.avant.types),
+            apres = EspeceAnimee(it.apres.id, it.apres.nom, it.apres.types),
             onFin = viewModel::finirAnimation,
         )
     }
@@ -182,12 +182,14 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
-            Modifier
-                .size(width = 44.dp, height = 41.dp)
-                .clip(FormeGemme)
-                .background(brosseGemmeEspece(membre.types)),
-        )
+        // Image de l'espèce (assets/sprites, image par défaut sinon) et, à côté, les logos de ses types.
+        SpriteEspece(membre.especeId, decouverte = 1f, taille = 52.dp)
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            membre.types.forEach { type ->
+                val nom = nomDuType(cleType(type))?.let { stringResource(it) } ?: type
+                IconeType(type, taille = 24.dp, description = nom)
+            }
+        }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 membre.surnom?.let { stringResource(R.string.equipe_surnom, it, membre.nom) } ?: membre.nom,
@@ -195,11 +197,6 @@ private fun LigneMembre(numero: Int, membre: MembreVue, plafond: Int?, actions: 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                membre.types.forEach { type ->
-                    TypeChip(type = type, libelle = nomDuType(type)?.let { stringResource(it) } ?: type)
-                }
-            }
             Text(
                 membre.defiActif?.let { stringResource(R.string.equipe_defi_actif, it) }
                     ?: stringResource(R.string.equipe_aucun_defi, numero),
@@ -244,9 +241,11 @@ private fun ActionsMembre(numero: Int, membre: MembreVue, actions: ActionsEquipe
 @Composable
 private fun ReglageNiveau(numero: Int, membre: MembreVue, plafond: Int?, onNiveau: (Int, Int) -> Unit) {
     val ecart = membre.ecartPlafond
+    val sons = LocalSons.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             BoutonNiveau("−", stringResource(R.string.equipe_baisser, membre.nom), membre.niveau > 1) {
+                sons.jouer(Son.NIVEAU_CRAN)
                 onNiveau(numero, -1)
             }
             Text(
@@ -254,6 +253,8 @@ private fun ReglageNiveau(numero: Int, membre: MembreVue, plafond: Int?, onNivea
                 style = OmegadexTheme.chiffres.moyen,
             )
             BoutonNiveau("+", stringResource(R.string.equipe_monter, membre.nom), membre.niveau < NIVEAU_MAX) {
+                // Monter d'un niveau quand le membre est au plafond le fait passer au-dessus : alerte.
+                sons.jouer(if (ecart == 0) Son.PLAFOND_ALERTE else Son.NIVEAU_CRAN)
                 onNiveau(numero, 1)
             }
         }

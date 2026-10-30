@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,8 @@ import com.omegadex.app.R
 import com.omegadex.app.domain.model.Utilisateur
 import com.omegadex.app.ui.components.ChampTexte
 import com.omegadex.app.ui.components.OmegaButton
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.OmegadexTheme
@@ -46,6 +49,8 @@ fun ConnexionScreen(
     viewModel: ConnexionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sons = LocalSons.current
+    LaunchedEffect(uiState.erreur) { if (uiState.erreur != null) sons.jouer(Son.ERREUR) }
     ConnexionContenu(
         uiState = uiState,
         onCompte = viewModel::choisirCompte,

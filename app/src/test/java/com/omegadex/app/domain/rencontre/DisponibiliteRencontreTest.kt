@@ -11,6 +11,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DisponibiliteRencontreTest {
+    private val route101 = Lieu(1, "Route 101", TypeLieu.ROUTE, 0)
     private val route104 = Lieu(5, "Route 104", TypeLieu.ROUTE, 1)
     private val route119 = Lieu(40, "Route 119", TypeLieu.ROUTE, 6)
     private val horsHoenn = Lieu(78, "Hors de Hoenn (échange ou transfert)", TypeLieu.HORS_HOENN, 10)
@@ -89,5 +90,23 @@ class DisponibiliteRencontreTest {
         assertEquals(listOf(279), groupes[1].rencontres.map { it.rencontre.especeId })
         val etape1 = RencontresDeLEtapeUseCase.grouper(rencontres, 1).single()
         assertEquals(263, etape1.rencontres.single().rencontre.especeId)
+    }
+
+    @Test
+    fun `apres la Ligue, apres l'Episode Delta, fossiles et Devon Scope`() {
+        fun etape(condition: String, methode: MethodeRencontre = MethodeRencontre.CADEAU) =
+            DisponibiliteRencontre.de(r(route101, 152, methode, condition)).let { it.etape to it.debloqueur }
+        assertEquals(11 to Debloqueur.APRES_LIGUE, etape("après la Ligue"))
+        assertEquals(12 to Debloqueur.APRES_DELTA, etape("après avoir battu la Ligue une deuxième fois"))
+        assertEquals(12 to Debloqueur.APRES_DELTA, etape("après l'Épisode Delta"))
+        assertEquals(5 to Debloqueur.LUNETTES_SABLE, etape("fossile ranimé"))
+        assertEquals(7 to Debloqueur.DEVON_SCOPE, etape("Devon Scope requis", MethodeRencontre.FIXE))
+    }
+
+    @Test
+    fun `seul le starter choisi est propose parmi les Pokemon de depart`() {
+        val starters = listOf(252, 255, 258).map { r(route101, it, MethodeRencontre.CADEAU, "Pokémon de départ") }
+        val proposes = RencontresDeLEtapeUseCase.grouper(starters, 0, starterId = 255).single().rencontres
+        assertEquals(listOf(255), proposes.map { it.rencontre.especeId })
     }
 }

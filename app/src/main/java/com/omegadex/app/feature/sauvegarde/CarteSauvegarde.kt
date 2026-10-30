@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -24,6 +25,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.VarianteBouton
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
@@ -38,6 +41,10 @@ private const val TYPE_EXPORT = "application/json"
 @Composable
 fun CarteSauvegarde(modifier: Modifier = Modifier, viewModel: SauvegardeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sons = LocalSons.current
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let { sons.jouer(if (it.estUneErreur()) Son.ERREUR else Son.CONFIRMATION) }
+    }
     val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(TYPE_EXPORT)) { uri ->
         uri?.let { viewModel.exporter(it.toString()) }
     }

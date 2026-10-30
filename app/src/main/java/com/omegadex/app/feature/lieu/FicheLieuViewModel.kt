@@ -3,17 +3,27 @@ package com.omegadex.app.feature.lieu
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omegadex.app.domain.rencontre.DisponibiliteRencontre
 import com.omegadex.app.domain.repository.JeuRepository
+import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-/** Fiche d'un lieu : rencontres avec méthode et niveaux, objets importants obtenus sur place. */
+/**
+ * Fiche d'un lieu : rencontres avec méthode et niveaux, objets importants obtenus sur place. Dans une run,
+ * les rencontres pas encore possibles (Surf, canne, après Groudon…) sont verrouillées.
+ */
 @HiltViewModel
-class FicheLieuViewModel @Inject constructor(etatNavigation: SavedStateHandle, jeu: JeuRepository) : ViewModel() {
+class FicheLieuViewModel @Inject constructor(
+    etatNavigation: SavedStateHandle,
+    jeu: JeuRepository,
+    observerRunEnCours: ObserverRunEnCoursUseCase,
+) : ViewModel() {
     private val lieuId: Int = checkNotNull(etatNavigation[ARGUMENT_LIEU])
 
     val uiState: StateFlow<FicheLieuUiState> = combine(
@@ -21,7 +31,8 @@ class FicheLieuViewModel @Inject constructor(etatNavigation: SavedStateHandle, j
         jeu.especesDuLieu(lieuId),
         jeu.pokedexNational(),
         jeu.quetesDuLieu(lieuId),
-    ) { lieu, rencontres, especes, quetes ->
+        observerRunEnCours().map { it?.etape?.id },
+    ) { lieu, rencontres, especes, quetes, etapeEnCours ->
         if (lieu == null) return@combine FicheLieuUiState.Introuvable
         val parId = especes.associateBy { it.id }
         FicheLieuUiState.Fiche(
@@ -32,6 +43,7 @@ class FicheLieuViewModel @Inject constructor(etatNavigation: SavedStateHandle, j
                     methode,
                     lignes.map {
                         val espece = parId[it.especeId]
+                        val dispo = DisponibiliteRencontre.de(it)
                         LigneRencontre(
                             it.especeId,
                             espece?.nom ?: "#${it.especeId}",
@@ -40,6 +52,9 @@ class FicheLieuViewModel @Inject constructor(etatNavigation: SavedStateHandle, j
                             it.niveauMax,
                             it.taux,
                             it.condition,
+                            types = espece?.types.orEmpty(),
+                            verrou = etapeEnCours?.takeIf { e -> dispo.etape > e }
+                                ?.let { Verrou(dispo.etape, dispo.debloqueur) },
                         )
                     },
                 )

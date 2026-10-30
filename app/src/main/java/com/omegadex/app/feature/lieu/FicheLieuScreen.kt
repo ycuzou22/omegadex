@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -34,9 +33,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.MethodeRencontre
 import com.omegadex.app.domain.model.TypeLieu
+import com.omegadex.app.feature.aventure.nomDebloqueur
+import com.omegadex.app.ui.components.IconesTypes
 import com.omegadex.app.ui.theme.ApercusClairSombre
-import com.omegadex.app.ui.theme.CouleursTypes
-import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 /** Fiche d'un lieu, ouverte depuis l'étape en cours ; toucher une espèce ouvre sa fiche Pokémon. */
@@ -136,10 +135,11 @@ private fun TitreSection(@StringRes titre: Int) {
 @Composable
 private fun CarteRencontre(ligne: LigneRencontre, onClick: () -> Unit) {
     val ouvrir = stringResource(R.string.lieu_ouvrir_espece, ligne.nom)
-    val couleur = ligne.type1?.let { CouleursTypes.de(it) } ?: MaterialTheme.colorScheme.primary
+    val verrou = ligne.verrou
+    val eteint = OmegadexTheme.couleurs.texteEteint
     Surface(
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surface,
+        color = if (verrou != null) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surface,
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClickLabel = ouvrir, role = Role.Button, onClick = onClick),
@@ -149,14 +149,25 @@ private fun CarteRencontre(ligne: LigneRencontre, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(Modifier.size(width = 18.dp, height = 16.dp).background(couleur, FormeGemme))
+            IconesTypes(ligne.types, taille = 18.dp)
             Column(Modifier.weight(1f)) {
-                Text(ligne.nom, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    ligne.nom,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (verrou != null) eteint else MaterialTheme.colorScheme.onSurface,
+                )
                 ligne.condition?.let {
                     Text(
                         it,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                verrou?.let {
+                    Text(
+                        texteVerrou(it),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = OmegadexTheme.couleurs.magma,
                     )
                 }
             }
@@ -173,6 +184,12 @@ private fun CarteRencontre(ligne: LigneRencontre, onClick: () -> Unit) {
         }
     }
 }
+
+/** « Plus tard · étape 6 · Surf » : quand et grâce à quoi la rencontre deviendra possible. */
+@Composable
+internal fun texteVerrou(verrou: Verrou): String = verrou.debloqueur?.let {
+    stringResource(R.string.rencontre_verrou_debloqueur, verrou.etape, stringResource(nomDebloqueur(it)))
+} ?: stringResource(R.string.rencontre_verrou, verrou.etape)
 
 @Composable
 private fun niveaux(ligne: LigneRencontre): String? {

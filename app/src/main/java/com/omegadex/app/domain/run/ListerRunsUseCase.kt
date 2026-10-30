@@ -60,6 +60,21 @@ class ListerRunsUseCase @Inject constructor(
 }
 
 /** Fait de [runId] la run active du joueur connecté ; tout l'affichage qui suit la run active se met à jour. */
+/**
+ * Supprime une run du compte connecté et toute sa progression. Si c'était la run active, la plus récente des
+ * runs restantes le devient ; s'il n'en reste aucune, l'app propose d'en créer une. Une run d'un autre compte
+ * n'est jamais touchée.
+ */
+class SupprimerRunUseCase @Inject constructor(
+    private val session: SessionRepository,
+    private val comptes: CompteRepository,
+) {
+    suspend operator fun invoke(runId: Long) {
+        val utilisateurId = session.utilisateurConnecte.value ?: return
+        comptes.supprimerRun(utilisateurId, runId)
+    }
+}
+
 class ChoisirRunUseCase @Inject constructor(
     private val session: SessionRepository,
     private val runActive: RunActiveRepository,

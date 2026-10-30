@@ -5,7 +5,10 @@
   le plafond est le niveau de son Pokémon le plus fort ;
 - quêtes annexes générées : capturer chaque espèce sauvage la première fois qu'elle devient disponible
   dans Rubis Oméga ; une exclusivité de Saphir Alpha devient une quête « obtenir par échange », placée à
-  l'étape où elle apparaîtrait dans Saphir Alpha.
+  l'étape où elle apparaîtrait dans Saphir Alpha ;
+- quêtes annexes d'objets (donnees/objets_rosa.json) : récupérer chaque objet utile (CT, CS, objets clés,
+  objets d'évolution, objets tenus, Méga-Gemmes) à l'étape où il devient réellement accessible : lieu
+  débloqué, CS utilisable (badge obtenu) et condition d'histoire remplie.
 """
 
 from __future__ import annotations
@@ -24,7 +27,62 @@ METHODES_CAPTURE = ("HERBE", "HORDE", "SURF", "PLONGEE", "PECHE", "NAVI_DEX", "R
 CONDITIONS_ETAPE = [("Groudon", 8), ("Pokédex National", 10), ("Ligue", 10), ("Delta", 11)]
 # Étape à partir de laquelle chaque méthode est utilisable (CS ou canne obtenue à l'étape précédente).
 METHODES_ETAPE = {"SURF": 6, "PLONGEE": 8, "ROCHE_FRACASSEE": 3}
-CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 3), ("Canne", 2)]
+# Super Canne : pêcheur de la rive est de la Route 118, rejointe en Surf (même règle que DisponibiliteRencontre).
+CANNES_ETAPE = [("Méga Canne", 7), ("Super Canne", 6), ("Canne", 2)]
+# Étape à partir de laquelle chaque capacité de terrain ouvre le chemin : CS en poche et badge qui l'autorise.
+CS_ETAPE = {
+    "COUPE": 2,
+    "ECLATE_ROC": 3,
+    "FORCE": 5,
+    "SURF": 6,
+    "VOL": 7,
+    "VELO_CROSS": 3,
+    "VELO_COURSE": 3,
+    "CHERCHE_OBJET": 0,
+    "PLONGEE": 8,
+    "CASCADE": 10,
+}
+# Conditions d'histoire qui repoussent un objet, repérées dans le champ « condition » (mot-clé, étape minimale).
+CONDITIONS_OBJET = [
+    ("Pokédex National complété", 12),
+    ("Pokédex de Hoenn complété", 10),
+    ("Delta", 11),
+    ("Ligue", 10),
+    ("Pokédex National", 10),
+    ("Groudon", 8),
+    ("Marc", 10),
+    ("Lévy", 8),
+    ("Alizée", 7),
+    ("Norman", 6),
+    ("Adriane", 5),
+    ("Voltère", 4),
+    ("Bastien", 3),
+    ("Roxanne", 2),
+    # Récompense remise en battant le champion : à l'étape de son arène.
+    ("arène de Clémenti-Ville", 5),
+    # Badge désigné par la ville de son arène.
+    ("badge d'Atalanopolis", 10),
+    ("badge d'Algatia", 8),
+    ("badge de Cimetronelle", 7),
+    ("badge de Clémenti", 6),
+    ("badge de Vermilava", 5),
+    ("badge de Lavandia", 4),
+    ("badge de Myokara", 3),
+    ("badge de Mérouville", 2),
+]
+NOMS_CS = {
+    "COUPE": "Coupe",
+    "ECLATE_ROC": "Éclate-Roc",
+    "FORCE": "Force",
+    "SURF": "Surf",
+    "VOL": "Vol",
+    "VELO_CROSS": "Vélo Cross",
+    "VELO_COURSE": "Vélo Course",
+    "CHERCHE_OBJET": "Cherche-Objet",
+    "PLONGEE": "Plongée",
+    "CASCADE": "Cascade",
+}
+VERBES_OBJET = {"ACHAT": "Acheter", "RECOMPENSE": "Gagner", "CADEAU": "Recevoir", "SOL": "Récupérer"}
 
 
 def combats_rosa(wiki: str, section: str | None = None) -> list[list[int]]:
@@ -84,21 +142,25 @@ def importer(con: sqlite3.Connection) -> dict[str, int]:
                 (numero, e["id"], lieux[q["lieu"]], "PRINCIPALE", ordre, q["description"], q["recompense"]),
             )
 
-    captures, echanges = generer_quetes_annexes(con, numero + 1)
+    echanges = generer_quetes_annexes(con, numero + 1)
+    objets = generer_quetes_objets(con)
     return {
         "etapes": len(etapes),
         "quetes principales": numero,
-        "quetes de capture": captures,
         "quetes d'echange (Saphir Alpha)": echanges,
+        "quetes d'objets": objets,
     }
 
 
-def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> tuple[int, int]:
-    """Quêtes annexes, numérotées à partir de [premier_numero] : (nombre de captures, nombre d'échanges).
+def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> int:
+    """Quêtes annexes d'échange, numérotées à partir de [premier_numero] ; renvoie leur nombre.
 
-    - « Capturer X (lieu) » : la première occasion de capturer chaque espèce sauvage dans Rubis Oméga ;
-    - « Obtenir X par échange » : une espèce sauvage seulement dans Saphir Alpha (et que Rubis Oméga
-      n'obtient pas non plus par évolution ou reproduction), à l'étape de sa première apparition.
+    « Obtenir X par échange » : une espèce sauvage seulement dans Saphir Alpha (et que Rubis Oméga
+    n'obtient pas non plus par évolution ou reproduction), à l'étape de sa première apparition.
+
+    Les captures (« Capturer X (lieu) », première occasion de capturer chaque espèce) ne deviennent plus des quêtes :
+    le bouton « Attraper » des rencontres les enregistre déjà. Elles gardent leur numéro réservé, pour que les quêtes
+    suivantes conservent leur identifiant et que les coches des runs existantes restent sur les bonnes quêtes.
     """
     capture: dict[int, tuple[int, int, str]] = {}
     autre_version: dict[int, int] = {}
@@ -133,10 +195,104 @@ def generer_quetes_annexes(con: sqlite3.Connection, premier_numero: int) -> tupl
     par_etape: dict[int, int] = {}
     for etape, rang, _, _, lieu_id, description in sorted(quetes, key=lambda q: q[:4]):
         par_etape[etape] = par_etape.get(etape, 0) + 1
+        if rang == 1:
+            con.execute(
+                "INSERT INTO quete VALUES (?,?,?,?,?,?,?)",
+                (numero, etape, lieu_id, "ANNEXE", par_etape[etape], description, None),
+            )
+        numero += 1
+    return sum(1 for q in quetes if q[1] == 1)
+
+
+def capacites_objet(objet: dict) -> list[str]:
+    """Capacités de terrain qu'il faut pour atteindre l'objet : « cs » vaut un code, une liste de codes ou rien."""
+    cs = objet.get("cs")
+    if not cs:
+        return []
+    return [cs] if isinstance(cs, str) else list(cs)
+
+
+def etape_objet(etape_lieu: int, cs: str | list[str] | None, condition: str | None) -> int:
+    """Étape où l'objet devient récupérable : lieu débloqué, capacités de terrain utilisables, histoire avancée.
+
+    Avec plusieurs capacités (Surf puis Vélo Cross…), c'est la dernière devenue utilisable qui compte.
+    """
+    capacites = capacites_objet({"cs": cs})
+    etape = max([etape_lieu, *(CS_ETAPE.get(c, 0) for c in capacites)])
+    for mot, minimum in CONDITIONS_OBJET:
+        if condition and mot in condition:
+            etape = max(etape, minimum)
+    return etape
+
+
+def description_objet(objet: dict) -> str:
+    """« Récupérer CT39 Tomberoche (Mérouville) », « Acheter … », avec la capacité de terrain requise."""
+    verbe = VERBES_OBJET.get(objet.get("methode") or "SOL", "Récupérer")
+    texte = f"{verbe} {objet['nom']} ({objet.get('lieu') or objet['lieuLibre']})"
+    capacites = capacites_objet(objet)
+    if capacites:
+        texte += " · " + " + ".join(NOMS_CS[c] for c in capacites)
+    return texte
+
+
+def generer_quetes_objets(con: sqlite3.Connection, fichier: pathlib.Path | None = None) -> int:
+    """Quêtes annexes « Récupérer X (lieu) » des objets utiles, après les autres quêtes de chaque étape.
+
+    Les quêtes d'objets déjà présentes sont d'abord retirées : la fonction peut être rejouée sur une base existante.
+    """
+    fichier = fichier or DOSSIER / "donnees" / "objets_rosa.json"
+    objets = json.loads(fichier.read_text(encoding="utf-8"))["objets"]
+    con.execute("DELETE FROM quete WHERE type = 'ANNEXE' AND recompense IS NOT NULL")
+    lieux = {nom: (lid, etape) for lid, nom, etape in con.execute("SELECT id, nom, etapeDeblocageId FROM lieu")}
+    # Les récompenses d'arène (« Badge Roche, CT39 Tomberoche ») sont déjà dans les quêtes principales.
+    deja_donnes = {
+        nom.strip()
+        for (recompense,) in con.execute("SELECT recompense FROM quete WHERE type = 'PRINCIPALE' AND recompense IS NOT NULL")
+        for nom in recompense.split(",")
+    }
+    quetes = []
+    for rang, objet in enumerate(objets):
+        if objet["nom"] in deja_donnes:
+            continue
+        # Exception fixée à la main : « etape » impose l'étape ; « lieuLibre » nomme un lieu absent de la base
+        # (lieu mirage), la quête n'est alors rattachée à aucun lieu.
+        if not objet.get("lieu"):
+            if objet.get("lieuLibre") and objet.get("etape") is not None:
+                quetes.append((objet["etape"], rang, None, description_objet(objet), objet["nom"]))
+            continue
+        if objet["lieu"] not in lieux:
+            raise ValueError(f"Objet « {objet['nom']} » : lieu inconnu « {objet['lieu']} »")
+        for cs in capacites_objet(objet):
+            if cs not in CS_ETAPE:
+                raise ValueError(f"Objet « {objet['nom']} » : capacité de terrain inconnue « {cs} »")
+        lieu_id, etape_lieu = lieux[objet["lieu"]]
+        etape = objet.get("etape")
+        if etape is None:
+            etape = etape_objet(etape_lieu, objet.get("cs"), objet.get("condition"))
+        quetes.append((etape, rang, lieu_id, description_objet(objet), objet["nom"]))
+    numero = con.execute("SELECT COALESCE(MAX(id), 0) FROM quete").fetchone()[0] + 1
+    ordres = dict(con.execute("SELECT etapeId, MAX(ordre) FROM quete WHERE type = 'ANNEXE' GROUP BY etapeId"))
+    for etape, _, lieu_id, description, nom in sorted(quetes, key=lambda q: q[:2]):
+        ordres[etape] = ordres.get(etape, 0) + 1
         con.execute(
             "INSERT INTO quete VALUES (?,?,?,?,?,?,?)",
-            (numero, etape, lieu_id, "ANNEXE", par_etape[etape], description, None),
+            (numero, etape, lieu_id, "ANNEXE", ordres[etape], description, nom),
         )
         numero += 1
-    echanges = sum(1 for q in quetes if q[1] == 1)
-    return len(quetes) - echanges, echanges
+    return len(quetes)
+
+
+if __name__ == "__main__":
+    # Rejoue seulement les quêtes d'objets sur la base embarquée (sans réseau) :
+    #     python3 tools/import/import_etapes.py --objets
+    import sys
+
+    if sys.argv[1:] != ["--objets"]:
+        raise SystemExit("Usage : python3 tools/import/import_etapes.py --objets")
+    base = DOSSIER.parents[1] / "app" / "src" / "main" / "assets" / "database" / "omegadex_jeu.db"
+    connexion = sqlite3.connect(base)
+    total = generer_quetes_objets(connexion)
+    connexion.commit()
+    connexion.execute("VACUUM")
+    connexion.close()
+    print(f"{total} quêtes d'objets écrites dans {base}")
