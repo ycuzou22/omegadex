@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: |
           set +e
-          ./gradlew ktlintCheck detekt lint assembleDebug testDebugUnitTest --continue 2>&1 | tee build.log; st=${PIPESTATUS[0]}; mkdir -p captures; cp build.log captures/; find app/build/reports \( -name '*.txt' -o -name '*.xml' \) -path '*test-results*' -prune -o -name '*.txt' -print | xargs -r cp -t captures/ 2>/dev/null; [ $st -eq 0 ] || {
+          ./gradlew build lint ktlintCheck detekt test createDebugUnitTestCoverageReport --continue 2>&1 | tee build.log; st=${PIPESTATUS[0]}; mkdir -p captures; cp build.log captures/; find app/build/reports \( -name '*.txt' -o -name '*.xml' \) -path '*test-results*' -prune -o -name '*.txt' -print | xargs -r cp -t captures/ 2>/dev/null; [ $st -eq 0 ] || {
             mkdir -p captures; cp build.log captures/build.log; find app/build/reports -name '*.txt' -o -name 'lint-results*.txt' | xargs -r cp -t captures/ 2>/dev/null || true
             { grep -E "^e: |rror|\.kt:[0-9]+" build.log | head -40; tail -20 build.log; } | while IFS= read -r l; do echo "::error::$l"; done
             exit 1; }
