@@ -33,7 +33,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -130,9 +129,9 @@ class EquipeViewModelTest {
         assertEquals("Massko" to plafond, suggestion.nom to suggestion.niveau)
 
         vm.ajouterSuggestion(suggestion, emplacement = null)
-        val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } }
+        // L'équipe et les suggestions se mettent à jour l'une après l'autre : attendre les deux.
+        val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } && e.suggestions.none { it.especeId == 253 } }
         assertEquals(plafond, etat.membres.first { it.especeId == 253 }.niveau)
-        assertTrue(etat.suggestions.none { it.especeId == 253 })
     }
 
     @Test
