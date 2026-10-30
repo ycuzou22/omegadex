@@ -11,4 +11,6 @@ class ActionsEquipe(
     val onAjouterSuggestion: (suggestion: SuggestionVue, emplacement: Int?) -> Unit = { _, _ -> },
     /** Ouvre le PC de stockage. */
     val onPc: () -> Unit = {},
+    /** Lance une évolution manuelle (pierre, bonheur, échange…) confirmée depuis le ruban de la carte. */
+    val onEvoluer: (emplacement: Int, evolution: EvolutionVue) -> Unit = { _, _ -> },
 )
