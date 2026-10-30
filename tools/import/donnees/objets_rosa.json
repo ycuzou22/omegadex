@@ -1,0 +1,2562 @@
+{
+  "objets": [
+    {
+      "nom": "CS01 Coupe",
+      "categorie": "CS",
+      "lieu": "Mérouville",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Maison du Coupeur",
+      "fiable": true
+    },
+    {
+      "nom": "CS02 Vol",
+      "categorie": "CS",
+      "lieu": "Route 119",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le Centre Météo",
+      "note": "Donnée par le rival",
+      "fiable": true
+    },
+    {
+      "nom": "CS03 Surf",
+      "categorie": "CS",
+      "lieu": "Clémenti-Ville",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Norman",
+      "note": "Donnée par le père de Timmy (Wally) près de l'arène",
+      "fiable": true
+    },
+    {
+      "nom": "CS04 Force",
+      "categorie": "CS",
+      "lieu": "Route 112",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par le rival",
+      "fiable": true
+    },
+    {
+      "nom": "CS05 Cascade",
+      "categorie": "CS",
+      "lieu": "Atalanopolis",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "après le badge d'Atalanopolis",
+      "note": "Récompense de l'arène",
+      "fiable": true
+    },
+    {
+      "nom": "CS06 Éclate-Roc",
+      "categorie": "CS",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par l'oncle de Timmy",
+      "fiable": true
+    },
+    {
+      "nom": "CS07 Plongée",
+      "categorie": "CS",
+      "lieu": "Algatia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge d'Algatia",
+      "note": "Donnée par Pierre chez lui",
+      "fiable": true
+    },
+    {
+      "nom": "CT01 Aiguisage",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Stand de CT du marché de Poivressel (5 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT02 Dracogriffe",
+      "categorie": "CT",
+      "lieu": "Site Météore",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "CASCADE"
+      ],
+      "condition": null,
+      "note": "Salle du 1er sous-sol, Surf puis Cascade",
+      "fiable": true
+    },
+    {
+      "nom": "CT03 Choc Psy",
+      "categorie": "CT",
+      "lieu": "Pacifiville",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Maison du sud-est",
+      "fiable": true
+    },
+    {
+      "nom": "CT04 Plénitude",
+      "categorie": "CT",
+      "lieu": "Algatia",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Lévy et Tatia)",
+      "fiable": true
+    },
+    {
+      "nom": "CT05 Hurlement",
+      "categorie": "CT",
+      "lieu": "Route 114",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un homme au nord-ouest",
+      "fiable": true
+    },
+    {
+      "nom": "CT06 Toxik",
+      "categorie": "CT",
+      "lieu": "Chemin Ardent",
+      "methode": "SOL",
+      "cs": "FORCE",
+      "condition": null,
+      "note": "Après l'énigme de rochers",
+      "fiable": true
+    },
+    {
+      "nom": "CT07 Grêle",
+      "categorie": "CT",
+      "lieu": "Grotte Tréfonds",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "marée basse",
+      "note": "Niveau inférieur",
+      "fiable": true
+    },
+    {
+      "nom": "CT08 Gonflette",
+      "categorie": "CT",
+      "lieu": "Myokara",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Bastien)",
+      "fiable": true
+    },
+    {
+      "nom": "CT09 Choc Venin",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT10 Puissance Cachée",
+      "categorie": "CT",
+      "lieu": "Cimetronelle",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Vieille dame, jeu de devinettes",
+      "fiable": true
+    },
+    {
+      "nom": "CT11 Zénith",
+      "categorie": "CT",
+      "lieu": "Grotte Zénith",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT12 Provoc",
+      "categorie": "CT",
+      "lieu": "Route 110",
+      "methode": "RECOMPENSE",
+      "cs": "COUPE",
+      "condition": null,
+      "note": "Maison des Pièges, 1re épreuve",
+      "fiable": true
+    },
+    {
+      "nom": "CT13 Laser Glace",
+      "categorie": "CT",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Surf pour y aller, Plongée pour certaines salles",
+      "fiable": true
+    },
+    {
+      "nom": "CT14 Blizzard",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (30 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT15 Ultralaser",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (50 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT16 Mur Lumière",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT17 Abri",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT18 Danse Pluie",
+      "categorie": "CT",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Une source indique aussi Plongée",
+      "fiable": true
+    },
+    {
+      "nom": "CT19 Atterrissage",
+      "categorie": "CT",
+      "lieu": "Cimetronelle",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Alizée)",
+      "fiable": true
+    },
+    {
+      "nom": "CT20 Rune Protect",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT21 Frustration",
+      "categorie": "CT",
+      "lieu": "Pacifiville",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Si le 1er Pokémon de l'équipe vous apprécie peu",
+      "fiable": true
+    },
+    {
+      "nom": "CT22 Lance-Soleil",
+      "categorie": "CT",
+      "lieu": "Parc Safari",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Certaines zones demandent un Vélo (Cross ou Course)",
+      "fiable": true
+    },
+    {
+      "nom": "CT23 Anti-Air",
+      "categorie": "CT",
+      "lieu": "Autéquia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le sauvetage du Prof. Kosmo (Site Météore)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT24 Tonnerre",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": "après Groudon (quête New Lavandia)",
+      "note": "Donnée par Voltère après la mission à New Lavandia",
+      "fiable": true
+    },
+    {
+      "nom": "CT25 Fatal-Foudre",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (30 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT26 Séisme",
+      "categorie": "CT",
+      "lieu": "Caverne Fondmer",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Force et Éclate-Roc aussi utiles dans la caverne",
+      "fiable": true
+    },
+    {
+      "nom": "CT27 Retour",
+      "categorie": "CT",
+      "lieu": "Pacifiville",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Si le 1er Pokémon de l'équipe vous apprécie beaucoup",
+      "fiable": true
+    },
+    {
+      "nom": "CT28 Tunnel",
+      "categorie": "CT",
+      "lieu": "Route 114",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Petit frère du Fana de fossiles",
+      "fiable": true
+    },
+    {
+      "nom": "CT29 Psyko",
+      "categorie": "CT",
+      "lieu": "Éternara",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT30 Ball'Ombre",
+      "categorie": "CT",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT31 Casse-Brique",
+      "categorie": "CT",
+      "lieu": "Atalanopolis",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Dans une maison",
+      "fiable": true
+    },
+    {
+      "nom": "CT32 Reflet",
+      "categorie": "CT",
+      "lieu": "Route 113",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT33 Protection",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT34 Cradovague",
+      "categorie": "CT",
+      "lieu": "Chenal 132",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT35 Lance-Flammes",
+      "categorie": "CT",
+      "lieu": "Route Victoire",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT36 Bomb'Beurk",
+      "categorie": "CT",
+      "lieu": "Myokara",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Myokara",
+      "note": "Collectionneur dans le hall de Myokara",
+      "fiable": true
+    },
+    {
+      "nom": "CT37 Tempête de Sable",
+      "categorie": "CT",
+      "lieu": "Route 111",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "Lunettes Sable (après le badge de Vermilava)",
+      "note": "Dans le désert",
+      "fiable": true
+    },
+    {
+      "nom": "CT38 Déflagration",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (30 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT39 Tomberoche",
+      "categorie": "CT",
+      "lieu": "Mérouville",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Roxanne)",
+      "fiable": true
+    },
+    {
+      "nom": "CT40 Aéropique",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT41 Tourmente",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Marin dans la salle des Concours",
+      "fiable": true
+    },
+    {
+      "nom": "CT42 Façade",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT43 Nitrocharge",
+      "categorie": "CT",
+      "lieu": "Sentier Sinuroc",
+      "methode": "SOL",
+      "cs": "VELO_CROSS",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT44 Repos",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Dans une maison",
+      "fiable": true
+    },
+    {
+      "nom": "CT45 Attraction",
+      "categorie": "CT",
+      "lieu": "Vergazon",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Fille dans la salle des Concours",
+      "fiable": true
+    },
+    {
+      "nom": "CT46 Larcin",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un sbire au Musée Océanographique",
+      "fiable": true
+    },
+    {
+      "nom": "CT47 Balayette",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT48 Chant Canon",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Café de Lavandia",
+      "fiable": true
+    },
+    {
+      "nom": "CT49 Écho",
+      "categorie": "CT",
+      "lieu": "Route 104",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un garçon",
+      "fiable": true
+    },
+    {
+      "nom": "CT50 Surchauffe",
+      "categorie": "CT",
+      "lieu": "Vermilava",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Adriane)",
+      "fiable": true
+    },
+    {
+      "nom": "CT51 Aile d'Acier",
+      "categorie": "CT",
+      "lieu": "Grotte Granite",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par Pierre au fond de la grotte",
+      "fiable": true
+    },
+    {
+      "nom": "CT52 Exploforce",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (30 000 ₽ ; une source indique 40 000)",
+      "fiable": true
+    },
+    {
+      "nom": "CT53 Éco-Sphère",
+      "categorie": "CT",
+      "lieu": "Parc Safari",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Certaines zones demandent un Vélo (Cross ou Course)",
+      "fiable": true
+    },
+    {
+      "nom": "CT54 Faux-Chage",
+      "categorie": "CT",
+      "lieu": "Mérouville",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Homme dans la Boutique Pokémon",
+      "fiable": true
+    },
+    {
+      "nom": "CT55 Ébullition",
+      "categorie": "CT",
+      "lieu": "Caverne Fondmer",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT56 Dégommage",
+      "categorie": "CT",
+      "lieu": "Pacifiville",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Dans une maison",
+      "fiable": true
+    },
+    {
+      "nom": "CT57 Rayon Chargé",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT58 Chute Libre",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée dans la Boutique Pokémon",
+      "fiable": true
+    },
+    {
+      "nom": "CT59 Calcination",
+      "categorie": "CT",
+      "lieu": "Mont Chimnée",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Sous le pont",
+      "fiable": true
+    },
+    {
+      "nom": "CT60 À la Queue",
+      "categorie": "CT",
+      "lieu": "Algatia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Fille de la Boutique Pokémon (répondre Oui)",
+      "fiable": true
+    },
+    {
+      "nom": "CT61 Feu Follet",
+      "categorie": "CT",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT62 Acrobatie",
+      "categorie": "CT",
+      "lieu": "Route 119",
+      "methode": "SOL",
+      "cs": "CASCADE",
+      "condition": null,
+      "note": "Au-dessus de la cascade",
+      "fiable": true
+    },
+    {
+      "nom": "CT63 Embargo",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta (Passe Bateau)",
+      "note": "Sur le bateau Le Marina (navette Poivressel–Nénucrique), donnée par un Fana d'insectes",
+      "fiable": false
+    },
+    {
+      "nom": "CT64 Explosion",
+      "categorie": "CT",
+      "lieu": "Pilier Céleste",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
+      "condition": null,
+      "note": "Surf pour atteindre le Pilier ; sols fissurés à franchir au Vélo Course",
+      "fiable": false
+    },
+    {
+      "nom": "CT65 Griffe Ombre",
+      "categorie": "CT",
+      "lieu": "Grotte Granite",
+      "methode": "SOL",
+      "cs": "VELO_COURSE",
+      "condition": null,
+      "note": "2e sous-sol, sols fissurés du 1er sous-sol à franchir au Vélo Course",
+      "fiable": true
+    },
+    {
+      "nom": "CT66 Représailles",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage)",
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT67 Vengeance",
+      "categorie": "CT",
+      "lieu": "Clémenti-Ville",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "récompense de l'arène de Clémenti-Ville",
+      "note": "Récompense de l'arène (Norman)",
+      "fiable": true
+    },
+    {
+      "nom": "CT68 Giga-Impact",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (50 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT69 Poliroche",
+      "categorie": "CT",
+      "lieu": "Sentier Sinuroc",
+      "methode": "SOL",
+      "cs": "VELO_COURSE",
+      "condition": null,
+      "note": "En haut d'une pente à gravir à vélo (n'importe lequel)",
+      "fiable": true
+    },
+    {
+      "nom": "CT70 Flash",
+      "categorie": "CT",
+      "lieu": "Grotte Granite",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un Montagnard à l'entrée",
+      "fiable": true
+    },
+    {
+      "nom": "CT71 Lame de Roc",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Centre commercial de Nénucrique (30 000 ₽ ; une source indique 40 000)",
+      "fiable": true
+    },
+    {
+      "nom": "CT72 Change Éclair",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Récompense de l'arène (Voltère)",
+      "fiable": true
+    },
+    {
+      "nom": "CT73 Cage-Éclair",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Stand de CT du marché de Poivressel (5 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT74 Gyroballe",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Forêt Mirage)",
+      "fiable": true,
+      "lieuLibre": "Forêt Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT75 Danse-Lames",
+      "categorie": "CT",
+      "lieu": "Vermilava",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un Karatéka",
+      "fiable": true
+    },
+    {
+      "nom": "CT76 Survinsecte",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Stand de CT du marché de Poivressel (5 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT77 Boost",
+      "categorie": "CT",
+      "lieu": "Chenal 133",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Donnée par un Kinésiste",
+      "fiable": true
+    },
+    {
+      "nom": "CT78 Piétisol",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT79 Souffle Glacé",
+      "categorie": "CT",
+      "lieu": "Grotte Tréfonds",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
+      "condition": "marée basse",
+      "note": "Pentes boueuses, Surf aussi requis",
+      "fiable": true
+    },
+    {
+      "nom": "CT80 Éboulement",
+      "categorie": "CT",
+      "lieu": "Chenal 134",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT81 Plaie-Croix",
+      "categorie": "CT",
+      "lieu": "Route Victoire",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT82 Draco-Queue",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT83 Harcèlement",
+      "categorie": "CT",
+      "lieu": "Atalanopolis",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Fan de Lisia",
+      "fiable": true
+    },
+    {
+      "nom": "CT84 Direct Toxic",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Mont Mirage, Vélo Cross selon une source)",
+      "fiable": true,
+      "lieuLibre": "Mont Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT85 Dévorêve",
+      "categorie": "CT",
+      "lieu": "Route 121",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Homme à l'entrée du Parc Safari",
+      "fiable": true
+    },
+    {
+      "nom": "CT86 Nœud'Herbe",
+      "categorie": "CT",
+      "lieu": "Cimetronelle",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après le Scope Devon (Route 120)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "CT87 Vantardise",
+      "categorie": "CT",
+      "lieu": "Atoll de Combat",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Dame de la Pension",
+      "fiable": true
+    },
+    {
+      "nom": "CT88 Blabla Dodo",
+      "categorie": "CT",
+      "lieu": "Nénucrique",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Dans une maison",
+      "fiable": true
+    },
+    {
+      "nom": "CT89 Demi-Tour",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Balcon de la Résidence Lavandia ; une source lie l'accès au badge d'Atalanopolis",
+      "fiable": false
+    },
+    {
+      "nom": "CT90 Clonage",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "ECLATE_ROC",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage, rocher à briser)",
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT91 Luminocanon",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Île Mirage)",
+      "fiable": true,
+      "lieuLibre": "Île Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT92 Distorsion",
+      "categorie": "CT",
+      "lieu": "Route 110",
+      "methode": "RECOMPENSE",
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC"
+      ],
+      "condition": null,
+      "note": "Maison des Pièges, épreuve 3 (après les épreuves 1 Coupe et 2 Éclate-Roc)",
+      "fiable": true
+    },
+    {
+      "nom": "CT93 Éclair Fou",
+      "categorie": "CT",
+      "lieu": "Parc Safari",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Certaines zones demandent un Vélo (Cross ou Course)",
+      "fiable": true
+    },
+    {
+      "nom": "CT94 Force Cachée",
+      "categorie": "CT",
+      "lieu": "Route 111",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par Millepertuis",
+      "fiable": true
+    },
+    {
+      "nom": "CT95 Aboiement",
+      "categorie": "CT",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Grotte Mirage)",
+      "fiable": true,
+      "lieuLibre": "Grotte Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "CT96 Force-Nature",
+      "categorie": "CT",
+      "lieu": "Chemin Ardent",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Vermilava",
+      "note": "Donnée par Millepertuis",
+      "fiable": true
+    },
+    {
+      "nom": "CT97 Vibrobscur",
+      "categorie": "CT",
+      "lieu": "Planque Magma",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Pièce aux téléporteurs (Rubis Oméga)",
+      "fiable": true
+    },
+    {
+      "nom": "CT98 Poing Boost",
+      "categorie": "CT",
+      "lieu": "Lavandia",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique de CT de la Boutique Pokémon de Lavandia (10 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "CT99 Éclat Magique",
+      "categorie": "CT",
+      "lieu": "Route 123",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par une fille",
+      "fiable": true
+    },
+    {
+      "nom": "CT100 Confidence",
+      "categorie": "CT",
+      "lieu": "Poivressel",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": null,
+      "note": "Stand de CT du marché de Poivressel (5 000 ₽)",
+      "fiable": true
+    },
+    {
+      "nom": "Méga-Bracelet",
+      "categorie": "OBJET_CLE",
+      "lieu": "Île du Sud",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "événement après le badge de Norman (Route 118)",
+      "note": "Pierre l'offre quand Latios rejoint l'équipe",
+      "fiable": true,
+      "etape": 6
+    },
+    {
+      "nom": "Vélo Course",
+      "categorie": "OBJET_CLE",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Magasin de vélos ; échangeable contre le Vélo Cross à tout moment",
+      "fiable": true
+    },
+    {
+      "nom": "Vélo Cross",
+      "categorie": "OBJET_CLE",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Magasin de vélos ; échangeable contre le Vélo Course à tout moment ; les deux possibles après une quête (Route 111, Route 119, Atoll de Combat)",
+      "fiable": true
+    },
+    {
+      "nom": "Canne",
+      "categorie": "OBJET_CLE",
+      "lieu": "Myokara",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Pêcheur",
+      "fiable": true
+    },
+    {
+      "nom": "Super Canne",
+      "categorie": "OBJET_CLE",
+      "lieu": "Route 118",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Pêcheur de la rive est, après le chenal à traverser en Surf",
+      "fiable": true
+    },
+    {
+      "nom": "Méga Canne",
+      "categorie": "OBJET_CLE",
+      "lieu": "Algatia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Pêcheur",
+      "fiable": true
+    },
+    {
+      "nom": "Multi Exp",
+      "categorie": "OBJET_CLE",
+      "lieu": "Bois Clémenti",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Chercheur de Devon après le combat contre le sbire",
+      "fiable": false
+    },
+    {
+      "nom": "Cherch'Objet",
+      "categorie": "OBJET_CLE",
+      "lieu": "Route 110",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par le rival selon une source ; à confirmer",
+      "fiable": false
+    },
+    {
+      "nom": "Lunettes Sable",
+      "categorie": "OBJET_CLE",
+      "lieu": "Vermilava",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Vermilava",
+      "note": "Données par le rival, ouvrent le désert",
+      "fiable": true
+    },
+    {
+      "nom": "Arrosoir",
+      "categorie": "OBJET_CLE",
+      "lieu": "Route 104",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Fleuriste",
+      "fiable": true
+    },
+    {
+      "nom": "Sac à Suie",
+      "categorie": "OBJET_CLE",
+      "lieu": "Route 113",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Atelier du Verre",
+      "fiable": true
+    },
+    {
+      "nom": "Scope Devon",
+      "categorie": "OBJET_CLE",
+      "lieu": "Route 120",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par Pierre, révèle les Kecleon",
+      "fiable": true
+    },
+    {
+      "nom": "Scaphandre",
+      "categorie": "OBJET_CLE",
+      "lieu": "Algatia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge d'Algatia",
+      "note": "Maison de Pierre, avec la CS Plongée",
+      "fiable": false
+    },
+    {
+      "nom": "Flûte Éon",
+      "categorie": "OBJET_CLE",
+      "lieu": "Atalanopolis",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après Groudon",
+      "note": "Donnée par Pierre ; permet de Planer",
+      "fiable": true
+    },
+    {
+      "nom": "Gemme Bleue",
+      "categorie": "OBJET_CLE",
+      "lieu": "Mont Mémoria",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Version Rubis Oméga : remise par le couple âgé au sommet",
+      "fiable": true
+    },
+    {
+      "nom": "Tenue Magma",
+      "categorie": "OBJET_CLE",
+      "lieu": "Atalanopolis",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Rubis Oméga uniquement, donnée par Max",
+      "fiable": false
+    },
+    {
+      "nom": "Kit Pokébloc",
+      "categorie": "OBJET_CLE",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par Lisia",
+      "fiable": true
+    },
+    {
+      "nom": "Passe Concours",
+      "categorie": "OBJET_CLE",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par Lisia",
+      "fiable": true
+    },
+    {
+      "nom": "Passe Bateau",
+      "categorie": "OBJET_CLE",
+      "lieu": "Bourg-en-Vol",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Donné par Norman ; donne accès au Marina",
+      "fiable": true
+    },
+    {
+      "nom": "Scanner",
+      "categorie": "OBJET_CLE",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "après Groudon (selon une source)",
+      "note": null,
+      "fiable": false
+    },
+    {
+      "nom": "Glas Transparent",
+      "categorie": "OBJET_CLE",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après avoir remis le Scanner",
+      "note": "Capitaine Marco ; sert pour Ho-Oh (Rubis Oméga)",
+      "fiable": false
+    },
+    {
+      "nom": "Charme Ovale",
+      "categorie": "OBJET_CLE",
+      "lieu": "Bourg-en-Vol",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "Pokédex de Hoenn complété",
+      "note": "Laboratoire du Prof. Seko",
+      "fiable": true
+    },
+    {
+      "nom": "Charme Chroma",
+      "categorie": "OBJET_CLE",
+      "lieu": "Bourg-en-Vol",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "Pokédex National complété",
+      "note": "Laboratoire du Prof. Seko",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Feu",
+      "categorie": "EVOLUTION",
+      "lieu": "Route 114",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "5 % après une revanche contre le Pyromane de la route ; au sol au Chemin Ardent (Force)",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Eau",
+      "categorie": "EVOLUTION",
+      "lieu": "Chenal 106",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "après le badge de Myokara",
+      "note": "5 % par revanche contre le Pêcheur Elliot (plage derrière la Grotte Granite), revanches dès le Badge Poing ; aussi via le chasseur de trésors du Chenal 124 (Tesson Bleu)",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Foudre",
+      "categorie": "EVOLUTION",
+      "lieu": "Route 118",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "après le badge de Vermilava",
+      "note": "5 % par revanche contre le Guitariste de la rive ouest, revanches dès le Badge Chaleur",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Plante",
+      "categorie": "EVOLUTION",
+      "lieu": "Route 118",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "après le badge de Vermilava",
+      "note": "5 % par revanche contre l'Aromathérapeute de la rive ouest, revanches dès le Badge Chaleur",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Lune",
+      "categorie": "EVOLUTION",
+      "lieu": "Site Météore",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Aussi au Sentier Sinuroc",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Soleil",
+      "categorie": "EVOLUTION",
+      "lieu": "Route 115",
+      "methode": "RECOMPENSE",
+      "cs": "SURF",
+      "condition": null,
+      "note": "5 % après une revanche contre l'Expert de la partie nord (Surf) ; aussi au Centre Spatial d'Algatia",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Éclat",
+      "categorie": "EVOLUTION",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Aussi Route 121",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Nuit",
+      "categorie": "EVOLUTION",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Aussi en récompense des Combats Inversés de Lavandia",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Aube",
+      "categorie": "EVOLUTION",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Aussi Route Victoire",
+      "fiable": true
+    },
+    {
+      "nom": "Roche Royale",
+      "categorie": "EVOLUTION",
+      "lieu": "Algatia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donnée par un habitant",
+      "fiable": true
+    },
+    {
+      "nom": "Écaille Draco",
+      "categorie": "EVOLUTION",
+      "lieu": "Pilier Céleste",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
+      "condition": null,
+      "note": "2e étage ; Vélo Course probable pour monter",
+      "fiable": false
+    },
+    {
+      "nom": "Peau Métal",
+      "categorie": "EVOLUTION",
+      "lieu": "New Lavandia",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Améliorator",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "CD Douteux",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Protecteur",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Électriseur",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Magmariseur",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Tissu Fauche",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Chantibonbon",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Sachet Senteur",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Griffe Rasoir",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo ; aussi au sol en Forêt Mirage",
+      "fiable": true
+    },
+    {
+      "nom": "Croc Rasoir",
+      "categorie": "EVOLUTION",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo ; aussi au sol sur une Île Mirage",
+      "fiable": true
+    },
+    {
+      "nom": "Dent Océan",
+      "categorie": "EVOLUTION",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Grotte Mirage) ; aussi tenue par Carvanha/Sharpedo sauvages",
+      "fiable": true,
+      "lieuLibre": "Grotte Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "Écaille Océan",
+      "categorie": "EVOLUTION",
+      "lieu": null,
+      "methode": "SOL",
+      "cs": "VOL",
+      "condition": "après Groudon (Flûte Éon)",
+      "note": "Lieu Mirage (îlot aléatoire atteint en Planant) : aucun lieu de la liste ne correspond (Mont Mirage) ; aussi tenue par Loupio/Lanturn/Relicanth sauvages",
+      "fiable": true,
+      "lieuLibre": "Mont Mirage",
+      "etape": 12
+    },
+    {
+      "nom": "Restes",
+      "categorie": "OBJET_TENU",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta (Passe Bateau)",
+      "note": "À bord du Marina (bateau au départ de Poivressel)",
+      "fiable": false
+    },
+    {
+      "nom": "Bandeau Choix",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Lunettes Choix",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Mouchoir Choix",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Vie",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Ceinture Force",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Veste de Combat",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (48 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Vulné-Assurance",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Ballon",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Toxique",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat (16 PCo)",
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Flamme",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Lentilscope",
+      "categorie": "OBJET_TENU",
+      "lieu": "Atoll de Combat",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Ceinture Pro",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 110",
+      "methode": "RECOMPENSE",
+      "cs": "COUPE",
+      "condition": null,
+      "note": "Maison des Pièges, après l'épreuve 1 (Coupe)",
+      "fiable": true
+    },
+    {
+      "nom": "Casque Brut",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par un assistant",
+      "fiable": true
+    },
+    {
+      "nom": "Grelot Coque",
+      "categorie": "OBJET_TENU",
+      "lieu": "Grotte Tréfonds",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": "4 Sels Tréfonds (marée basse) + 4 Coquilles Tréfonds (marée haute)",
+      "note": "Vieil homme de la grotte",
+      "fiable": true
+    },
+    {
+      "nom": "Évoluroc",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 123",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Maison de pêche ; répondre Magicarpe au pêcheur",
+      "fiable": true
+    },
+    {
+      "nom": "Pièce Rune",
+      "categorie": "OBJET_TENU",
+      "lieu": "Bourg-en-Vol",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Norman",
+      "note": "Donnée par la mère",
+      "fiable": true
+    },
+    {
+      "nom": "Grelot Zen",
+      "categorie": "OBJET_TENU",
+      "lieu": "Poivressel",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Fan Club : le 1er Pokémon doit bien vous apprécier",
+      "fiable": true
+    },
+    {
+      "nom": "Vive Griffe",
+      "categorie": "OBJET_TENU",
+      "lieu": "Mérouville",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "École des Dresseurs",
+      "fiable": true
+    },
+    {
+      "nom": "Herbe Blanche",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 104",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après le badge de Norman",
+      "note": "Donnée par une fille devant la Boutique Fleurie, après avoir parlé à la fleuriste",
+      "fiable": true
+    },
+    {
+      "nom": "Herbe Mental",
+      "categorie": "OBJET_TENU",
+      "lieu": "Cimetronelle",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Lunettes Noires",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 116",
+      "methode": "SOL",
+      "cs": [
+        "ECLATE_ROC",
+        "CHERCHE_OBJET"
+      ],
+      "condition": null,
+      "note": "Objet caché dans la partie est, atteinte par le Tunnel Mérazon (rochers à briser)",
+      "fiable": true
+    },
+    {
+      "nom": "Mouchoir Soie",
+      "categorie": "OBJET_TENU",
+      "lieu": "Myokara",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Dans une maison",
+      "fiable": true
+    },
+    {
+      "nom": "Charbon",
+      "categorie": "OBJET_TENU",
+      "lieu": "Vermilava",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Boutique d'herbes",
+      "fiable": true
+    },
+    {
+      "nom": "Grain Miracle",
+      "categorie": "OBJET_TENU",
+      "lieu": "Bois Clémenti",
+      "methode": "CADEAU",
+      "cs": "COUPE",
+      "condition": null,
+      "note": "Donné par une fille derrière un arbre à couper, à l'est de la sortie nord",
+      "fiable": true
+    },
+    {
+      "nom": "Eau Mystique",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Glace Éternelle",
+      "categorie": "OBJET_TENU",
+      "lieu": "Grotte Tréfonds",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "marée basse",
+      "note": "Caverne gelée",
+      "fiable": true
+    },
+    {
+      "nom": "Sable Doux",
+      "categorie": "OBJET_TENU",
+      "lieu": "Chenal 109",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Donné par une fille sur la plage",
+      "fiable": true
+    },
+    {
+      "nom": "Pierre Dure",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 110",
+      "methode": "RECOMPENSE",
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC"
+      ],
+      "condition": null,
+      "note": "Maison des Pièges, épreuve 2 (Éclate-Roc, après l'épreuve 1 Coupe)",
+      "fiable": true
+    },
+    {
+      "nom": "Poudre Métal",
+      "categorie": "OBJET_TENU",
+      "lieu": "Lavandia",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": null,
+      "note": "Cantine (croquettes parfaites)",
+      "fiable": true
+    },
+    {
+      "nom": "Noeud Destin",
+      "categorie": "OBJET_TENU",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Métronome",
+      "categorie": "OBJET_TENU",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Résidence Lavandia",
+      "fiable": true
+    },
+    {
+      "nom": "Grosse Racine",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 123",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Loupe",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 123",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Aussi Boutique PCo de la Maison de Combat",
+      "fiable": true
+    },
+    {
+      "nom": "Lunettes Filtre",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 111",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "Lunettes Sable",
+      "note": "Donnée par un Kinésiste côté est du désert (Lunettes Sable)",
+      "fiable": true
+    },
+    {
+      "nom": "Rune Purifiante",
+      "categorie": "OBJET_TENU",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Pierrallégée",
+      "categorie": "OBJET_TENU",
+      "lieu": "Mérouville",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Bandeau",
+      "categorie": "OBJET_TENU",
+      "lieu": "Grotte Tréfonds",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "marée basse",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Bec Pointu",
+      "categorie": "OBJET_TENU",
+      "lieu": "Poivressel",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après l'Épisode Delta (Passe Bateau)",
+      "note": "Cale du Marina",
+      "fiable": false
+    },
+    {
+      "nom": "Boule Fumée",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 110",
+      "methode": "RECOMPENSE",
+      "cs": [
+        "COUPE",
+        "ECLATE_ROC",
+        "FORCE"
+      ],
+      "condition": null,
+      "note": "Maison des Pièges, épreuve 4 (Force, après les épreuves Coupe et Éclate-Roc)",
+      "fiable": true
+    },
+    {
+      "nom": "Balle Lumière",
+      "categorie": "OBJET_TENU",
+      "lieu": "Route 120",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Roche Chaude",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Roche Humide",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Roche Glace",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Roche Lisse",
+      "categorie": "OBJET_TENU",
+      "lieu": "Centre Météo",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Adamant",
+      "categorie": "OBJET_TENU",
+      "lieu": "Chenal 128",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Sous l'eau",
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Perlé",
+      "categorie": "OBJET_TENU",
+      "lieu": "Chenal 129",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Sous l'eau",
+      "fiable": true
+    },
+    {
+      "nom": "Orbe Platiné",
+      "categorie": "OBJET_TENU",
+      "lieu": "Chenal 130",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Sous l'eau",
+      "fiable": true
+    },
+    {
+      "nom": "Rosée Âme",
+      "categorie": "OBJET_TENU",
+      "lieu": "Île du Sud",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Moment d'obtention non confirmé",
+      "fiable": false
+    },
+    {
+      "nom": "Absolite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Parc Safari",
+      "methode": "SOL",
+      "cs": "VELO_CROSS",
+      "condition": null,
+      "note": "Plateau atteint par des ponts",
+      "fiable": true
+    },
+    {
+      "nom": "Galekingite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Tunnel Mérazon",
+      "methode": "CADEAU",
+      "cs": "ECLATE_ROC",
+      "condition": null,
+      "note": "Donnée une fois le tunnel dégagé",
+      "fiable": true
+    },
+    {
+      "nom": "Alakazamite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Poivressel",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Marché ; les sources hésitent entre achat et objet au sol",
+      "fiable": false
+    },
+    {
+      "nom": "Altarite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Nénucrique",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "avoir un Altaria dans l'équipe",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Branettite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Sommet",
+      "fiable": true
+    },
+    {
+      "nom": "Dardargnite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Lavandia Sea",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Salle de stockage (clé à trouver sur place)",
+      "fiable": true
+    },
+    {
+      "nom": "Braségalite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 114",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "1 500 ₽ (Pierre du Couchant) ; si Poussifeu est votre starter, offerte par Pierre sur la Route 120",
+      "fiable": true
+    },
+    {
+      "nom": "Jungkite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 114",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "1 500 ₽ ; si Arcko est votre starter, offerte par Pierre sur la Route 120",
+      "fiable": true
+    },
+    {
+      "nom": "Laggronite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 114",
+      "methode": "ACHAT",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "1 500 ₽ ; si Gobou est votre starter, offerte par Pierre sur la Route 120",
+      "fiable": true
+    },
+    {
+      "nom": "Caméruptite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Planque Magma",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "Épisode Delta",
+      "note": "Donnée par Max (Rubis Oméga)",
+      "fiable": true
+    },
+    {
+      "nom": "Carchacrokite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Cimetronelle",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "rang Platine à la Guilde des Bases Secrètes",
+      "note": "Donnée par Millepertuis",
+      "fiable": true
+    },
+    {
+      "nom": "Charminite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Mont Mémoria",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Méga-Gemme de Charmina ; étage supérieur du cimetière",
+      "fiable": true
+    },
+    {
+      "nom": "Cizayoxite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Bois Clémenti",
+      "methode": "SOL",
+      "cs": "COUPE",
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Démolossite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Vermilava",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Diancite",
+      "categorie": "MEGA_GEMME",
+      "lieu": null,
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "avoir Diancie (évènement) dans l'équipe",
+      "note": "N'importe quel Centre Pokémon",
+      "fiable": true
+    },
+    {
+      "nom": "Dracaufite X",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Chemin Ardent",
+      "methode": "SOL",
+      "cs": "FORCE",
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Dracaufite Y",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Grotte Zénith",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "après Groudon (Pokédex National)",
+      "note": "2e sous-sol",
+      "fiable": true
+    },
+    {
+      "nom": "Drattakite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Site Météore",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Vieille dame",
+      "fiable": true
+    },
+    {
+      "nom": "Ectoplasmite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Atoll de Combat",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après la Ligue",
+      "note": "Derrière une maison au nord-est",
+      "fiable": true
+    },
+    {
+      "nom": "Élecsprintite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 110",
+      "methode": "SOL",
+      "cs": "VELO_COURSE",
+      "condition": null,
+      "note": "Sur la Piste Cyclable, juste après l'entrée côté Lavandia (n'importe quel vélo)",
+      "fiable": true
+    },
+    {
+      "nom": "Flagadossite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Grotte Tréfonds",
+      "methode": "CADEAU",
+      "cs": "SURF",
+      "condition": "après le Grelot Coque",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Florizarrite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 119",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Gallamite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Autéquia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Prof. Kosmo",
+      "fiable": true
+    },
+    {
+      "nom": "Gardevoirite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Vergazon",
+      "methode": "CADEAU",
+      "cs": "ECLATE_ROC",
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Donnée par Sylvie ; Pokébip indique après l'Épisode Delta",
+      "fiable": false
+    },
+    {
+      "nom": "Gemme Rouge",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Grotte Origine",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après Groudon",
+      "note": "Objet de Primo-Résurgence de Groudon (Rubis Oméga)",
+      "fiable": false
+    },
+    {
+      "nom": "Kangourexite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Pacifiville",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Latiosite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Île du Sud",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "événement après le badge de Norman",
+      "note": "Tenue par Latios quand il rejoint l'équipe (Rubis Oméga)",
+      "fiable": true
+    },
+    {
+      "nom": "Latiasite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Bourg-en-Vol",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Donnée par la mère (Rubis Oméga)",
+      "fiable": true
+    },
+    {
+      "nom": "Lockpinite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Lavandia",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Résidence Lavandia, appartement 12",
+      "fiable": true
+    },
+    {
+      "nom": "Lucarite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Nénucrique",
+      "methode": "RECOMPENSE",
+      "cs": null,
+      "condition": "tous les Concours rang Master + battre Lisia",
+      "note": "Les sources hésitent sur la salle exacte",
+      "fiable": false
+    },
+    {
+      "nom": "Mysdibulite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Vergazon",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Entrer par le jardin fleuri de la Route 117",
+      "fiable": true
+    },
+    {
+      "nom": "Métalossite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Ligue Pokémon",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Donnée par Pierre",
+      "fiable": true
+    },
+    {
+      "nom": "Mewtwoïte X",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Bourg-en-Vol",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Sous un arbre près du laboratoire",
+      "fiable": true
+    },
+    {
+      "nom": "Mewtwoïte Y",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Éternara",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Devant la Ligue Pokémon",
+      "fiable": true
+    },
+    {
+      "nom": "Roucarnagite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Vergazon",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Trouver le Balignon de la fille, puis faire identifier la Pierre Étrange à Mérouville (Devon)",
+      "fiable": true
+    },
+    {
+      "nom": "Scarabruite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Chenal 124",
+      "methode": "SOL",
+      "cs": "PLONGEE",
+      "condition": null,
+      "note": "Petit îlot",
+      "fiable": true
+    },
+    {
+      "nom": "Scarhinoïte",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Chenal 127",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": null,
+      "note": "Petit îlot",
+      "fiable": true
+    },
+    {
+      "nom": "Ténéfixite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Atalanopolis",
+      "methode": "SOL",
+      "cs": null,
+      "condition": null,
+      "note": "Près du pont menant à la Grotte Origine",
+      "fiable": true
+    },
+    {
+      "nom": "Sharpedite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Atoll de Combat",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Donnée par Arthur (Rubis Oméga)",
+      "fiable": true
+    },
+    {
+      "nom": "Oniglalite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Grotte Tréfonds",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "VELO_COURSE"
+      ],
+      "condition": "marée basse",
+      "note": "Salle de glace",
+      "fiable": true
+    },
+    {
+      "nom": "Léviatorite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 123",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": null,
+      "note": "Maison de pêche ; conditions de l'échange peu claires selon les sources",
+      "fiable": false
+    },
+    {
+      "nom": "Steelixite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Grotte Granite",
+      "methode": "SOL",
+      "cs": "VELO_COURSE",
+      "condition": null,
+      "note": "2e sous-sol, sols fissurés du 1er sous-sol à franchir au Vélo Course",
+      "fiable": true
+    },
+    {
+      "nom": "Tyranocivite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Sentier Sinuroc",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Blizzarite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Route 123",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Champ de Baies",
+      "fiable": true
+    },
+    {
+      "nom": "Ptéraïte",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Site Météore",
+      "methode": "SOL",
+      "cs": [
+        "SURF",
+        "CASCADE"
+      ],
+      "condition": "après Groudon (Pokédex National)",
+      "note": "Corniches ouest de la grotte intérieure, Surf puis Cascade",
+      "fiable": true
+    },
+    {
+      "nom": "Pharampite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "New Lavandia",
+      "methode": "SOL",
+      "cs": "SURF",
+      "condition": "après Groudon (Pokédex National)",
+      "note": null,
+      "fiable": true
+    },
+    {
+      "nom": "Nanméouïte",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Atoll de Combat",
+      "methode": "CADEAU",
+      "cs": null,
+      "condition": "après l'Épisode Delta",
+      "note": "Donnée par Beladonis",
+      "fiable": true
+    },
+    {
+      "nom": "Tortankite",
+      "categorie": "MEGA_GEMME",
+      "lieu": "Poivressel",
+      "methode": "SOL",
+      "cs": null,
+      "condition": "après l'Épisode Delta (Passe Bateau)",
+      "note": "Sur le pont du Marina (bateau au départ de Poivressel)",
+      "fiable": true
+    }
+  ]
+}

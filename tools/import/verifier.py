@@ -10,7 +10,6 @@ import pathlib
 import sqlite3
 from collections import defaultdict
 
-from import_lieux import dans_rubis_omega
 from source_pokeapi import lire, noms_fr
 
 DOSSIER = pathlib.Path(__file__).resolve().parent
@@ -90,35 +89,12 @@ def _etapes(con: sqlite3.Connection, c: Controle) -> list[str]:
 
 
 def controler_quetes_annexes(con: sqlite3.Connection, c: Controle) -> None:
-    """Une quête « Capturer » doit reposer sur une rencontre possible dans Rubis Oméga, à son lieu ;
-    une exclusivité de Saphir Alpha ne peut être qu'une quête d'échange, sur une espèce « échange requis »."""
-    for description, lieu, espece in con.execute(
-        """
-        SELECT q.description, l.nom, e.id FROM quete q
-        JOIN lieu l ON l.id = q.lieuId
-        JOIN espece e ON q.description = 'Capturer ' || e.nom || ' (' || l.nom || ')'
-        WHERE q.type = 'ANNEXE'
-        """
+    """Aucune quête « Capturer » : le bouton « Attraper » des rencontres enregistre déjà les captures.
+    Une exclusivité de Saphir Alpha ne peut être qu'une quête d'échange, sur une espèce « échange requis »."""
+    for (description,) in con.execute(
+        "SELECT description FROM quete WHERE type = 'ANNEXE' AND description LIKE 'Capturer %'"
     ).fetchall():
-        conditions = [
-            cond for (cond,) in con.execute(
-                "SELECT r.condition FROM rencontre r JOIN lieu l ON l.id = r.lieuId WHERE r.especeId = ? AND l.nom = ?",
-                (espece, lieu),
-            )
-        ]
-        c.exiger(
-            any(dans_rubis_omega(cond) for cond in conditions),
-            f"quête « {description} » : aucune rencontre de Rubis Oméga à ce lieu",
-        )
-    captures = con.execute("SELECT COUNT(*) FROM quete WHERE type = 'ANNEXE' AND description LIKE 'Capturer %'").fetchone()[0]
-    reconnues = con.execute(
-        """
-        SELECT COUNT(*) FROM quete q JOIN lieu l ON l.id = q.lieuId
-        JOIN espece e ON q.description = 'Capturer ' || e.nom || ' (' || l.nom || ')'
-        WHERE q.type = 'ANNEXE'
-        """
-    ).fetchone()[0]
-    c.exiger(captures == reconnues, f"{captures - reconnues} quêtes « Capturer » sans espèce ni lieu reconnus")
+        c.exiger(False, f"quête « {description} » : les captures passent par le bouton « Attraper », pas par une quête")
     for description, espece in con.execute(
         """
         SELECT q.description, e.id FROM quete q

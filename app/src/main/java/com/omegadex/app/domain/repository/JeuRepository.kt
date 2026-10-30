@@ -10,6 +10,7 @@ import com.omegadex.app.domain.model.Quete
 import com.omegadex.app.domain.model.Rencontre
 import com.omegadex.app.domain.model.TalentEspece
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 /** Données de Rubis Oméga (base jeu, lecture seule). */
 interface JeuRepository {
@@ -20,8 +21,11 @@ interface JeuRepository {
     fun lieu(id: Int): Flow<Lieu?>
     fun quetesDuLieu(lieuId: Int): Flow<List<Quete>>
 
-    /** Modèles de défis de la base jeu (moteur de défis, T11). */
+    /** Modèles de défis saisis à la main (moteur de défis, T11), sans la banque par famille. */
     fun modelesDefis(): Flow<List<ModeleDefi>>
+
+    /** Banque de défis de la famille de racine [racine] (voir `BanqueDefis`) ; vide si la famille n'en a pas. */
+    fun banqueDefis(racine: Int): Flow<List<ModeleDefi>> = flowOf(emptyList())
     fun pokedexHoenn(): Flow<List<Espece>>
     fun pokedexNational(): Flow<List<Espece>>
     fun espece(id: Int): Flow<Espece?>

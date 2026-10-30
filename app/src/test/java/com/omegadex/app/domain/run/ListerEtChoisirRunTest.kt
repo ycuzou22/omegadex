@@ -30,6 +30,7 @@ class ListerEtChoisirRunTest {
     private lateinit var creerRun: CreerRunUseCase
     private lateinit var listerRuns: ListerRunsUseCase
     private lateinit var choisirRun: ChoisirRunUseCase
+    private lateinit var supprimerRun: SupprimerRunUseCase
     private lateinit var runEnCours: ObserverRunEnCoursUseCase
     private val session = FausseSession()
     private var maintenant = 1_000L
@@ -46,6 +47,7 @@ class ListerEtChoisirRunTest {
         creerRun = CreerRunUseCase(comptes, progression, session, runActive)
         listerRuns = ListerRunsUseCase(session, comptes, runActive, progression, jeu)
         choisirRun = ChoisirRunUseCase(session, runActive)
+        supprimerRun = SupprimerRunUseCase(session, comptes)
         runEnCours = ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu)
     }
 
@@ -101,5 +103,37 @@ class ListerEtChoisirRunTest {
         assertNull(runEnCours().first())
         session.fermer()
         assertTrue(listerRuns().first().isEmpty())
+    }
+
+    @Test
+    fun `supprimer une run efface sa progression et une autre run devient active`() = runTest {
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s")))
+        val premiere = nouvelleRun("Première", Starter.ARCKO)
+        val seconde = nouvelleRun("Seconde", Starter.GOBOU)
+        progression.cocherQuete(seconde, 1, cochee = true)
+        assertEquals(seconde, runEnCours().first()?.run?.id)
+
+        supprimerRun(seconde)
+
+        assertEquals(listOf(premiere), listerRuns().first().map { it.run.id })
+        assertEquals(premiere, runEnCours().first()?.run?.id)
+        assertTrue(progression.quetesCochees(seconde).first().isEmpty())
+
+        supprimerRun(premiere)
+        assertTrue(listerRuns().first().isEmpty())
+        assertNull(runEnCours().first())
+    }
+
+    @Test
+    fun `on ne peut pas supprimer la run d'un autre compte`() = runTest {
+        val yamao = requireNotNull(comptes.creerUtilisateur("Yamao", "h", "s"))
+        session.ouvrir(yamao)
+        val runDeYamao = nouvelleRun("Run de Yamao", Starter.ARCKO)
+        session.ouvrir(requireNotNull(comptes.creerUtilisateur("Invite", "h", "s")))
+
+        supprimerRun(runDeYamao)
+
+        session.ouvrir(yamao)
+        assertEquals(listOf(runDeYamao), listerRuns().first().map { it.run.id })
     }
 }

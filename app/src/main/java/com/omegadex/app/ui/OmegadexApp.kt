@@ -14,11 +14,14 @@ import androidx.navigation.compose.rememberNavController
 import com.omegadex.app.ui.navigation.BarreNavigationOmega
 import com.omegadex.app.ui.navigation.Destination
 import com.omegadex.app.ui.navigation.OmegadexNavHost
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 
 /** Squelette de l'application : barre de navigation Oméga à 5 onglets et contenu de l'onglet courant. */
 @Composable
 fun OmegadexApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val sons = LocalSons.current
     val entreeCourante by navController.currentBackStackEntryAsState()
     val destinationCourante = Destination.entries.firstOrNull { destination ->
         entreeCourante?.destination?.hierarchy?.any { it.route == destination.route } == true
@@ -33,6 +36,7 @@ fun OmegadexApp(modifier: Modifier = Modifier) {
                 BarreNavigationOmega(
                     destinationCourante = destinationCourante,
                     onDestination = { destination ->
+                        if (destination != destinationCourante) sons.jouer(Son.NAVIGATION)
                         navController.navigate(destination.route) {
                             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                             launchSingleTop = true

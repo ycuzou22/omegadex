@@ -42,6 +42,8 @@ class FauxComptes : CompteRepository {
 
     override fun run(utilisateurId: Long, runId: Long) = flowOf<Run?>(null)
 
+    override suspend fun supprimerRun(utilisateurId: Long, runId: Long) = Unit
+
     override suspend fun creerRun(
         utilisateurId: Long,
         nom: String,

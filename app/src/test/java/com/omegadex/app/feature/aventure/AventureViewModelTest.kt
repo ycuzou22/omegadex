@@ -9,9 +9,11 @@ import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.domain.aventure.CocherQueteUseCase
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.MethodeRencontre
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.pokedex.CapturerEspeceUseCase
 import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
+import com.omegadex.app.domain.rencontre.RencontresDeLEtapeUseCase
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.ResultatCreationRun
@@ -70,6 +72,7 @@ class AventureViewModelTest {
         CocherQueteUseCase(jeu, progression),
         ObserverPokedexUseCase(jeu, progression),
         CapturerEspeceUseCase(progression),
+        RencontresDeLEtapeUseCase(jeu),
     )
 
     @Test
@@ -146,9 +149,11 @@ class AventureViewModelTest {
         progression.definirStatut(run, 252, StatutEspece.VUE)
         val viewModel = viewModel()
         val depart = viewModel.uiState.first { it is AventureUiState.EtapeEnCours } as AventureUiState.EtapeEnCours
+        val groupe = depart.rencontres.single()
+        assertEquals("Route 101" to null, groupe.lieu to groupe.debloqueur)
         assertEquals(
-            listOf(RencontreAffichee(252, "Arcko", "Plante", "Route 101", 5, 5, null, capturee = false)),
-            depart.rencontres,
+            listOf(RencontreAffichee(252, "Arcko", listOf("Plante"), MethodeRencontre.CADEAU, 5, 5, null, false)),
+            groupe.lignes,
         )
 
         viewModel.attraper(252)
@@ -166,8 +171,8 @@ class AventureViewModelTest {
         )
         assertEquals(StatutEspece.CAPTUREE, progression.statuts(run).first()[252])
         val apres = viewModel.uiState.first {
-            it is AventureUiState.EtapeEnCours && it.rencontres.single().capturee
+            it is AventureUiState.EtapeEnCours && it.rencontres.single().lignes.single().capturee
         } as AventureUiState.EtapeEnCours
-        assertEquals(true, apres.rencontres.single().capturee)
+        assertEquals(true, apres.rencontres.single().lignes.single().capturee)
     }
 }

@@ -62,6 +62,8 @@ import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.dessinerGemme
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.sons.Son
+import com.omegadex.app.ui.sons.SonsAuxReperes
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.LueurMagma
@@ -123,6 +125,15 @@ private val EASE_CAMERA: Easing = CubicBezierEasing(0.45f, 0f, 0.25f, 1f)
 private val EASE_ONDE: Easing = CubicBezierEasing(0.2f, 0.6f, 0.3f, 1f)
 private val EASE_FENTE: Easing = CubicBezierEasing(0.5f, 0f, 0.8f, 0.5f)
 private const val ZOOM_CAMERA = 2.2f
+
+/** Sons de la capture, calés sur la chronologie : éclosion, pulse, fissures, fente, découvrement. */
+private val REPERES_SONS_CAPTURE = listOf(
+    0f to Son.CAPTURE_ECLOSION,
+    ChronoCapture.PULSE to Son.CAPTURE_PULSE,
+    ChronoCapture.FISSURES to Son.CAPTURE_FISSURE,
+    ChronoCapture.FENTE to Son.CAPTURE_FENTE,
+    ChronoCapture.DECOUVERTE to Son.CAPTURE_DECOUVERTE,
+)
 private const val COLONNES = 3
 private val FORME_CASE = RoundedCornerShape(14.dp)
 private val HAUTEUR_CASE = 188.dp
@@ -194,6 +205,7 @@ fun AnimationCapture(
         }
     }
     val t = if (passe) ChronoCapture.FIN else temps.value
+    SonsAuxReperes(t, REPERES_SONS_CAPTURE)
     ContenuCapture(
         capture = capture,
         origine = origine,

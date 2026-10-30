@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,12 +46,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.model.MethodeRencontre.HERBE
+import com.omegadex.app.domain.model.MethodeRencontre.SURF
+import com.omegadex.app.domain.rencontre.Debloqueur
 import com.omegadex.app.ui.animations.AnimationCapture
+import com.omegadex.app.ui.animations.AnimationFinAventure
 import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.components.CarteRubis
 import com.omegadex.app.ui.components.GemCheckbox
 import com.omegadex.app.ui.components.TypeChip
 import com.omegadex.app.ui.components.nomDuType
+import com.omegadex.app.ui.sons.LocalSons
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.Blanc
 import com.omegadex.app.ui.theme.FormeGemme
@@ -73,6 +79,12 @@ fun AventureScreen(
     val rubis = remember { mutableMapOf<Int, Offset>() }
     LaunchedEffect(viewModel) { viewModel.evenements.collect { celebration = it } }
     LaunchedEffect(viewModel) { viewModel.captures.collect { capture = it } }
+    // Ambiance volcanique tant que l'Aventure est affichée (si elle est activée dans les réglages).
+    val sons = LocalSons.current
+    DisposableEffect(sons) {
+        sons.ambiance(active = true)
+        onDispose { sons.ambiance(active = false) }
+    }
     Box(modifier) {
         AventureContenu(
             uiState = uiState,
@@ -118,9 +130,7 @@ private fun AventureContenu(
         AventureUiState.AucuneRun -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.aventure_aucune_run), style = MaterialTheme.typography.bodyLarge)
         }
-        AventureUiState.Terminee -> Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-            Text(stringResource(R.string.aventure_terminee), style = MaterialTheme.typography.titleLarge)
-        }
+        AventureUiState.Terminee -> AnimationFinAventure(modifier)
         is AventureUiState.EtapeEnCours -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
                 Modifier.widthIn(max = 560.dp).fillMaxWidth(),
@@ -136,12 +146,16 @@ private fun AventureContenu(
                 }
                 if (uiState.rencontres.isNotEmpty()) {
                     item(key = "rencontres") { EnTeteRencontres(uiState.rencontres) }
-                    items(uiState.rencontres, key = { "rencontre-${it.especeId}" }) { rencontre ->
-                        LigneRencontre(
-                            rencontre,
-                            onAttraper = { rencontres.onAttraper(rencontre.especeId) },
-                            onRubis = { rencontres.onRubis(rencontre.especeId, it) },
-                        )
+                    uiState.rencontres.forEach { groupe ->
+                        val cle = "${groupe.lieuId}-${groupe.debloqueur}"
+                        item(key = "groupe-$cle") { EnTeteGroupe(groupe, onLieu) }
+                        items(groupe.lignes, key = { "rencontre-$cle-${it.especeId}" }) { rencontre ->
+                            LigneRencontre(
+                                rencontre,
+                                onAttraper = { rencontres.onAttraper(rencontre.especeId) },
+                                onRubis = { rencontres.onRubis(rencontre.especeId, it) },
+                            )
+                        }
                     }
                 }
                 if (uiState.annexes.isNotEmpty()) {
@@ -392,11 +406,24 @@ private fun AventurePreview() {
                     QueteAffichee(2, "Battre le rival sur la Route 110", null, false),
                     QueteAffichee(3, "Vaincre Voltère", "Badge Dynamo", false),
                 ),
-                annexes = listOf(QueteAffichee(4, "Capturer Dynavolt (Route 110)", null, false)),
+                annexes = listOf(QueteAffichee(4, "Récupérer CT34 Onde de Choc (Route 110)", null, false)),
                 lieux = listOf(LieuAffiche(1, "Lavandia"), LieuAffiche(2, "Route 110")),
                 rencontres = listOf(
-                    RencontreAffichee(309, "Dynavolt", "electrik", "Route 110", 12, 13, 15, capturee = false),
-                    RencontreAffichee(316, "Gloupti", "poison", "Route 110", 12, 13, 15, capturee = true),
+                    GroupeRencontresAffiche(
+                        2,
+                        "Route 110",
+                        null,
+                        listOf(
+                            RencontreAffichee(309, "Dynavolt", listOf("electrik"), HERBE, 12, 13, 15, false),
+                            RencontreAffichee(316, "Gloupti", listOf("poison"), HERBE, 12, 13, 15, true),
+                        ),
+                    ),
+                    GroupeRencontresAffiche(
+                        3,
+                        "Route 104",
+                        Debloqueur.SURF,
+                        listOf(RencontreAffichee(279, "Bekipan", listOf("eau", "vol"), SURF, 25, 25, 5, false)),
+                    ),
                 ),
             ),
             onCocher = { _, _ -> },

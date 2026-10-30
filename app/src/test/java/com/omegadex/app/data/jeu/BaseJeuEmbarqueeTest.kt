@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -63,6 +64,8 @@ class BaseJeuEmbarqueeTest {
         assertEquals(2, base.modeleDefiDao().modelesDeLEtape(4).first().size)
         val quetes = base.etapeDao().quetes(0).first()
         assertEquals("Choisir son Pokémon de départ et sauver le Professeur Seko", quetes.first().description)
+        // Quêtes d'objets : la CS Coupe se reçoit pendant l'étape de Roxanne.
+        assertTrue(base.etapeDao().quetes(1).first().any { it.recompense == "CS01 Coupe" })
     }
 
     @Test
@@ -77,6 +80,6 @@ class BaseJeuEmbarqueeTest {
     }
 
     private companion object {
-        const val VERSION_EMBARQUEE = 5
+        const val VERSION_EMBARQUEE = 11
     }
 }

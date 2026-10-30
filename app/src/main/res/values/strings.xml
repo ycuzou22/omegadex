@@ -99,6 +99,12 @@
     <string name="mes_runs_etape">Étape %1$d · %2$s</string>
     <string name="mes_runs_progression">%1$d étapes validées sur %2$d</string>
     <string name="mes_runs_retour">Retour</string>
+    <string name="mes_runs_supprimer">Supprimer</string>
+    <string name="mes_runs_supprimer_description">Supprimer la run %1$s</string>
+    <string name="mes_runs_supprimer_titre">Supprimer « %1$s » ?</string>
+    <string name="mes_runs_supprimer_texte">La run et toute sa progression (quêtes, Pokédex, équipe, défis) seront effacées. Exporte une sauvegarde avant si tu veux pouvoir la retrouver.</string>
+    <string name="mes_runs_supprimer_confirmer">Supprimer la run</string>
+    <string name="mes_runs_supprimer_annuler">Annuler</string>
     <!-- Aventure -->
     <string name="aventure_etape">Étape %1$d sur %2$d</string>
     <string name="aventure_plafond">%1$s · plafond</string>
@@ -116,7 +122,9 @@
     <string name="aventure_attraper_description">Attraper %1$s</string>
     <string name="aventure_capturee">Capturé</string>
     <string name="capture_annonce">%1$s rejoint le Pokédex · Capturé</string>
-    <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
+    <string name="fin_felicitations">Félicitations !</string>
+    <string name="fin_sous_titre">Tu as terminé ton aventure</string>
+    <string name="fin_sprite_primo_groudon">Primo-Groudon</string>
 
     <!-- Fiche de lieu -->
     <string name="lieu_retour">Retour</string>
@@ -325,4 +333,29 @@
     <string name="equipe_niveau_titre">À quel niveau est %1$s ?</string>
     <string name="equipe_ajouter">Ajouter</string>
     <string name="equipe_defi_propose">Défi pour ce nouveau membre : %1$s</string>
+    <string name="rencontre_nouveau">Nouveau · %1$s</string>
+    <string name="aventure_ouvrir_lieu">Ouvrir la fiche de %1$s</string>
+    <string name="rencontre_recu">Reçu</string>
+    <string name="rencontre_recu_description">Marquer %1$s comme reçu par échange</string>
+    <string name="rencontre_echange_saphir">Échange depuis Saphir Alpha</string>
+    <string name="rencontre_echange_hors_hoenn">Échange ou transfert depuis un autre jeu</string>
+    <string name="rencontre_verrou">Plus tard · étape %1$d</string>
+    <string name="rencontre_verrou_debloqueur">Plus tard · étape %1$d · %2$s</string>
+    <string name="debloqueur_canne">Canne</string>
+    <string name="debloqueur_eclate_roc">Éclate-Roc</string>
+    <string name="debloqueur_surf">Surf</string>
+    <string name="debloqueur_super_canne">Super Canne</string>
+    <string name="debloqueur_mega_canne">Méga Canne</string>
+    <string name="debloqueur_plongee">Plongée</string>
+    <string name="debloqueur_apres_groudon">après Groudon</string>
+    <string name="debloqueur_pokedex_national">Pokédex National</string>
+    <string name="debloqueur_lunettes_sable">Lunettes Sable</string>
+    <string name="debloqueur_devon_scope">Devon Scope</string>
+    <string name="debloqueur_apres_ligue">après la Ligue</string>
+    <string name="debloqueur_apres_delta">après l\'Épisode Delta</string>
+    <string name="reglages_sons_titre">Sons et vibrations</string>
+    <string name="reglages_sons">Sons</string>
+    <string name="reglages_vibrations">Vibrations</string>
+    <string name="reglages_ambiance">Ambiance dans l\'Aventure</string>
+    <string name="reglages_ambiance_aide">Grondement volcanique discret, en boucle</string>
 </resources>
