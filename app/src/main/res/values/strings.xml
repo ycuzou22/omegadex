@@ -322,6 +322,17 @@
     <string name="equipe_retirer_titre">Retirer %1$s de l\'équipe ?</string>
     <string name="equipe_retirer_detail">L\'emplacement %1$d redevient libre. Le Pokémon reste capturé dans ton Pokédex.</string>
     <string name="equipe_annuler">Annuler</string>
+    <string name="equipe_suggestions_titre">Suggestions de rotation</string>
+    <string name="equipe_suggestions_detail">Captures encore jamais utilisées, à faire entrer au niveau %1$d (plafond de l\'étape).</string>
+    <string name="equipe_suggestion_ajouter">Ajouter</string>
+    <string name="equipe_suggestion_echanger">Échanger</string>
+    <string name="equipe_suggestion_echange_titre">Qui laisse sa place à %1$s ?</string>
+    <string name="equipe_suggestion_echange_membre">%1$d · %2$s, niv. %3$d</string>
+    <string name="equipe_suggestion_avantage">Fort contre le type %1$s</string>
+    <string name="equipe_suggestion_resistance">Résiste au type %1$s</string>
+    <string name="equipe_suggestion_neutre">Neutre face au type %1$s</string>
+    <string name="equipe_suggestion_faiblesse">Craint le type %1$s</string>
+    <string name="equipe_suggestion_jamais_utilise">Jamais utilisé</string>
     <string name="equipe_ajouter_capture">+ Ajouter</string>
     <string name="equipe_ajouter_titre">Ajouter à l\'équipe</string>
     <string name="equipe_echanger_titre">Échanger %1$s</string>

@@ -73,6 +73,7 @@ fun EquipeScreen(
             onNiveau = viewModel::changerNiveau,
             onChoisir = onChoisir,
             onRetirer = viewModel::retirer,
+            onAjouterSuggestion = viewModel::ajouterSuggestion,
             onPc = {
                 sons.jouer(Son.NAVIGATION)
                 pcOuvert = true
@@ -115,6 +116,9 @@ internal fun EquipeContenu(uiState: EquipeUiState, actions: ActionsEquipe, modif
                     } else {
                         CarteMembre(emplacement.numero, membre, uiState.plafond, actions)
                     }
+                }
+                if (uiState.suggestions.isNotEmpty()) {
+                    item(key = "suggestions") { CarteSuggestions(uiState, actions.onAjouterSuggestion) }
                 }
             }
         }
