@@ -21,8 +21,4 @@ interface ModeleDefiDao {
     /** Banque de la famille de racine [racine] : identifiants 100000 + racine × 1000 + n (voir `BanqueDefis`). */
     @Query("SELECT * FROM modele_defi WHERE id > 100000 + :racine * 1000 AND id < 101000 + :racine * 1000 ORDER BY id")
     fun banque(racine: Int): Flow<List<ModeleDefiEntity>>
-
-    /** Modèles des défis déjà enregistrés, quelle que soit leur origine. */
-    @Query("SELECT * FROM modele_defi WHERE id IN (:ids) ORDER BY id")
-    fun parIds(ids: List<Int>): Flow<List<ModeleDefiEntity>>
 }

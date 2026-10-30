@@ -65,8 +65,11 @@ class ObserverDefisUseCase @Inject constructor(
                 val etapes = donnees.etapes
                 // Les défis tirés de la banque par famille ne sont pas dans les modèles saisis à la main.
                 val connus = donnees.modeles.map { it.id }.toSet()
-                val manquants = defis.map { it.modeleId }.filter { it !in connus }
-                val banque = if (manquants.isEmpty()) emptyList() else jeu.modelesDefisParIds(manquants).first()
+                val familles = defis.map { it.modeleId }
+                    .filter { it !in connus && BanqueDefis.estDeLaBanque(it) }
+                    .map { BanqueDefis.racineDuModele(it) }
+                    .distinct()
+                val banque = familles.flatMap { jeu.banqueDefis(it).first() }
                 val parModele = (donnees.modeles + banque).associateBy { it.id }
                 val parEtape = etapes.associateBy { it.id }
                 val noms = donnees.especes.associate { it.id to it.nom }

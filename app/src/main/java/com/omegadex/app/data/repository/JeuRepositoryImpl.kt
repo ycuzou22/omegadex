@@ -33,9 +33,6 @@ class JeuRepositoryImpl @Inject constructor(base: JeuDatabase) : JeuRepository {
 
     override fun banqueDefis(racine: Int) = modeles.banque(racine).map { liste -> liste.map { it.versDomaine() } }
 
-    override fun modelesDefisParIds(ids: Collection<Int>) =
-        modeles.parIds(ids.distinct()).map { liste -> liste.map { it.versDomaine() } }
-
     override fun pokedexHoenn() = especes.pokedexHoenn().map { liste -> liste.map { it.versDomaine() } }
 
     override fun pokedexNational() = especes.pokedexNational().map { liste -> liste.map { it.versDomaine() } }

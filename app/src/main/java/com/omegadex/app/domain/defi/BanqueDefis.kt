@@ -22,6 +22,9 @@ object BanqueDefis {
 
     fun estDeLaBanque(modeleId: Int): Boolean = modeleId >= ID_DEBUT
 
+    /** Racine de la famille d'un défi de la banque, lue dans son identifiant. */
+    fun racineDuModele(modeleId: Int): Int = (modeleId - ID_DEBUT) / TAILLE_PLAGE
+
     /** Espèce visée par un défi de la banque. */
     fun cible(modele: ModeleDefi): Int? = modele.parametres["cible"]?.toIntOrNull()
 
@@ -58,12 +61,7 @@ object BanqueDefis {
      * Tire un défi de la banque pour [espece], ou null si le Pokémon relève déjà un défi espèce
      * ou si aucun défi de sa banque n'est débloqué.
      */
-    fun tirer(
-        banque: List<ModeleDefi>,
-        espece: EspeceCandidate,
-        contexte: ContexteDefis,
-        graine: Long,
-    ): DefiPropose? {
+    fun tirer(banque: List<ModeleDefi>, espece: EspeceCandidate, contexte: ContexteDefis, graine: Long): DefiPropose? {
         if (espece.id in GenerateurDefis.especesOccupees(contexte.defisExistants)) return null
         val candidats = eligibles(banque, espece, contexte)
         if (candidats.isEmpty()) return null

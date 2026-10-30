@@ -26,9 +26,6 @@ interface JeuRepository {
 
     /** Banque de défis de la famille de racine [racine] (voir `BanqueDefis`) ; vide si la famille n'en a pas. */
     fun banqueDefis(racine: Int): Flow<List<ModeleDefi>> = flowOf(emptyList())
-
-    /** Modèles de défis par identifiant, banque comprise (pour réafficher les défis enregistrés). */
-    fun modelesDefisParIds(ids: Collection<Int>): Flow<List<ModeleDefi>> = flowOf(emptyList())
     fun pokedexHoenn(): Flow<List<Espece>>
     fun pokedexNational(): Flow<List<Espece>>
     fun espece(id: Int): Flow<Espece?>
