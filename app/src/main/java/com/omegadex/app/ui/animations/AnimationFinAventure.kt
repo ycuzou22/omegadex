@@ -7,6 +7,7 @@ package com.omegadex.app.ui.animations
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.withInfiniteAnimationFrameMillis
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.withInfiniteAnimationFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
@@ -44,13 +45,13 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -126,9 +127,11 @@ private fun ContenuFinAventure(t: Float, entree: Float, modifier: Modifier = Mod
         val taille = min(250f * echelle, maxHeight.value * 0.32f).dp
         val flottement = if (entree < 1f) 0f else sin(t * 2f * PI.toFloat() / 4f) * 4f
         Image(
-            painter = painterResource(R.drawable.sprite_primo_groudon),
+            painter = BitmapPainter(
+                ImageBitmap.imageResource(R.drawable.sprite_primo_groudon),
+                filterQuality = FilterQuality.None,
+            ),
             contentDescription = stringResource(R.string.fin_sprite_primo_groudon),
-            filterQuality = FilterQuality.None,
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = (maxHeight.value * 0.04f + flottement).dp)
@@ -215,8 +218,7 @@ private class DecorLave private constructor(
     private val vapeurs: List<Bouffee>,
 ) {
     private class Braise(
-        val x: Float,
-        val y: Float,
+        val origine: Offset,
         val rayon: Float,
         val couleur: Color,
         val duree: Float,
@@ -224,6 +226,8 @@ private class DecorLave private constructor(
         val dx: Float,
         val floue: Boolean,
     )
+
+    private class PlaqueCroute(val x: Float, val y: Float, val rx: Float, val ry: Float)
 
     private class Bulle(val x: Float, val y: Float, val rayon: Float, val duree: Float, val phase: Float)
 
@@ -289,14 +293,12 @@ private class DecorLave private constructor(
             p > 0.9f -> (1f - p) / 0.1f * 0.8f
             else -> 1f - 0.2f * ((p - 0.1f) / 0.8f)
         }
-        val centre = Offset(b.x + b.dx * p, b.y - 420f * p)
+        val centre = Offset(b.origine.x + b.dx * p, b.origine.y - 420f * p)
         if (b.floue) {
-            drawCircle(
-                Brush.radialGradient(listOf(b.couleur, b.couleur.copy(alpha = 0f)), center = centre, radius = b.rayon * 2.5f),
-                radius = b.rayon * 2.5f,
-                center = centre,
-                alpha = opacite * 0.8f,
-            )
+            // Halo doux en trois disques pleins : bien moins coûteux qu'un dégradé par particule et par image.
+            drawCircle(b.couleur, b.rayon * 2.5f, centre, alpha = opacite * 0.15f)
+            drawCircle(b.couleur, b.rayon * 1.7f, centre, alpha = opacite * 0.25f)
+            drawCircle(b.couleur, b.rayon, centre, alpha = opacite * 0.4f)
         } else {
             drawCircle(b.couleur, b.rayon, centre, alpha = opacite)
         }
@@ -328,10 +330,15 @@ private class DecorLave private constructor(
 
     private fun DrawScope.croutes(t: Float) {
         val decalage = decalage(t, 7f)
-        CROUTES.forEach { (x0, y, rx, ry) ->
-            val x = ((x0 + decalage) % 1_170f) - 390f
+        CROUTES.forEach { plaque ->
+            val x = ((plaque.x + decalage) % 1_170f) - 390f
             if (x in -40f..430f) {
-                drawOval(Croute, Offset(x - rx, y - ry), Size(rx * 2, ry * 2), alpha = 0.7f)
+                drawOval(
+                    Croute,
+                    Offset(x - plaque.rx, plaque.y - plaque.ry),
+                    Size(plaque.rx * 2, plaque.ry * 2),
+                    alpha = 0.7f,
+                )
             }
         }
     }
@@ -371,12 +378,9 @@ private class DecorLave private constructor(
         val opacite = if (p < 0.2f) p / 0.2f * 0.75f else 0.75f * (1f - (p - 0.2f) / 0.8f)
         val rayon = b.rayon * (0.5f + 1.9f * p)
         val centre = Offset(b.x, b.y - 150f * p)
-        drawCircle(
-            Brush.radialGradient(listOf(Vapeur, Vapeur.copy(alpha = 0f)), centre, rayon * 1.6f),
-            radius = rayon * 1.6f,
-            center = centre,
-            alpha = opacite,
-        )
+        drawCircle(Vapeur, rayon * 1.6f, centre, alpha = opacite * 0.12f)
+        drawCircle(Vapeur, rayon * 1.1f, centre, alpha = opacite * 0.22f)
+        drawCircle(Vapeur, rayon * 0.6f, centre, alpha = opacite * 0.3f)
     }
 
     private fun DrawScope.rocher(x: Float, y: Float, s: Float, miroir: Boolean, t: Float) {
@@ -395,7 +399,9 @@ private class DecorLave private constructor(
                     ),
                 )
                 clipPath(forme) {
-                    FACETTES.forEach { (points, couleur, opacite) -> drawPath(polygone(points), couleur, alpha = opacite) }
+                    FACETTES.forEach { (points, couleur, opacite) ->
+                        drawPath(polygone(points), couleur, alpha = opacite)
+                    }
                     drawRect(
                         Brush.verticalGradient(
                             0f to Magma.copy(alpha = 0f),
@@ -420,7 +426,12 @@ private class DecorLave private constructor(
                 val rond = Stroke(7f, cap = StrokeCap.Round, join = StrokeJoin.Round)
                 drawPath(fissure, Magma, alpha = 0.35f * pulsation, style = Stroke(11f, cap = StrokeCap.Round))
                 drawPath(fissure, Magma, alpha = 0.6f * pulsation, style = rond)
-                drawPath(fissure, LueurLave, alpha = pulsation, style = Stroke(3f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+                drawPath(
+                    fissure,
+                    LueurLave,
+                    alpha = pulsation,
+                    style = Stroke(3f, cap = StrokeCap.Round, join = StrokeJoin.Round),
+                )
                 drawLine(LueurLave, Offset(-12f, -4f), Offset(8f, -8f), 2f, StrokeCap.Round, alpha = pulsation)
                 drawPath(
                     ligne(FISSURE_2),
@@ -440,19 +451,32 @@ private class DecorLave private constructor(
         private val FISSURE = listOf(-30f to 40f, -26f to 14f, -12f to -4f, -18f to -26f, -4f to -46f, 2f to -60f)
         private val FISSURE_2 = listOf(44f to 40f, 40f to 18f, 50f to -2f, 46f to -18f)
         private val FACETTES = listOf(
-            Triple(listOf(-56f to -56f, -26f to -82f, 6f to -88f, 36f to -74f, 12f to -58f, -22f to -52f), Color(0xFF5A4648), 1f),
+            Triple(
+                listOf(-56f to -56f, -26f to -82f, 6f to -88f, 36f to -74f, 12f to -58f, -22f to -52f),
+                Color(0xFF5A4648),
+                1f,
+            ),
             Triple(listOf(-26f to -82f, 6f to -88f, 12f to -58f, -22f to -52f), Color(0xFF6B5557), 1f),
             Triple(
                 listOf(36f to -74f, 60f to -44f, 72f to -8f, 76f to 40f, 28f to 40f, 22f to -14f, 12f to -58f),
                 Color(0xFF1A1214),
                 0.75f,
             ),
-            Triple(listOf(-70f to -18f, -56f to -56f, -22f to -52f, -34f to -10f, -40f to 40f, -74f to 40f), Color(0xFF2E2326), 0.8f),
+            Triple(
+                listOf(-70f to -18f, -56f to -56f, -22f to -52f, -34f to -10f, -40f to 40f, -74f to 40f),
+                Color(0xFF2E2326),
+                0.8f,
+            ),
             Triple(listOf(-34f to -10f, -22f to -52f, 12f to -58f, 22f to -14f, -4f to 2f), Color(0xFF3A2D30), 0.6f),
         )
-        private val CROUTES: List<List<Float>> = Random(5).let { r ->
+        private val CROUTES: List<PlaqueCroute> = Random(5).let { r ->
             (10 until 1_170 step 70).map { x ->
-                listOf(x.toFloat(), r.nextInt(800, 837).toFloat(), r.nextInt(14, 31).toFloat(), r.nextInt(3, 7).toFloat())
+                PlaqueCroute(
+                    x.toFloat(),
+                    r.nextInt(800, 837).toFloat(),
+                    r.nextInt(14, 31).toFloat(),
+                    r.nextInt(3, 7).toFloat(),
+                )
             }
         }
 
@@ -469,8 +493,7 @@ private class DecorLave private constructor(
             fun braises(n: Int, y0: Float, y1: Float, couleur: Color, r0: Float, r1: Float, floue: Boolean = false) =
                 List(n) {
                     Braise(
-                        x = r.entre(0f, LARGEUR),
-                        y = r.entre(y0, y1),
+                        origine = Offset(r.entre(0f, LARGEUR), r.entre(y0, y1)),
                         rayon = r.entre(r0, r1),
                         couleur = couleur,
                         duree = r.entre(4f, 9f),
@@ -485,7 +508,8 @@ private class DecorLave private constructor(
             fun bulles(n: Int, x0: Float, x1: Float, r0: Float, r1: Float) = List(n) {
                 Bulle(r.entre(x0, x1), r.entre(822f, 840f), r.entre(r0, r1), r.entre(1.8f, 3.6f), r.nextFloat())
             }
-            val toutesLesBulles = bulles(6, 150f, 250f, 4f, 8f) + bulles(3, 0f, 30f, 4f, 7f) + bulles(3, 360f, 390f, 4f, 7f)
+            val toutesLesBulles =
+                bulles(6, 150f, 250f, 4f, 8f) + bulles(3, 0f, 30f, 4f, 7f) + bulles(3, 360f, 390f, 4f, 7f)
             val sources = listOf(80f to 692f, 330f to 678f, 201f to 775f)
             val bouffees = sources.flatMap { (x, y) ->
                 List(4) { k ->
