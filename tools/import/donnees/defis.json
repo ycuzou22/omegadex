@@ -519,7 +519,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 4,
     "conditions": []
    }
   },
@@ -564,7 +564,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 3,
     "conditions": []
    }
   },
@@ -579,7 +579,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 7,
     "conditions": []
    }
   },
@@ -594,7 +594,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 4,
     "conditions": []
    }
   },
@@ -609,7 +609,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },
@@ -624,7 +624,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },
@@ -654,7 +654,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },
@@ -684,7 +684,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },
@@ -699,7 +699,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 7,
     "conditions": []
    }
   },
@@ -714,7 +714,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 5,
     "conditions": []
    }
   },
@@ -744,7 +744,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },
@@ -759,7 +759,7 @@
    },
    "difficulteMin": "NORMAL",
    "deblocage": {
-    "etapeMin": 1,
+    "etapeMin": 2,
     "conditions": []
    }
   },

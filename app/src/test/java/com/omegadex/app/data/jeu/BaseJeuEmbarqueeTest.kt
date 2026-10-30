@@ -80,6 +80,6 @@ class BaseJeuEmbarqueeTest {
     }
 
     private companion object {
-        const val VERSION_EMBARQUEE = 10
+        const val VERSION_EMBARQUEE = 11
     }
 }

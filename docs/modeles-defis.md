@@ -27,6 +27,8 @@ Les modèles de défis sont la seule donnée saisie à la main. Ils sont écrits
 | `parametres` | objet | Valeurs des marqueurs propres au modèle (`type`, `nombre`…) |
 | `difficulteMin` | texte | `NORMAL` (défi de base), `DIFFICILE` ou `HARDCORE` : difficulté de run à partir de laquelle le défi est proposé |
 | `deblocage.etapeMin` | entier | Première étape où le défi peut être proposé |
+
+Un défi `MONOTYPE` n'est proposé qu'à partir de l'étape où **deux familles** de son type s'obtiennent, starters exclus (`tools/import/monotypes.py`) : ni Monotype Feu, Glace, Spectre, Dragon ou Électrik contre Bastien. `test_monotypes.py` vérifie que `defis.json` suit ce calcul.
 | `deblocage.conditions` | liste | Conditions supplémentaires vérifiées par le moteur (voir ci-dessous) |
 
 ## Marqueurs
@@ -65,7 +67,7 @@ En plus des 60 modèles saisis à la main, la table `modele_defi` contient une *
 | Familles | Les 229 familles dont au moins un membre s'obtient dans Rubis Oméga sans échange (Pokédex national compris). Les autres membres comptent s'ils s'obtiennent par évolution (hors évolution par échange) ou par reproduction. |
 | Identifiants | `100000 + racine × 1000 + n` : la **racine** est la plus petite espèce de la famille qui n'est l'évolution d'aucune autre (Arcko, 252 → défis 352001 à 352200). |
 | Cible | Chaque défi vise un membre (`parametres.cible`) ; son nom est déjà écrit dans l'énoncé. Seuls `{adversaire}` et `{niveau}` restent à remplir par le moteur. |
-| Déblocage | `etapeMin` vaut au moins l'étape où la cible s'obtient (même règle que la disponibilité des rencontres dans l'app), puis l'étape où le niveau cité passe sous le plafond, où la CT, la pierre ou la Méga-Gemme est accessible, où la Pension (étape 3), les Concours Live (étape 3) ou l'Atoll de Combat (étape 12) ouvrent. |
+| Déblocage | `etapeMin` vaut au moins l'étape où la cible s'obtient (même règle que la disponibilité des rencontres dans l'app), puis l'étape où le niveau cité passe sous le plafond, où la CT, la pierre ou la Méga-Gemme est accessible, où la Pension (étape 3), les Concours Live (étape 3) ou l'Atoll de Combat (étape 12) ouvrent. Un défi qui vise des Pokémon d'un type (« Chasse au type Glace », « Capture Spectre », « Face au type Dragon », « Eau contre Feu ») attend en plus qu'on puisse croiser ce type à l'état sauvage. |
 | Catégories | `parametres.categorie` : combat, attaque (niveau, CT, Donneur de capacités), type, talent, évolution, statistique, lieu, capture, élevage, concours, méga. Le `type` du modèle reste un type connu de l'app (`ESPECE`, `EVOLUTION`, `NAVI_DEX`, `MEGA`, `CONCOURS`). |
 | Difficulté | Environ 54 % Normal, 30 % Difficile, 15 % Hardcore. |
 
