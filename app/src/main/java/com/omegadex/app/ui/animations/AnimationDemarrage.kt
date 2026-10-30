@@ -49,8 +49,8 @@ import com.omegadex.app.R
 import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.sons.SonsAuxReperes
 import com.omegadex.app.ui.theme.OmegadexTheme
-import kotlinx.coroutines.delay
 import kotlin.math.min
+import kotlinx.coroutines.delay
 
 /**
  * Chronologie du démarrage (ms) : une goutte de magma tombe et s'écrase, refroidit en rubis taillé dans un
@@ -98,6 +98,7 @@ private val FACETTES = listOf(
 private val CONTOUR_GEMME = listOf(36f to 10f, 84f to 10f, 112f to 42f, 60f to 112f, 8f to 42f)
 private const val UNITES = 120f
 private const val TAILLE_GEMME_DP = 150
+
 /** Le rubis est un peu au-dessus du centre, la marque dessous. */
 private const val DECALAGE_GEMME_DP = -40
 private const val DECALAGE_MARQUE_DP = 72
