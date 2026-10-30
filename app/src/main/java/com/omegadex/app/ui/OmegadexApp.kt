@@ -1,5 +1,6 @@
 package com.omegadex.app.ui
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,11 +14,14 @@ import androidx.navigation.compose.rememberNavController
 import com.omegadex.app.ui.navigation.BarreNavigationOmega
 import com.omegadex.app.ui.navigation.Destination
 import com.omegadex.app.ui.navigation.OmegadexNavHost
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 
 /** Squelette de l'application : barre de navigation Oméga à 5 onglets et contenu de l'onglet courant. */
 @Composable
 fun OmegadexApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val sons = LocalSons.current
     val entreeCourante by navController.currentBackStackEntryAsState()
     val destinationCourante = Destination.entries.firstOrNull { destination ->
         entreeCourante?.destination?.hierarchy?.any { it.route == destination.route } == true
@@ -26,18 +30,28 @@ fun OmegadexApp(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            BarreNavigationOmega(
-                destinationCourante = destinationCourante,
-                onDestination = { destination ->
-                    navController.navigate(destination.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-            )
+            // Les écrans de détail (fiche Pokémon, fiche de lieu, Mes runs…) prennent tout l'écran,
+            // comme les maquettes ; ils ont leur propre bouton retour.
+            if (destinationCourante != null) {
+                BarreNavigationOmega(
+                    destinationCourante = destinationCourante,
+                    onDestination = { destination ->
+                        if (destination != destinationCourante) sons.jouer(Son.NAVIGATION)
+                        navController.navigate(destination.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
+            }
         },
     ) { padding ->
-        OmegadexNavHost(navController = navController, modifier = Modifier.padding(padding))
+        // Les marges du Scaffold couvrent déjà les barres système : elles sont consommées pour que les écrans
+        // qui gèrent eux-mêmes les marges (création de run) ne les ajoutent pas une seconde fois.
+        OmegadexNavHost(
+            navController = navController,
+            modifier = Modifier.padding(padding).consumeWindowInsets(padding),
+        )
     }
 }

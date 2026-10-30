@@ -16,6 +16,9 @@ interface CompteRepository {
     suspend fun supprimerUtilisateur(utilisateurId: Long)
     fun runs(utilisateurId: Long): Flow<List<Run>>
     fun run(utilisateurId: Long, runId: Long): Flow<Run?>
+
+    /** Supprime la run du compte et toute sa progression (quêtes, statuts, équipe, défis). */
+    suspend fun supprimerRun(utilisateurId: Long, runId: Long)
     suspend fun creerRun(
         utilisateurId: Long,
         nom: String,

@@ -1,7 +1,8 @@
 package com.omegadex.app.ui.components
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,22 +22,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.omegadex.app.ui.sons.LocalSons
+import com.omegadex.app.ui.sons.Son
 import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
-private const val ECHELLE_DEPART = 0.5f
-private const val ECHELLE_REBOND = 1.25f
-private const val DUREE_REBOND_MS = 400
-private const val MOMENT_REBOND_MS = 240
-
 /**
- * Case à cocher en rubis taillé. Éteinte, elle est gris rosé ; cochée, elle s'allume
- * et rebondit (0,5 → 1,25 → 1). Avec un [libelle], toute la ligne est cliquable
- * et le texte est barré une fois la quête faite.
+ * Case à cocher en gemme Oméga. Éteinte, la pierre porte un Ω gravé ; cochée, elle se fend de veines de magma,
+ * s'allume dans un flash avec deux ondes et le Ω est frappé en rougeoyant (~1,1 s, voir [ChronoGemmeOmega]).
+ * Avec les animations réduites, l'état final s'affiche aussitôt. Avec un [libelle], toute la ligne est
+ * cliquable et le texte est barré une fois la quête faite (sauf si [barrerSiCoche] vaut false, pour une
+ * option choisie).
  */
 @Composable
 fun GemCheckbox(
@@ -45,21 +44,22 @@ fun GemCheckbox(
     modifier: Modifier = Modifier,
     libelle: String? = null,
     actif: Boolean = true,
+    barrerSiCoche: Boolean = true,
 ) {
     val couleurs = OmegadexTheme.couleurs
     val reduites = OmegadexTheme.animationsReduites
-    val echelle = remember { Animatable(1f) }
+    val sons = LocalSons.current
+    val temps = remember { Animatable(ChronoGemmeOmega.FIN) }
     var etatPrecedent by remember { mutableStateOf(coche) }
     LaunchedEffect(coche) {
         if (coche && !etatPrecedent && !reduites) {
-            echelle.snapTo(ECHELLE_DEPART)
-            echelle.animateTo(
-                1f,
-                keyframes {
-                    durationMillis = DUREE_REBOND_MS
-                    ECHELLE_REBOND at MOMENT_REBOND_MS
-                },
+            temps.snapTo(0f)
+            temps.animateTo(
+                ChronoGemmeOmega.FIN,
+                tween(durationMillis = ChronoGemmeOmega.FIN.toInt(), easing = LinearEasing),
             )
+        } else {
+            temps.snapTo(ChronoGemmeOmega.FIN)
         }
         etatPrecedent = coche
     }
@@ -67,26 +67,24 @@ fun GemCheckbox(
     Row(
         modifier = modifier
             .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
-            .toggleable(value = coche, enabled = actif, role = Role.Checkbox, onValueChange = onCocheChange),
+            .toggleable(value = coche, enabled = actif, role = Role.Checkbox, onValueChange = {
+                sons.jouer(if (it) Son.COCHER else Son.DECOCHER)
+                onCocheChange(it)
+            }),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.padding(start = if (libelle == null) 12.dp else 0.dp), contentAlignment = Alignment.Center) {
-            Canvas(
-                Modifier
-                    .size(width = 24.dp, height = 22.dp)
-                    .graphicsLayer {
-                        scaleX = echelle.value
-                        scaleY = echelle.value
-                    },
-            ) { dessinerGemme(allumee = coche, couleurs = couleurs) }
+        Box(Modifier.padding(start = if (libelle == null) 10.dp else 0.dp), contentAlignment = Alignment.Center) {
+            Canvas(Modifier.size(width = 28.dp, height = 26.dp)) {
+                dessinerGemmeOmega(allumee = coche, couleurs = couleurs, t = temps.value)
+            }
         }
         if (libelle != null) {
             Text(
                 text = libelle,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (coche) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
-                textDecoration = if (coche) TextDecoration.LineThrough else null,
+                color = if (coche && barrerSiCoche) couleurs.texteEteint else MaterialTheme.colorScheme.onSurface,
+                textDecoration = if (coche && barrerSiCoche) TextDecoration.LineThrough else null,
             )
         }
     }

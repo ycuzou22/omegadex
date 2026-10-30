@@ -1,3 +1,5 @@
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -18,9 +20,14 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            // Couverture JaCoCo des tests JVM (createDebugUnitTestCoverageReport), contrôlée par la CI.
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -53,6 +60,15 @@ android {
     }
 }
 
+// Robolectric charge les classes dans son propre chargeur : sans ces réglages, JaCoCo ne compte pas
+// les lignes exécutées par les tests Robolectric.
+tasks.withType<Test>().configureEach {
+    extensions.findByType(JacocoTaskExtension::class.java)?.apply {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
 room {
     // Schémas exportés et versionnés : ils servent aux tests de migration.
     schemaDirectory("$projectDir/schemas")
@@ -70,7 +86,7 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
-    source.setFrom("src/main/java", "src/test/java")
+    source.setFrom("src/main/java", "src/test/java", "src/androidTest/java")
 }
 
 // detekt 1.23 embarque son propre compilateur Kotlin : on évite qu'il soit aligné sur la version du projet.
@@ -99,6 +115,13 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // Argon2id (hachage des mots de passe), en Java pur
+    implementation(libs.bouncycastle)
+    implementation(libs.androidx.datastore.preferences)
+    // Chiffrement de la base progression (SQLCipher, AES-256)
+    implementation(libs.sqlcipher)
+    implementation(libs.androidx.sqlite)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -111,4 +134,9 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.room.testing)
+
+    // Tests instrumentés (émulateur ou appareil) : chiffrement réel avec l'Android Keystore
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.core)
 }

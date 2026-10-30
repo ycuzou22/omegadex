@@ -28,7 +28,19 @@ Le script lit le dernier schéma exporté par Room (`app/schemas/com.omegadex.ap
 2. Lancer `python3 tools/import/importer.py --version-donnees N` avec N augmenté de 1 : la base est écrite directement dans `app/src/main/assets/database/omegadex_jeu.db`.
 3. Vérifier `rapport_controle.md` (aucune erreur bloquante) et commiter la base, le rapport et le schéma.
 
-Version actuelle des données : **4** (schéma Room v4, 60 modèles de défis).
+Version actuelle des données : **11** (schéma Room v9, 60 modèles de défis, banque de 45 480 défis pour 229 familles, quêtes d'échange pour les exclusivités Saphir Alpha, 248 quêtes d'objets, plus de quêtes « Capturer » : le bouton « Attraper » des rencontres les remplace).
+
+## Banque de défis par famille
+
+`import_banque_defis.py` génère environ 200 défis pour chaque famille d'évolution capturable dans Rubis Oméga (Pokédex national compris), à partir des données déjà importées. Il tourne à la fin de `importer.py`, après les corrections, et peut se relancer seul sur la base existante : `python3 tools/import/import_banque_defis.py`. Le format est décrit dans `docs/modeles-defis.md` (section « Banque de défis par famille »).
+
+## Quêtes d'objets
+
+Les objets utiles (`donnees/objets_rosa.json`) deviennent des quêtes annexes « Récupérer / Acheter / Recevoir / Gagner X (lieu) », placées à l'étape où l'objet est accessible : lieu débloqué, capacités de terrain utilisables (`CS_ETAPE` ; `cs` peut lister plusieurs codes, par exemple `["SURF", "VELO_COURSE"]` : la dernière devenue utilisable fixe l'étape) et condition d'histoire (`CONDITIONS_OBJET`). Les récompenses déjà listées dans une quête principale sont ignorées. Exceptions fixées dans les données : `etape` impose l'étape (Méga-Bracelet à l'étape 6), `lieuLibre` nomme un lieu absent de la base (objets des lieux mirages, en post-game). Pour rejouer seulement ces quêtes sur la base embarquée, sans réseau :
+
+```bash
+python3 tools/import/import_etapes.py --objets
+```
 
 ## Attention aux schémas exportés
 

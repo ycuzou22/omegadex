@@ -33,3 +33,7 @@ tools/import/.cache/
 __pycache__/
 *.pyc
 .venv/
+
+# Images des espèces fournies localement par le propriétaire du projet (jamais versionnées)
+app/src/main/assets/sprites/*
+!app/src/main/assets/sprites/LISEZMOI.md

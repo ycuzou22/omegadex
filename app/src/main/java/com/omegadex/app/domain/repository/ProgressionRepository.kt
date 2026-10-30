@@ -19,6 +19,10 @@ interface ProgressionRepository {
     fun statuts(runId: Long): Flow<Map<Int, StatutEspece>>
     suspend fun definirStatut(runId: Long, especeId: Int, statut: StatutEspece)
 
+    /** Notes libres du joueur sur une espèce (vides par défaut). */
+    fun notes(runId: Long, especeId: Int): Flow<String>
+    suspend fun definirNotes(runId: Long, especeId: Int, notes: String)
+
     fun equipe(runId: Long): Flow<List<MembreEquipe>>
     suspend fun placerMembre(runId: Long, membre: MembreEquipe)
     suspend fun retirerMembre(runId: Long, emplacement: Int)

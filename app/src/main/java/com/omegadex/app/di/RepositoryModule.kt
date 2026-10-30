@@ -6,10 +6,20 @@ import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
+import com.omegadex.app.data.repository.ReglagesDataStore
+import com.omegadex.app.data.repository.RunActiveDataStore
+import com.omegadex.app.data.repository.SessionDataStore
+import com.omegadex.app.data.securite.CleBaseKeystore
+import com.omegadex.app.data.securite.FournisseurCleBase
+import com.omegadex.app.data.securite.HacheurArgon2
+import com.omegadex.app.domain.compte.HacheurMotDePasse
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
+import com.omegadex.app.domain.repository.ReglagesRepository
+import com.omegadex.app.domain.repository.RunActiveRepository
+import com.omegadex.app.domain.repository.SessionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,4 +48,22 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindHorloge(impl: HorlogeSysteme): Horloge
+
+    @Binds
+    abstract fun bindHacheur(impl: HacheurArgon2): HacheurMotDePasse
+
+    @Binds
+    abstract fun bindSession(impl: SessionDataStore): SessionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRunActive(impl: RunActiveDataStore): RunActiveRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReglages(impl: ReglagesDataStore): ReglagesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCleBase(impl: CleBaseKeystore): FournisseurCleBase
 }

@@ -88,6 +88,26 @@ def _etapes(con: sqlite3.Connection, c: Controle) -> list[str]:
     return lignes
 
 
+def controler_quetes_annexes(con: sqlite3.Connection, c: Controle) -> None:
+    """Aucune quête « Capturer » : le bouton « Attraper » des rencontres enregistre déjà les captures.
+    Une exclusivité de Saphir Alpha ne peut être qu'une quête d'échange, sur une espèce « échange requis »."""
+    for (description,) in con.execute(
+        "SELECT description FROM quete WHERE type = 'ANNEXE' AND description LIKE 'Capturer %'"
+    ).fetchall():
+        c.exiger(False, f"quête « {description} » : les captures passent par le bouton « Attraper », pas par une quête")
+    for description, espece in con.execute(
+        """
+        SELECT q.description, e.id FROM quete q
+        JOIN espece e ON q.description LIKE 'Obtenir ' || e.nom || ' par échange%'
+        WHERE q.type = 'ANNEXE'
+        """
+    ).fetchall():
+        requis = con.execute(
+            "SELECT COUNT(*) FROM rencontre WHERE especeId = ? AND methode = 'ECHANGE_REQUIS'", (espece,)
+        ).fetchone()[0]
+        c.exiger(requis > 0, f"quête « {description} » sur une espèce sans mention « échange requis »")
+
+
 def _croiser_pokeapi(con: sqlite3.Connection, c: Controle) -> list[str]:
     """Compare les espèces par lieu avec les rencontres Rubis Oméga connues de PokéAPI (couverture partielle)."""
     zones = {r["id"]: r["location_id"] for r in lire("location_areas")}
@@ -122,6 +142,7 @@ def verifier(con: sqlite3.Connection, corrections: int) -> Controle:
     c = Controle()
     globaux = _globaux(con, c)
     etapes = _etapes(con, c)
+    controler_quetes_annexes(con, c)
     croisement = _croiser_pokeapi(con, c)
     texte = [
         "# Rapport de contrôle de la base jeu",

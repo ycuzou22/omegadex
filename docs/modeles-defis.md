@@ -27,6 +27,8 @@ Les modèles de défis sont la seule donnée saisie à la main. Ils sont écrits
 | `parametres` | objet | Valeurs des marqueurs propres au modèle (`type`, `nombre`…) |
 | `difficulteMin` | texte | `NORMAL` (défi de base), `DIFFICILE` ou `HARDCORE` : difficulté de run à partir de laquelle le défi est proposé |
 | `deblocage.etapeMin` | entier | Première étape où le défi peut être proposé |
+
+Un défi `MONOTYPE` n'est proposé qu'à partir de l'étape où **deux familles** de son type s'obtiennent, starters exclus (`tools/import/monotypes.py`) : ni Monotype Feu, Glace, Spectre, Dragon ou Électrik contre Bastien. `test_monotypes.py` vérifie que `defis.json` suit ce calcul.
 | `deblocage.conditions` | liste | Conditions supplémentaires vérifiées par le moteur (voir ci-dessous) |
 
 ## Marqueurs
@@ -55,3 +57,27 @@ defis.json, modèle n° 3 (id 7) : marqueur(s) sans valeur dans « parametres »
 ```
 
 Contrôles : champs obligatoires et types, champs inconnus, type de défi, étape, difficulté, marqueurs, types Pokémon, conditions, identifiants uniques, JSON lisible. Tests : `python3 -m unittest discover tools/import/tests`.
+
+## Banque de défis par famille
+
+En plus des 60 modèles saisis à la main, la table `modele_defi` contient une **banque d'environ 200 défis par famille d'évolution** (Arcko, Massko et Jungko forment une famille). Elle n'est pas saisie : `tools/import/import_banque_defis.py` la génère depuis les données du jeu, et la même base donne toujours la même banque.
+
+| Point | Règle |
+| --- | --- |
+| Familles | Les 229 familles dont au moins un membre s'obtient dans Rubis Oméga sans échange (Pokédex national compris). Les autres membres comptent s'ils s'obtiennent par évolution (hors évolution par échange) ou par reproduction. |
+| Identifiants | `100000 + racine × 1000 + n` : la **racine** est la plus petite espèce de la famille qui n'est l'évolution d'aucune autre (Arcko, 252 → défis 352001 à 352200). |
+| Cible | Chaque défi vise un membre (`parametres.cible`) ; son nom est déjà écrit dans l'énoncé. Seuls `{adversaire}` et `{niveau}` restent à remplir par le moteur. |
+| Déblocage | `etapeMin` vaut au moins l'étape où la cible s'obtient (même règle que la disponibilité des rencontres dans l'app), puis l'étape où le niveau cité passe sous le plafond, où la CT, la pierre ou la Méga-Gemme est accessible, où la Pension (étape 3), les Concours Live (étape 3) ou l'Atoll de Combat (étape 12) ouvrent. Un défi qui vise des Pokémon d'un type (« Chasse au type Glace », « Capture Spectre », « Face au type Dragon », « Eau contre Feu ») attend en plus qu'on puisse croiser ce type à l'état sauvage. |
+| Catégories | `parametres.categorie` : combat, attaque (niveau, CT, Donneur de capacités), type, talent, évolution, statistique, lieu, capture, élevage, concours, méga. Le `type` du modèle reste un type connu de l'app (`ESPECE`, `EVOLUTION`, `NAVI_DEX`, `MEGA`, `CONCOURS`). |
+| Difficulté | Environ 54 % Normal, 30 % Difficile, 15 % Hardcore. |
+
+Quelques familles ont moins de 200 défis parce que leurs espèces ont peu d'attaques ou de talents : Métamorph et Zarbi (113), et une douzaine de légendaires ou d'espèces sans évolution entre 177 et 198 (Raikou, Entei, Suicune, Cresselia, Kyogre, Heatran, Coquiperl…).
+
+### Tirage au sort dans l'app
+
+L'app lit les modèles saisis à la main par `ModeleDefiDao.modeles()` (identifiants sous 100000) et la banque famille par famille (`ModeleDefiDao.banque(racine)`). Dans l'onglet Défis (`ProposerDefisUseCase`, `BanqueDefis`) :
+
+- chaque Pokémon **de l'équipe** reçoit **un seul défi tiré au sort** dans la banque de sa famille, parmi les défis qui le visent, débloqués à l'étape en cours, de la difficulté de la run et jamais relevés dans cette run ;
+- le tirage est stable : il dépend de la run, du Pokémon, de l'étape et du nombre de défis que ce Pokémon a déjà terminés. Il change donc à chaque nouvelle étape et après chaque défi réussi ou raté ;
+- tant qu'un Pokémon relève un défi espèce, il n'en reçoit pas d'autre ; un défi raté se reprend avec « Retenter » ;
+- les Pokémon capturés hors de l'équipe, et ceux dont la famille n'a pas de banque, gardent les modèles espèce saisis à la main ; les défis d'étape ne changent pas.

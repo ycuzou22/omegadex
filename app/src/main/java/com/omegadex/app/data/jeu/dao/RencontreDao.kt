@@ -32,14 +32,20 @@ interface RencontreDao {
     )
     fun especesDuLieu(lieuId: Int): Flow<List<RencontreLigne>>
 
-    /** Espèces trouvables dans les lieux débloqués jusqu'à l'étape donnée (mises en avant dans le Pokédex). */
+    /** Toutes les rencontres, avec leur lieu : la disponibilité selon l'avancement se calcule dans le domaine. */
     @Query(
         """
-        SELECT DISTINCT r.especeId FROM rencontre r JOIN lieu l ON l.id = r.lieuId
-        WHERE l.etapeDeblocageId <= :etapeId
+        SELECT l.*, r.especeId AS especeId, r.methode AS methode, r.niveauMin AS niveauMin, r.niveauMax AS niveauMax,
+            r.taux AS taux, r.condition AS condition
+        FROM rencontre r JOIN lieu l ON l.id = r.lieuId
+        ORDER BY l.etapeDeblocageId, l.nom, r.methode, r.especeId
         """,
     )
-    fun especesAccessibles(etapeId: Int): Flow<List<Int>>
+    fun toutesLesRencontres(): Flow<List<RencontreLigne>>
+
+    /** Espèces absentes de Rubis Oméga, à obtenir par échange ou transfert depuis un autre jeu. */
+    @Query("SELECT DISTINCT especeId FROM rencontre WHERE methode = 'ECHANGE_REQUIS' ORDER BY especeId")
+    fun especesEchangeRequis(): Flow<List<Int>>
 }
 
 data class RencontreLigne(
