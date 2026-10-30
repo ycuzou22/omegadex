@@ -36,27 +36,26 @@ class FondBoite internal constructor(
                     topLeft = Offset((decor.x - decor.rx) * size.width, (decor.y - decor.ry) * size.height),
                     size = Size(decor.rx * 2f * size.width, decor.ry * 2f * size.height),
                 )
-                is Decor.Points -> {
-                    val pas = decor.pas * size.width
-                    var y = pas / 2f
-                    while (y < size.height) {
-                        var x = pas / 2f
-                        while (x < size.width) {
-                            drawCircle(decor.couleur, decor.rayon * size.width, Offset(x, y))
-                            x += pas
-                        }
-                        y += pas
-                    }
-                }
-                is Decor.Bandes -> {
-                    val pas = decor.pas * size.height
-                    var y = 0f
-                    while (y < size.height) {
-                        drawRect(decor.couleur, Offset(0f, y), Size(size.width, pas / 2f))
-                        y += pas
-                    }
-                }
+                is Decor.Points -> dessinerPoints(decor)
+                is Decor.Bandes -> dessinerBandes(decor)
             }
+        }
+    }
+
+    private fun DrawScope.dessinerPoints(decor: Decor.Points) {
+        val pas = decor.pas * size.width
+        for (ligne in 0 until (size.height / pas).toInt() + 1) {
+            for (colonne in 0 until (size.width / pas).toInt() + 1) {
+                val centre = Offset(pas / 2f + colonne * pas, pas / 2f + ligne * pas)
+                drawCircle(decor.couleur, decor.rayon * size.width, centre)
+            }
+        }
+    }
+
+    private fun DrawScope.dessinerBandes(decor: Decor.Bandes) {
+        val pas = decor.pas * size.height
+        for (bande in 0 until (size.height / pas).toInt() + 1) {
+            drawRect(decor.couleur, Offset(0f, bande * pas), Size(size.width, pas / 2f))
         }
     }
 }
