@@ -109,14 +109,23 @@ class PcViewModel @Inject constructor(
         }
     }
 
-    fun definirNature(nature: Nature?) = modifierDetails { pokemon -> nature to pokemon.talent }
+    fun definirNature(nature: Nature?) = modifierDetails { _, talent -> nature to talent }
 
-    fun definirTalent(talent: String?) = modifierDetails { pokemon -> pokemon.nature to talent }
+    fun definirTalent(talent: String?) = modifierDetails { nature, _ -> nature to talent }
 
-    private fun modifierDetails(nouveau: (PokemonVue) -> Pair<Nature?, String?>) {
-        val pokemon = (uiState.value as? PcUiState.Pc)?.fiche?.pokemon ?: return
-        val (nature, talent) = nouveau(pokemon)
-        surLaRun { runId -> definirDetails(runId, pokemon.place, nature, talent) }
+    /** Relit la nature et le talent enregistrés du Pokémon choisi, puis enregistre les nouvelles valeurs. */
+    private fun modifierDetails(nouveau: (Nature?, String?) -> Pair<Nature?, String?>) {
+        val place = selection.value ?: return
+        surLaRun { runId ->
+            val actuels = when (place) {
+                is PlacePokemon.Equipe -> progression.equipe(runId).first()
+                    .firstOrNull { it.emplacement == place.emplacement }?.let { it.nature to it.talent }
+                is PlacePokemon.Pc -> progression.pc(runId).first()
+                    .firstOrNull { it.id == place.id }?.let { it.nature to it.talent }
+            } ?: return@surLaRun
+            val (nature, talent) = nouveau(actuels.first, actuels.second)
+            definirDetails(runId, place, nature, talent)
+        }
     }
 
     private fun talentsDeLaSelection(contenu: Flow<Contenu>): Flow<List<String>> = combine(contenu, selection) {

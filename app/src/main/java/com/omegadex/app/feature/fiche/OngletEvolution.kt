@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.omegadex.app.R
 import com.omegadex.app.domain.model.ConditionEvolution
+import com.omegadex.app.ui.components.SpriteEspece
 import com.omegadex.app.ui.components.brosseGemmeEspece
 import com.omegadex.app.ui.theme.FormeGemme
 import com.omegadex.app.ui.theme.OmegadexTheme
@@ -144,20 +145,24 @@ private fun CarteStade(stade: StadeEvolution, actuel: Boolean, fiche: Boolean, o
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Box(
-            Modifier
-                .size(width = 64.dp, height = 60.dp)
-                .then(if (fiche) Modifier.border(BorderStroke(2.dp, couleurs.magma), FormeGemme) else Modifier)
-                .padding(if (fiche) 3.dp else 0.dp)
-                .clip(FormeGemme)
-                .then(
-                    if (actuel) {
-                        Modifier.background(brosseGemmeEspece(stade.types))
-                    } else {
-                        Modifier.background(couleurs.piste)
-                    },
-                ),
-        )
+        // Le sprite de l'espèce (en ombre tant qu'elle n'est pas vue) est posé sur sa gemme, comme au Pokédex.
+        Box(Modifier.size(width = 76.dp, height = 72.dp), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .size(width = 64.dp, height = 60.dp)
+                    .then(if (fiche) Modifier.border(BorderStroke(2.dp, couleurs.magma), FormeGemme) else Modifier)
+                    .padding(if (fiche) 3.dp else 0.dp)
+                    .clip(FormeGemme)
+                    .then(
+                        if (actuel) {
+                            Modifier.background(brosseGemmeEspece(stade.types))
+                        } else {
+                            Modifier.background(couleurs.piste)
+                        },
+                    ),
+            )
+            SpriteEspece(especeId = stade.id, decouverte = if (stade.vue) 1f else 0f, taille = 64.dp)
+        }
         Text(stade.nom, style = MaterialTheme.typography.titleSmall)
     }
 }
