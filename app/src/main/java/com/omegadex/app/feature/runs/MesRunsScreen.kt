@@ -16,16 +16,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
@@ -64,9 +69,11 @@ fun MesRunsScreen(
     viewModel: MesRunsViewModel = hiltViewModel(),
 ) {
     val runs by viewModel.runs.collectAsStateWithLifecycle()
+    var aSupprimer by remember { mutableStateOf<ResumeRun?>(null) }
     MesRunsContenu(
         runs = runs,
         onChoisir = { viewModel.choisir(it, onRetour) },
+        onSupprimer = { aSupprimer = it },
         onNouvelleRun = onNouvelleRun,
         onRetour = onRetour,
         modifier = modifier,
@@ -77,6 +84,16 @@ fun MesRunsScreen(
             }
         },
     )
+    aSupprimer?.let { resume ->
+        ConfirmationSuppression(
+            nom = resume.run.nom,
+            onConfirmer = {
+                viewModel.supprimer(resume.run.id)
+                aSupprimer = null
+            },
+            onAnnuler = { aSupprimer = null },
+        )
+    }
 }
 
 @Composable
@@ -86,6 +103,7 @@ private fun MesRunsContenu(
     onNouvelleRun: () -> Unit,
     onRetour: () -> Unit,
     modifier: Modifier = Modifier,
+    onSupprimer: (ResumeRun) -> Unit = {},
     sauvegarde: @Composable () -> Unit = {},
 ) {
     Box(
@@ -107,7 +125,9 @@ private fun MesRunsContenu(
                     TextButton(onClick = onRetour) { Text(stringResource(R.string.mes_runs_retour)) }
                 }
             }
-            items(runs, key = { it.run.id }) { resume -> CarteRun(resume) { onChoisir(resume.run.id) } }
+            items(runs, key = { it.run.id }) { resume ->
+                CarteRun(resume, onClick = { onChoisir(resume.run.id) }, onSupprimer = { onSupprimer(resume) })
+            }
             item {
                 Spacer(Modifier.size(4.dp))
                 OmegaButton(
@@ -124,7 +144,7 @@ private fun MesRunsContenu(
 }
 
 @Composable
-private fun CarteRun(resume: ResumeRun, onClick: () -> Unit) {
+private fun CarteRun(resume: ResumeRun, onClick: () -> Unit, onSupprimer: () -> Unit) {
     val run = resume.run
     val progressionTexte = stringResource(R.string.mes_runs_progression, resume.etapesValidees, resume.totalEtapes)
     Surface(
@@ -167,13 +187,38 @@ private fun CarteRun(resume: ResumeRun, onClick: () -> Unit) {
                 description = progressionTexte,
                 modifier = Modifier.fillMaxWidth(),
             )
-            Text(
-                progressionTexte,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    progressionTexte,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                val description = stringResource(R.string.mes_runs_supprimer_description, run.nom)
+                TextButton(onClick = onSupprimer, modifier = Modifier.semantics { contentDescription = description }) {
+                    Text(stringResource(R.string.mes_runs_supprimer), color = MaterialTheme.colorScheme.error)
+                }
+            }
         }
     }
+}
+
+/** Confirmation avant de supprimer une run : l'action est définitive. */
+@Composable
+private fun ConfirmationSuppression(nom: String, onConfirmer: () -> Unit, onAnnuler: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onAnnuler,
+        title = { Text(stringResource(R.string.mes_runs_supprimer_titre, nom)) },
+        text = { Text(stringResource(R.string.mes_runs_supprimer_texte)) },
+        confirmButton = {
+            TextButton(onClick = onConfirmer) {
+                Text(stringResource(R.string.mes_runs_supprimer_confirmer), color = MaterialTheme.colorScheme.error)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onAnnuler) { Text(stringResource(R.string.mes_runs_supprimer_annuler)) }
+        },
+    )
 }
 
 @Composable
