@@ -407,7 +407,7 @@ private fun AventurePreview() {
                     QueteAffichee(2, "Battre le rival sur la Route 110", null, false),
                     QueteAffichee(3, "Vaincre Voltère", "Badge Dynamo", false),
                 ),
-                annexes = listOf(QueteAffichee(4, "Capturer Dynavolt (Route 110)", null, false)),
+                annexes = listOf(QueteAffichee(4, "Récupérer CT34 Onde de Choc (Route 110)", null, false)),
                 lieux = listOf(LieuAffiche(1, "Lavandia"), LieuAffiche(2, "Route 110")),
                 rencontres = listOf(
                     GroupeRencontresAffiche(

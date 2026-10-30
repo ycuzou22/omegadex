@@ -99,6 +99,12 @@
     <string name="mes_runs_etape">Étape %1$d · %2$s</string>
     <string name="mes_runs_progression">%1$d étapes validées sur %2$d</string>
     <string name="mes_runs_retour">Retour</string>
+    <string name="mes_runs_supprimer">Supprimer</string>
+    <string name="mes_runs_supprimer_description">Supprimer la run %1$s</string>
+    <string name="mes_runs_supprimer_titre">Supprimer « %1$s » ?</string>
+    <string name="mes_runs_supprimer_texte">La run et toute sa progression (quêtes, Pokédex, équipe, défis) seront effacées. Exporte une sauvegarde avant si tu veux pouvoir la retrouver.</string>
+    <string name="mes_runs_supprimer_confirmer">Supprimer la run</string>
+    <string name="mes_runs_supprimer_annuler">Annuler</string>
     <!-- Aventure -->
     <string name="aventure_etape">Étape %1$d sur %2$d</string>
     <string name="aventure_plafond">%1$s · plafond</string>
