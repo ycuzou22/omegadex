@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.run.ChoisirRunUseCase
 import com.omegadex.app.domain.run.ListerRunsUseCase
 import com.omegadex.app.domain.run.ResumeRun
+import com.omegadex.app.domain.run.SupprimerRunUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,8 +14,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class MesRunsViewModel @Inject constructor(listerRuns: ListerRunsUseCase, private val choisirRun: ChoisirRunUseCase) :
-    ViewModel() {
+class MesRunsViewModel @Inject constructor(
+    listerRuns: ListerRunsUseCase,
+    private val choisirRun: ChoisirRunUseCase,
+    private val supprimerRun: SupprimerRunUseCase,
+) : ViewModel() {
     val runs: StateFlow<List<ResumeRun>> =
         listerRuns().stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), emptyList())
 
@@ -24,6 +28,11 @@ class MesRunsViewModel @Inject constructor(listerRuns: ListerRunsUseCase, privat
             choisirRun(runId)
             ensuite()
         }
+    }
+
+    /** Supprime la run et sa progression, après confirmation dans l'écran. */
+    fun supprimer(runId: Long) {
+        viewModelScope.launch { supprimerRun(runId) }
     }
 
     private companion object {
