@@ -1,0 +1,3 @@
+CyclomaticComplexMethod - 15/15 - [libelleEvolution] at /home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/feature/equipe/EvolutionsEquipe.kt:123:14 - Signature=EvolutionsEquipe.kt$@Composable internal fun libelleEvolution(evolution: EvolutionVue): String
+MagicNumber - [RubanEvolution] at /home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/feature/equipe/EvolutionsEquipe.kt:48:113 - Signature=EvolutionsEquipe.kt$50
+MagicNumber - [BoutonMagma] at /home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/feature/equipe/EvolutionsEquipe.kt:114:32 - Signature=EvolutionsEquipe.kt$50
