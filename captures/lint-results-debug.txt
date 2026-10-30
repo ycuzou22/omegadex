@@ -1,0 +1,182 @@
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:33: Warning: Formatting %d followed by words ("caractères"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="inscription_info">Ton mot de passe ne quitte jamais cet appareil et n\'est jamais enregistré en clair. %1$d caractères minimum.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:36: Warning: Formatting %d followed by words ("caractères"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="inscription_erreur_court">Au moins %1$d caractères.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:46: Warning: Formatting %d followed by words ("caractères"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="creation_run_erreur_nom_long">%1$d caractères maximum.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:93: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="accueil_etape">Étape %1$d sur %2$d</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:100: Warning: Formatting %d followed by words ("étapes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="mes_runs_progression">%1$d étapes validées sur %2$d</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:109: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="aventure_etape">Étape %1$d sur %2$d</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:164: Warning: Formatting %d followed by words ("réussis"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="defis_reussite">%1$d / %2$d réussis</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:165: Warning: Formatting %d followed by words ("actifs"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="defis_bilan">%1$d actifs · %2$d réussis · %3$d ratés</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:200: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="accueil_jauge_description_fraction">%1$s : %2$d sur %3$d</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:204: Warning: Formatting %d followed by words ("validée"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="anim_etape_validee">Étape %1$d validée</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:230: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="fiche_statut_description">Statut %1$d sur %2$d : %3$s</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:323: Warning: Formatting %d followed by words ("redevient"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="equipe_retirer_detail">L\'emplacement %1$d redevient libre. Le Pokémon reste capturé dans ton Pokédex.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings_badges.xml:6: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="badges_description">Boîte à badges : %1$d sur %2$d. %3$s</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings_pokedex.xml:6: Warning: Formatting %d followed by words ("sur"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="pokedex_compteur">Vus %1$d · Capturés %2$d sur %3$d</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "PluralsCandidate":
+   This lint check looks for potential errors in internationalization where
+   you have translated a message which involves a quantity and it looks like
+   other parts of the string may need grammatical changes.
+
+   For example, rather than something like this:
+     <string name="try_again">Try again in %d seconds.</string>
+   you should be using a plural:
+      <plurals name="try_again">
+           <item quantity="one">Try again in %d second</item>
+           <item quantity="other">Try again in %d seconds</item>
+       </plurals>
+   This will ensure that in other languages the right set of translations are
+   provided for the different quantity classes.
+
+   (This check depends on some heuristics, so it may not accurately determine
+   whether a string really should be a quantity. You can use tools:ignore to
+   filter out false positives.
+
+   https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:12: Warning: The resource R.string.ecran_bientot_disponible appears to be unused [UnusedResources]
+    <string name="ecran_bientot_disponible">Bientôt disponible</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:93: Warning: The resource R.string.accueil_etape appears to be unused [UnusedResources]
+    <string name="accueil_etape">Étape %1$d sur %2$d</string>
+            ~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:159: Warning: The resource R.string.espece_fiche_titre appears to be unused [UnusedResources]
+    <string name="espece_fiche_titre">Fiche Pokémon</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings.xml:210: Warning: The resource R.string.aventure_debloquee appears to be unused [UnusedResources]
+    <string name="aventure_debloquee">débloquée</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/res/values/strings_badges.xml:11: Warning: The resource R.string.badges_animation_description appears to be unused [UnusedResources]
+    <string name="badges_animation_description">Le badge %1$s rejoint ta boîte à badges</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests=true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests=true.
+
+   Available options:
+
+   **skip-libraries** (default is true):
+   Whether the unused resource check should skip reporting unused resources in libraries.
+
+   Many libraries will declare resources that are part of the library surface; other modules depending on the library will also reference the resources. To avoid reporting all these resources as unused (in the context of a library), the unused resource check normally skips reporting unused resources in libraries. Instead, run the unused resource check on the consuming app module (along with `checkDependencies=true`).
+
+   However, there are cases where you want to check that all the resources declared in a library are used; in that case, you can disable the skip option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UnusedResources">
+           <option name="skip-libraries" value="true" />
+       </issue>
+   </lint>
+   ```
+
+/home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/data/sauvegarde/FichiersSauvegardeAndroid.kt:22: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        val flux = context.contentResolver.openOutputStream(Uri.parse(destination), "wt")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/data/sauvegarde/FichiersSauvegardeAndroid.kt:29: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        val flux = context.contentResolver.openInputStream(Uri.parse(source))
+                                                           ~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/ui/components/SpriteEspece.kt:114: Warning: Use the KTX function createBitmap instead? [UseKtx]
+    val image = Bitmap.createBitmap(cote, cote, Bitmap.Config.ARGB_8888)
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/omegadex/omegadex/app/src/main/java/com/omegadex/app/ui/components/SpriteEspece.kt:116: Warning: Use the KTX extension function Bitmap.set instead? [UseKtx]
+        ligne.forEachIndexed { x, pixel -> PALETTE_PAR_DEFAUT[pixel]?.let { image.setPixel(x, y, it) } }
+                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseKtx":
+   The Android KTX libraries decorates the Android platform SDK as well as
+   various libraries with more convenient extension functions available from
+   Kotlin, allowing you to use default parameters, named parameters, and
+   more.
+
+   Available options:
+
+   **remove-defaults** (default is true):
+   Whether to skip arguments that match the defaults provided by the extension.
+
+   Extensions often provide default values for some of the parameters. For example:
+   ```kotlin
+   fun Path.readLines(charset: Charset = Charsets.UTF_8): List<String> { return Files.readAllLines(this, charset) }
+   ```
+   This lint check will by default automatically omit parameters that match the default, so if your code was calling
+
+   ```kotlin
+   Files.readAllLines(file, Charset.UTF_8)
+   ```
+   lint would replace this with
+   ```kotlin
+   file.readLines()
+   ```
+   rather than
+
+   ```kotlin
+   file.readLines(Charset.UTF_8
+   ```
+   You can turn this behavior off using this option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="remove-defaults" value="true" />
+       </issue>
+   </lint>
+   ```
+
+   **require-present** (default is true):
+   Whether to only offer extensions already available.
+
+   This option lets you only have lint suggest extension replacements if those extensions are already available on the class path (in other words, you're already depending on the library containing the extension method.)
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="require-present" value="true" />
+       </issue>
+   </lint>
+   ```
+
+0 errors, 23 warnings
