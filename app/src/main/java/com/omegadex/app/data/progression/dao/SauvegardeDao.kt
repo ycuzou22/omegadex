@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
+import com.omegadex.app.data.progression.entity.PokemonPcEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
 import com.omegadex.app.data.progression.entity.ProgressionEtapeEntity
 import com.omegadex.app.data.progression.entity.QueteCocheeEntity
@@ -29,6 +30,9 @@ interface SauvegardeDao {
     @Query("SELECT * FROM membre_equipe WHERE runId = :runId ORDER BY emplacement")
     suspend fun equipe(runId: Long): List<MembreEquipeEntity>
 
+    @Query("SELECT * FROM pokemon_pc WHERE runId = :runId ORDER BY boite, id")
+    suspend fun pc(runId: Long): List<PokemonPcEntity>
+
     @Query("SELECT * FROM defi WHERE runId = :runId ORDER BY id")
     suspend fun defis(runId: Long): List<DefiEntity>
 
@@ -50,4 +54,7 @@ interface SauvegardeDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun ajouterDefis(defis: List<DefiEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun ajouterAuPc(pokemons: List<PokemonPcEntity>)
 }

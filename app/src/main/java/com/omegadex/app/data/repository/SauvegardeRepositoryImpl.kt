@@ -6,6 +6,7 @@ import com.omegadex.app.data.mapper.versDomaine
 import com.omegadex.app.data.progression.ProgressionDatabase
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
+import com.omegadex.app.data.progression.entity.PokemonPcEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
 import com.omegadex.app.data.progression.entity.ProgressionEtapeEntity
 import com.omegadex.app.data.progression.entity.QueteCocheeEntity
@@ -13,6 +14,7 @@ import com.omegadex.app.data.progression.entity.RunEntity
 import com.omegadex.app.domain.repository.SauvegardeRepository
 import com.omegadex.app.domain.sauvegarde.DefiSauvegarde
 import com.omegadex.app.domain.sauvegarde.EspeceSuivie
+import com.omegadex.app.domain.sauvegarde.PokemonPcSauvegarde
 import com.omegadex.app.domain.sauvegarde.QueteCochee
 import com.omegadex.app.domain.sauvegarde.RunSauvegardee
 import javax.inject.Inject
@@ -36,6 +38,9 @@ class SauvegardeRepositoryImpl @Inject constructor(private val base: Progression
                 equipe = dao.equipe(run.id).map { it.versDomaine() },
                 defis = dao.defis(run.id).map {
                     DefiSauvegarde(it.modeleId, it.especeId, it.etapeId, it.etat, it.dateDebut, it.dateFin)
+                },
+                pc = dao.pc(run.id).map {
+                    PokemonPcSauvegarde(it.boite, it.especeId, it.surnom, it.niveau, it.nature, it.talent)
                 },
             )
         }
@@ -67,7 +72,22 @@ class SauvegardeRepositoryImpl @Inject constructor(private val base: Progression
             run.especes.map { ProgressionEspeceEntity(runId, it.especeId, it.statut, it.notes, it.dateMaj) },
         )
         dao.ajouterMembres(
-            run.equipe.map { MembreEquipeEntity(runId, it.emplacement, it.especeId, it.surnom, it.niveau) },
+            run.equipe.map {
+                MembreEquipeEntity(runId, it.emplacement, it.especeId, it.surnom, it.niveau, it.nature, it.talent)
+            },
+        )
+        dao.ajouterAuPc(
+            run.pc.map {
+                PokemonPcEntity(
+                    runId = runId,
+                    boite = it.boite,
+                    especeId = it.especeId,
+                    surnom = it.surnom,
+                    niveau = it.niveau,
+                    nature = it.nature,
+                    talent = it.talent,
+                )
+            },
         )
         dao.ajouterDefis(
             run.defis.map {

@@ -82,6 +82,48 @@ class MigrationsProgressionTest {
         }
     }
 
+    @Test
+    fun `migrer de 1 vers 2 garde l'equipe et ajoute le PC`() {
+        creerBaseVersion(1).apply {
+            execSQL(
+                "INSERT INTO utilisateur (identifiant, hashMotDePasse, sel, dateCreation) VALUES ('y', 'h', 's', 0)",
+            )
+            execSQL(
+                "INSERT INTO run (utilisateurId, nom, starterId, difficulte, regles, dateDebut) " +
+                    "VALUES (1, 'Run', 252, 'NORMAL', '', 0)",
+            )
+            execSQL(
+                "INSERT INTO membre_equipe (runId, emplacement, especeId, surnom, niveau) " +
+                    "VALUES (1, 1, 253, 'Gecko', 18)",
+            )
+            close()
+        }
+        val base = Room.databaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            ProgressionDatabase::class.java,
+            NOM,
+        )
+            .addMigrations(*MigrationsProgression.TOUTES)
+            .allowMainThreadQueries()
+            .build()
+        val sql = base.openHelper.writableDatabase
+        sql.query("SELECT especeId, surnom, niveau, nature, talent FROM membre_equipe").use {
+            assertTrue(it.moveToFirst())
+            assertEquals(253, it.getInt(0))
+            assertEquals("Gecko", it.getString(1))
+            assertEquals(18, it.getInt(2))
+            assertTrue(it.isNull(3))
+            assertTrue(it.isNull(4))
+        }
+        sql.execSQL("INSERT INTO pokemon_pc (runId, boite, especeId, niveau, nature) VALUES (1, 1, 258, 5, 'CALME')")
+        sql.execSQL("DELETE FROM run")
+        sql.query("SELECT COUNT(*) FROM pokemon_pc").use {
+            it.moveToFirst()
+            assertEquals("le PC suit la run (suppression en cascade)", 0, it.getInt(0))
+        }
+        base.close()
+    }
+
     private companion object {
         const val NOM = "migration-test.db"
         const val JETON_TABLE = "\${TABLE_NAME}"

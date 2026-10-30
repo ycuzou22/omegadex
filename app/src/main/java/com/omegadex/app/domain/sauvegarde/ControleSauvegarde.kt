@@ -1,5 +1,8 @@
 package com.omegadex.app.domain.sauvegarde
 
+import com.omegadex.app.domain.equipe.NOMBRE_BOITES
+import com.omegadex.app.domain.equipe.TAILLE_BOITE
+
 /**
  * Contrôles de cohérence d'une sauvegarde avant import : un fichier modifié à la main ou abîmé
  * est refusé en entier plutôt que de laisser une progression incohérente dans la base.
@@ -27,6 +30,13 @@ object ControleSauvegarde {
         run.equipe.forEach { membre ->
             exiger(membre.emplacement in EMPLACEMENTS) { "$ou : emplacement ${membre.emplacement} hors de 1 à 6" }
             exiger(membre.niveau in NIVEAUX) { "$ou : niveau ${membre.niveau} hors de 1 à 100" }
+        }
+        run.pc.forEach { pokemon ->
+            exiger(pokemon.boite in 1..NOMBRE_BOITES) { "$ou : boîte ${pokemon.boite} hors de 1 à $NOMBRE_BOITES" }
+            exiger(pokemon.niveau in NIVEAUX) { "$ou : niveau ${pokemon.niveau} hors de 1 à 100" }
+        }
+        run.pc.groupingBy { it.boite }.eachCount().forEach { (boite, nombre) ->
+            exiger(nombre <= TAILLE_BOITE) { "$ou : boîte $boite trop pleine ($nombre Pokémon)" }
         }
         run.defis.forEach { defi ->
             exiger(defi.dateFin == null || defi.dateFin >= defi.dateDebut) { "$ou : défi terminé avant son début" }

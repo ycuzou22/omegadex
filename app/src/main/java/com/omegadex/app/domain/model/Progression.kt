@@ -23,7 +23,62 @@ data class ProgressionEtape(
     val dateValidation: Long?,
 )
 
-data class MembreEquipe(val emplacement: Int, val especeId: Int, val surnom: String?, val niveau: Int)
+data class MembreEquipe(
+    val emplacement: Int,
+    val especeId: Int,
+    val surnom: String?,
+    val niveau: Int,
+    val nature: Nature? = null,
+    /** Nom du talent, choisi parmi ceux de l'espèce ; null tant que le joueur ne l'a pas renseigné. */
+    val talent: String? = null,
+)
+
+/** Pokémon rangé dans une [boite] du PC (numérotée à partir de 1). */
+data class PokemonPc(
+    val id: Long,
+    val boite: Int,
+    val especeId: Int,
+    val surnom: String?,
+    val niveau: Int,
+    val nature: Nature? = null,
+    val talent: String? = null,
+)
+
+/** Où se trouve un Pokémon de la run : un emplacement de l'équipe ou une place du PC. */
+sealed interface PlacePokemon {
+    data class Equipe(val emplacement: Int) : PlacePokemon
+
+    data class Pc(val id: Long) : PlacePokemon
+}
+
+/** Les 25 natures, dans l'ordre du jeu ; [nom] est le nom affiché. */
+enum class Nature(val nom: String) {
+    HARDI("Hardi"),
+    SOLO("Solo"),
+    BRAVE("Brave"),
+    RIGIDE("Rigide"),
+    MAUVAIS("Mauvais"),
+    ASSURE("Assuré"),
+    DOCILE("Docile"),
+    RELAX("Relax"),
+    MALIN("Malin"),
+    LACHE("Lâche"),
+    TIMIDE("Timide"),
+    PRESSE("Pressé"),
+    SERIEUX("Sérieux"),
+    JOVIAL("Jovial"),
+    NAIF("Naïf"),
+    MODESTE("Modeste"),
+    DOUX("Doux"),
+    DISCRET("Discret"),
+    PUDIQUE("Pudique"),
+    FOUFOU("Foufou"),
+    CALME("Calme"),
+    GENTIL("Gentil"),
+    MALPOLI("Malpoli"),
+    PRUDENT("Prudent"),
+    BIZARRE("Bizarre"),
+}
 
 data class Defi(
     val id: Long,

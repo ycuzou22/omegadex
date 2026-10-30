@@ -3,6 +3,7 @@ package com.omegadex.app.domain.sauvegarde
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
+import com.omegadex.app.domain.model.Nature
 import com.omegadex.app.domain.model.ProgressionEtape
 import com.omegadex.app.domain.model.StatutEspece
 
@@ -19,8 +20,11 @@ data class Sauvegarde(
     val runs: List<RunSauvegardee>,
 ) {
     companion object {
-        /** Version courante du format ; à augmenter à chaque changement de structure du fichier. */
-        const val VERSION_FORMAT = 1
+        /**
+         * Version courante du format ; à augmenter à chaque changement de structure du fichier.
+         * Version 2 : nature et talent des membres, Pokémon du PC (absents d'un fichier version 1).
+         */
+        const val VERSION_FORMAT = 2
     }
 }
 
@@ -37,6 +41,17 @@ data class RunSauvegardee(
     val especes: List<EspeceSuivie>,
     val equipe: List<MembreEquipe>,
     val defis: List<DefiSauvegarde>,
+    val pc: List<PokemonPcSauvegarde> = emptyList(),
+)
+
+/** Pokémon rangé dans une boîte du PC. */
+data class PokemonPcSauvegarde(
+    val boite: Int,
+    val especeId: Int,
+    val surnom: String?,
+    val niveau: Int,
+    val nature: Nature?,
+    val talent: String?,
 )
 
 data class QueteCochee(val queteId: Int, val dateCochage: Long)

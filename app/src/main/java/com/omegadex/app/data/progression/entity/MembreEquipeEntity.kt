@@ -2,6 +2,7 @@ package com.omegadex.app.data.progression.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import com.omegadex.app.domain.model.Nature
 
 /** Membre de l'équipe actuelle, dans l'un des 6 emplacements (1 à 6). */
 @Entity(
@@ -22,4 +23,6 @@ data class MembreEquipeEntity(
     val especeId: Int,
     val surnom: String? = null,
     val niveau: Int,
+    val nature: Nature? = null,
+    val talent: String? = null,
 )

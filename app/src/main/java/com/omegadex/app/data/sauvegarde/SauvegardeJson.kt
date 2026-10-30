@@ -3,10 +3,12 @@ package com.omegadex.app.data.sauvegarde
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
+import com.omegadex.app.domain.model.Nature
 import com.omegadex.app.domain.model.ProgressionEtape
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.sauvegarde.DefiSauvegarde
 import com.omegadex.app.domain.sauvegarde.EspeceSuivie
+import com.omegadex.app.domain.sauvegarde.PokemonPcSauvegarde
 import com.omegadex.app.domain.sauvegarde.QueteCochee
 import com.omegadex.app.domain.sauvegarde.RunSauvegardee
 import com.omegadex.app.domain.sauvegarde.Sauvegarde
@@ -44,6 +46,7 @@ object SauvegardeJson {
         .put(Cles.ESPECES, especes.versJson { it.versJson() })
         .put(Cles.EQUIPE, equipe.versJson { it.versJson() })
         .put(Cles.DEFIS, defis.versJson { it.versJson() })
+        .put(Cles.PC, pc.versJson { it.versJson() })
 
     private fun ProgressionEtape.versJson() = JSONObject()
         .put(Cles.ETAPE_ID, etapeId)
@@ -66,6 +69,16 @@ object SauvegardeJson {
         .put(Cles.ESPECE_ID, especeId)
         .put(Cles.SURNOM, surnom.ouNull())
         .put(Cles.NIVEAU, niveau)
+        .put(Cles.NATURE, nature?.name.ouNull())
+        .put(Cles.TALENT, talent.ouNull())
+
+    private fun PokemonPcSauvegarde.versJson() = JSONObject()
+        .put(Cles.BOITE, boite)
+        .put(Cles.ESPECE_ID, especeId)
+        .put(Cles.SURNOM, surnom.ouNull())
+        .put(Cles.NIVEAU, niveau)
+        .put(Cles.NATURE, nature?.name.ouNull())
+        .put(Cles.TALENT, talent.ouNull())
 
     private fun DefiSauvegarde.versJson() = JSONObject()
         .put(Cles.MODELE_ID, modeleId)
@@ -154,6 +167,19 @@ object SauvegardeJson {
                 especeId = it.getInt(Cles.ESPECE_ID),
                 surnom = it.stringOuNull(Cles.SURNOM),
                 niveau = it.getInt(Cles.NIVEAU),
+                nature = it.natureFacultative(),
+                talent = it.stringFacultatif(Cles.TALENT),
+            )
+        },
+        // Absent des fichiers version 1.
+        pc = optJSONArray(Cles.PC)?.objets().orEmpty().map {
+            PokemonPcSauvegarde(
+                boite = it.getInt(Cles.BOITE),
+                especeId = it.getInt(Cles.ESPECE_ID),
+                surnom = it.stringOuNull(Cles.SURNOM),
+                niveau = it.getInt(Cles.NIVEAU),
+                nature = it.natureFacultative(),
+                talent = it.stringFacultatif(Cles.TALENT),
             )
         },
         defis = getJSONArray(Cles.DEFIS).objets().map {
@@ -186,6 +212,11 @@ object SauvegardeJson {
     private fun JSONObject.stringOuNull(cle: String): String? = also { it.exigerCle(cle) }.let {
         if (it.isNull(cle)) null else it.getString(cle)
     }
+
+    /** Champ ajouté en version 2 : absent d'un fichier version 1, il vaut null. */
+    private fun JSONObject.stringFacultatif(cle: String): String? = if (isNull(cle)) null else getString(cle)
+
+    private fun JSONObject.natureFacultative(): Nature? = stringFacultatif(Cles.NATURE)?.let { Nature.valueOf(it) }
 
     /** `put(cle, null)` retirerait la clé : on écrit un null JSON explicite. */
     private fun Any?.ouNull(): Any = this ?: JSONObject.NULL
@@ -223,5 +254,9 @@ object SauvegardeJson {
         const val NIVEAU = "niveau"
         const val MODELE_ID = "modeleId"
         const val ETAT = "etat"
+        const val NATURE = "nature"
+        const val TALENT = "talent"
+        const val PC = "pc"
+        const val BOITE = "boite"
     }
 }

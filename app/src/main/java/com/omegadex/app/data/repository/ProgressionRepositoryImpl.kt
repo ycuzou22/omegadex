@@ -6,11 +6,14 @@ import com.omegadex.app.data.mapper.versDomaine
 import com.omegadex.app.data.progression.ProgressionDatabase
 import com.omegadex.app.data.progression.entity.DefiEntity
 import com.omegadex.app.data.progression.entity.MembreEquipeEntity
+import com.omegadex.app.data.progression.entity.PokemonPcEntity
 import com.omegadex.app.data.progression.entity.ProgressionEspeceEntity
 import com.omegadex.app.data.progression.entity.ProgressionEtapeEntity
 import com.omegadex.app.data.progression.entity.QueteCocheeEntity
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
+import com.omegadex.app.domain.model.Nature
+import com.omegadex.app.domain.model.PlacePokemon
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.repository.SessionRepository
@@ -39,6 +42,7 @@ class ProgressionRepositoryImpl @Inject constructor(
     private val aventure = base.aventureDao()
     private val pokedex = base.pokedexDao()
     private val equipe = base.equipeDao()
+    private val pc = base.pcDao()
     private val defis = base.defiDao()
 
     override fun etapes(runId: Long) = duJoueur(runId, emptyList()) {
@@ -103,13 +107,82 @@ class ProgressionRepositoryImpl @Inject constructor(
     override suspend fun placerMembre(runId: Long, membre: MembreEquipe) {
         verifierProprietaire(runId)
         require(membre.emplacement in EMPLACEMENTS) { "Emplacement ${membre.emplacement} hors de 1 à 6" }
-        equipe.placer(MembreEquipeEntity(runId, membre.emplacement, membre.especeId, membre.surnom, membre.niveau))
+        equipe.placer(
+            MembreEquipeEntity(
+                runId,
+                membre.emplacement,
+                membre.especeId,
+                membre.surnom,
+                membre.niveau,
+                membre.nature,
+                membre.talent,
+            ),
+        )
     }
 
     override suspend fun retirerMembre(runId: Long, emplacement: Int) {
         verifierProprietaire(runId)
         equipe.retirer(runId, emplacement)
     }
+
+    override fun pc(runId: Long) = duJoueur(runId, emptyList()) {
+        pc.pc(runId)
+    }.map { liste -> liste.map { it.versDomaine() } }
+
+    override suspend fun deposerAuPc(runId: Long, emplacement: Int, boite: Int) = base.withTransaction {
+        verifierProprietaire(runId)
+        require(boite >= 1) { "Boîte $boite inexistante" }
+        val membre = equipe.equipe(runId).first().firstOrNull { it.emplacement == emplacement }
+            ?: return@withTransaction
+        pc.ranger(
+            PokemonPcEntity(
+                runId = runId,
+                boite = boite,
+                especeId = membre.especeId,
+                surnom = membre.surnom,
+                niveau = membre.niveau,
+                nature = membre.nature,
+                talent = membre.talent,
+            ),
+        )
+        equipe.retirer(runId, emplacement)
+    }
+
+    override suspend fun retirerDuPc(runId: Long, pcId: Long, emplacement: Int) = base.withTransaction {
+        verifierProprietaire(runId)
+        require(emplacement in EMPLACEMENTS) { "Emplacement $emplacement hors de 1 à 6" }
+        val pokemon = pc.pokemon(runId, pcId) ?: return@withTransaction
+        require(equipe.equipe(runId).first().none { it.emplacement == emplacement }) {
+            "Emplacement $emplacement déjà occupé"
+        }
+        equipe.placer(
+            MembreEquipeEntity(
+                runId,
+                emplacement,
+                pokemon.especeId,
+                pokemon.surnom,
+                pokemon.niveau,
+                pokemon.nature,
+                pokemon.talent,
+            ),
+        )
+        pc.sortir(runId, pcId)
+    }
+
+    override suspend fun definirDetails(runId: Long, place: PlacePokemon, nature: Nature?, talent: String?) =
+        base.withTransaction {
+            verifierProprietaire(runId)
+            when (place) {
+                is PlacePokemon.Equipe -> {
+                    val membre = equipe.equipe(runId).first().firstOrNull { it.emplacement == place.emplacement }
+                    if (membre != null) equipe.placer(membre.copy(nature = nature, talent = talent))
+                }
+                is PlacePokemon.Pc -> {
+                    val pokemon = pc.pokemon(runId, place.id)
+                    if (pokemon != null) pc.modifier(pokemon.copy(nature = nature, talent = talent))
+                }
+            }
+        }
 
     override fun defis(runId: Long) = duJoueur(runId, emptyList()) {
         defis.defis(runId)
