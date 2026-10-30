@@ -18,6 +18,11 @@ jobs:
           ./gradlew build lint ktlintCheck detekt test --continue 2>&1 | tee build.log || {
             { grep -E "^e: |FAILED|rror|Lint found|failed|\.kt:[0-9]+|What went wrong|Exception|expected|but was" build.log | head -60; } | while IFS= read -r l; do echo "::error::$l"; done
             exit 1; }
+      - name: Schéma généré
+        if: always()
+        run: |
+          find . -name '2.json' -path '*ProgressionDatabase*' | while read f; do echo "::warning::$f"; grep -o 'identityHash": "[0-9a-f]*"' "$f" | while read l; do echo "::warning::$l"; done; done
+          grep -rhoE "VALUES\(42, '[0-9a-f]+'\)" app/build/generated | sort -u | while read l; do echo "::warning::$l"; done
       - name: Publier le schéma généré
         if: always()
         run: |
