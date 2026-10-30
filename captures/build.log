@@ -1,0 +1,149 @@
+Calculating task graph as no cached configuration is available for tasks: ktlintCheck detekt lint assembleDebug testDebugUnitTest
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest FROM-CACHE
+> Task :app:loadKtlintReporters UP-TO-DATE
+> Task :app:runKtlintCheckOverAndroidTestDebugSourceSet NO-SOURCE
+> Task :app:ktlintAndroidTestDebugSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverAndroidTestReleaseSourceSet NO-SOURCE
+> Task :app:ktlintAndroidTestReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverAndroidTestSourceSet FROM-CACHE
+> Task :app:ktlintAndroidTestSourceSetCheck FROM-CACHE
+> Task :app:runKtlintCheckOverDebugSourceSet NO-SOURCE
+> Task :app:ktlintDebugSourceSetCheck SKIPPED
+> Task :app:generateDebugResources FROM-CACHE
+> Task :app:runKtlintCheckOverKotlinScripts FROM-CACHE
+> Task :app:detekt FROM-CACHE
+> Task :app:runKtlintCheckOverMainSourceSet FROM-CACHE
+> Task :app:runKtlintCheckOverReleaseSourceSet NO-SOURCE
+> Task :app:ktlintKotlinScriptCheck FROM-CACHE
+> Task :app:ktlintReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestDebugSourceSet NO-SOURCE
+> Task :app:ktlintTestDebugSourceSetCheck SKIPPED
+> Task :app:ktlintMainSourceSetCheck FROM-CACHE
+> Task :app:runKtlintCheckOverTestFixturesDebugSourceSet NO-SOURCE
+> Task :app:runKtlintCheckOverTestFixturesReleaseSourceSet NO-SOURCE
+> Task :app:ktlintTestFixturesDebugSourceSetCheck SKIPPED
+> Task :app:ktlintTestFixturesReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestFixturesSourceSet NO-SOURCE
+> Task :app:ktlintTestFixturesSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestReleaseSourceSet NO-SOURCE
+> Task :app:ktlintTestReleaseSourceSetCheck SKIPPED
+> Task :app:runKtlintCheckOverTestSourceSet FROM-CACHE
+> Task :app:javaPreCompileDebug FROM-CACHE
+> Task :app:ktlintTestSourceSetCheck FROM-CACHE
+> Task :app:ktlintCheck UP-TO-DATE
+> Task :app:packageDebugResources FROM-CACHE
+> Task :app:mapDebugSourceSetPaths
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug FROM-CACHE
+> Task :app:processDebugNavigationResources FROM-CACHE
+> Task :app:checkDebugAarMetadata
+> Task :app:compileDebugNavigationResources FROM-CACHE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:extractProguardFiles
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:mergeDebugResources FROM-CACHE
+> Task :app:generateDebugGlobalSynthetics FROM-CACHE
+> Task :app:processDebugMainManifest FROM-CACHE
+> Task :app:processDebugManifest FROM-CACHE
+> Task :app:processDebugManifestForPackage FROM-CACHE
+> Task :app:desugarDebugFileDependencies FROM-CACHE
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeLibDexDebug FROM-CACHE
+> Task :app:parseDebugLocalResources FROM-CACHE
+> Task :app:generateDebugRFile FROM-CACHE
+> Task :app:mergeDebugAssets
+> Task :app:mergeDebugNativeLibs
+> Task :app:compressDebugAssets FROM-CACHE
+> Task :app:processDebugResources FROM-CACHE
+> Task :app:kspDebugKotlin FROM-CACHE
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libsqlcipher.so. Run with --info option to learn more.
+
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeExtDexDebug FROM-CACHE
+> Task :app:compileDebugKotlin FROM-CACHE
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:mergeDebugUnitTestManifest
+> Task :app:processDebugUnitTestManifest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:processDebugJavaRes
+> Task :app:validateSigningDebug
+> Task :app:compileDebugJavaWithJavac FROM-CACHE
+> Task :app:hiltCollectClassesDebug UP-TO-DATE
+> Task :app:mergeDebugJavaResource
+> Task :app:hiltAggregateDepsDebug FROM-CACHE
+> Task :app:hiltJavaCompileDebug FROM-CACHE
+> Task :app:lintAnalyzeDebug FROM-CACHE
+> Task :app:generateDebugLintReportModel
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:transformDebugClassesWithAsm FROM-CACHE
+> Task :app:lintAnalyzeDebugAndroidTest FROM-CACHE
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:lintAnalyzeDebugUnitTest FROM-CACHE
+> Task :app:kspDebugUnitTestKotlin FROM-CACHE
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:dexBuilderDebug FROM-CACHE
+> Task :app:compileDebugUnitTestKotlin FROM-CACHE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:copyRoomSchemas NO-SOURCE
+> Task :app:hiltCollectClassesDebugUnitTest UP-TO-DATE
+> Task :app:mergeProjectDexDebug FROM-CACHE
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:hiltAggregateDepsDebugUnitTest FROM-CACHE
+> Task :app:hiltJavaCompileDebugUnitTest NO-SOURCE
+> Task :app:transformDebugUnitTestClassesWithAsm FROM-CACHE
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///home/runner/work/omegadex/omegadex/app/build/reports/lint-results-debug.html
+Wrote SARIF report to file:///home/runner/work/omegadex/omegadex/app/build/reports/lint-results-debug.sarif
+
+> Task :app:lintDebug
+> Task :app:lint
+
+> Task :app:testDebugUnitTest
+
+DefisViewModelTest > la page d'un pokemon montre son defi tire au sort et refuse un second defi actif FAILED
+    java.lang.IllegalStateException at DefisViewModelTest.kt:91
+        Caused by: java.lang.Throwable at TestMainDispatcher.kt:76
+
+AjoutMembreViewModelTest > seules les captures hors equipe sont proposees, et la recherche les filtre FAILED
+    java.lang.IllegalStateException at TestMainDispatcher.kt:72
+        Caused by: java.lang.Throwable at TestMainDispatcher.kt:86
+    kotlin.UninitializedPropertyAccessException at AjoutMembreViewModelTest.kt:62
+
+226 tests completed, 2 failed
+
+> Task :app:testDebugUnitTest FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1793369335710.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/omegadex/omegadex/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/runner/work/omegadex/omegadex/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 36s
+73 actionable tasks: 29 executed, 43 from cache, 1 up-to-date
+Configuration cache entry stored.
