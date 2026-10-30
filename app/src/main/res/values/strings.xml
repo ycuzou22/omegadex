@@ -122,7 +122,9 @@
     <string name="aventure_attraper_description">Attraper %1$s</string>
     <string name="aventure_capturee">Capturé</string>
     <string name="capture_annonce">%1$s rejoint le Pokédex · Capturé</string>
-    <string name="aventure_terminee">Aventure terminée : toutes les étapes sont validées.</string>
+    <string name="fin_felicitations">Félicitations !</string>
+    <string name="fin_sous_titre">Tu as terminé ton aventure</string>
+    <string name="fin_sprite_primo_groudon">Primo-Groudon</string>
 
     <!-- Fiche de lieu -->
     <string name="lieu_retour">Retour</string>

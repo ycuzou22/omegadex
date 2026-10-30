@@ -50,6 +50,7 @@ import com.omegadex.app.domain.model.MethodeRencontre.HERBE
 import com.omegadex.app.domain.model.MethodeRencontre.SURF
 import com.omegadex.app.domain.rencontre.Debloqueur
 import com.omegadex.app.ui.animations.AnimationCapture
+import com.omegadex.app.ui.animations.AnimationFinAventure
 import com.omegadex.app.ui.animations.CaptureAnimee
 import com.omegadex.app.ui.components.CarteRubis
 import com.omegadex.app.ui.components.GemCheckbox
@@ -129,9 +130,7 @@ private fun AventureContenu(
         AventureUiState.AucuneRun -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(stringResource(R.string.aventure_aucune_run), style = MaterialTheme.typography.bodyLarge)
         }
-        AventureUiState.Terminee -> Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-            Text(stringResource(R.string.aventure_terminee), style = MaterialTheme.typography.titleLarge)
-        }
+        AventureUiState.Terminee -> AnimationFinAventure(modifier)
         is AventureUiState.EtapeEnCours -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
                 Modifier.widthIn(max = 560.dp).fillMaxWidth(),
