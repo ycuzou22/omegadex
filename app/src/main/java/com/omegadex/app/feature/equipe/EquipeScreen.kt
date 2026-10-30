@@ -75,6 +75,7 @@ fun EquipeScreen(
             onChoisir = onChoisir,
             onRetirer = viewModel::retirer,
             onAjouterSuggestion = viewModel::ajouterSuggestion,
+            onEvoluer = viewModel::evoluerManuellement,
             onPc = {
                 sons.jouer(Son.NAVIGATION)
                 pcOuvert = true
