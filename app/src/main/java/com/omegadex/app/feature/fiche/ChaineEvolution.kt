@@ -9,8 +9,8 @@ import com.omegadex.app.domain.model.StatutEspece
 /** Statuts et équipe de la run active, pour situer le joueur dans la chaîne d'évolution. */
 data class SuiviRun(val statuts: Map<Int, StatutEspece>, val equipe: List<MembreEquipe>)
 
-/** Une espèce de la famille. */
-data class StadeEvolution(val id: Int, val nom: String, val types: List<String>)
+/** Une espèce de la famille ; [vue] est faux tant que le joueur ne l'a pas rencontrée (sprite en ombre). */
+data class StadeEvolution(val id: Int, val nom: String, val types: List<String>, val vue: Boolean = true)
 
 /** Un palier : de [sourceId] à [cibleId], avec sa condition. */
 data class PalierEvolution(val sourceId: Int, val cibleId: Int, val condition: ConditionEvolution, val valeur: String?)
@@ -61,7 +61,13 @@ data class ChaineEvolution(
             }
             return ChaineEvolution(
                 stades = stades.map { ids ->
-                    ids.mapNotNull { id -> parId[id]?.let { StadeEvolution(id, it.nom, it.types) } }
+                    ids.mapNotNull { id ->
+                        parId[id]?.let { espece ->
+                            val statut = suivi?.statuts?.get(id)
+                            val vue = suivi == null || (statut != null && statut != StatutEspece.NON_VUE)
+                            StadeEvolution(id, espece.nom, espece.types, vue)
+                        }
+                    }
                 },
                 paliers = famille.map { PalierEvolution(it.especeSourceId, it.especeCibleId, it.condition, it.valeur) },
                 stadeActuel = actuel,
