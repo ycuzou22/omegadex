@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Animation de démarrage. Fichier séparé de strings.xml pour limiter les conflits entre branches. -->
+<resources>
+    <string name="demarrage_marque" translatable="false">OMÉGADEX</string>
+    <string name="demarrage_description">Omégadex démarre. Toucher pour passer.</string>
+</resources>
