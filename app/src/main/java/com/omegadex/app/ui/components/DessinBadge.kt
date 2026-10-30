@@ -5,7 +5,11 @@ package com.omegadex.app.ui.components
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -16,15 +20,21 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import com.omegadex.app.domain.badge.BadgeArene
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.Rubis
 import com.omegadex.app.ui.theme.RubisEclat
+import kotlin.math.roundToInt
 
 private const val REPERE = 64f
 private val ENCRE = Color(0xFF141012)
 private val OR_FONDU = Color(0xFFFFA040)
 private val COEUR_FLAMME = Color(0xFFFFD15C)
+
+/** Part de l'or fondu sur une image de badge encore brûlante (l'image reste lisible dessous). */
+private const val OPACITE_FUSION = 0.85f
 
 /** Un détail tracé par-dessus le corps du badge. */
 private enum class TypeDetail { FACETTES, FILS, COEUR, SPIRALE }
@@ -134,11 +144,37 @@ private val REFLET = svg("M0 16 L38 0 L50 0 L0 24 Z")
 private val REFLET_FIN = svg("M0 31 L58 0 L62 0 L0 34 Z")
 
 /**
- * Dessine un badge d'arène dans toute la zone (carrée de préférence), au rendu « pin's » : contour noir épais,
- * aplat à la couleur du type de l'arène, ombre et reflets en bandes diagonales, gemme rubis incrustée.
- * [chaleur] (0 à 1) teinte le badge en métal en fusion, pour l'animation de forge.
+ * Dessine un badge d'arène dans toute la zone : l'[image] fournie (`assets/badges`, voir [ImagesBadges]) si elle
+ * existe, sinon le badge original. [chaleur] (0 à 1) teinte le badge en métal en fusion, pour l'animation de forge.
  */
-fun DrawScope.dessinerBadge(badge: BadgeArene, chaleur: Float = 0f) {
+fun DrawScope.dessinerBadge(badge: BadgeArene, chaleur: Float = 0f, image: ImageBitmap? = null) {
+    if (image != null) dessinerImageBadge(image, chaleur) else dessinerBadgeOriginal(badge, chaleur)
+}
+
+/** Image du badge centrée et réduite pour tenir dans la zone, recouverte d'or fondu selon [chaleur]. */
+private fun DrawScope.dessinerImageBadge(image: ImageBitmap, chaleur: Float) {
+    val echelle = minOf(size.width / image.width, size.height / image.height)
+    val cible = IntSize((image.width * echelle).roundToInt(), (image.height * echelle).roundToInt())
+    val coin = IntOffset((size.width.roundToInt() - cible.width) / 2, (size.height.roundToInt() - cible.height) / 2)
+    drawImage(image, dstOffset = coin, dstSize = cible, filterQuality = FilterQuality.Medium)
+    val c = chaleur.coerceIn(0f, 1f)
+    if (c > 0f) {
+        drawImage(
+            image,
+            dstOffset = coin,
+            dstSize = cible,
+            alpha = c * OPACITE_FUSION,
+            colorFilter = ColorFilter.tint(OR_FONDU, BlendMode.SrcIn),
+            filterQuality = FilterQuality.Medium,
+        )
+    }
+}
+
+/**
+ * Badge original, dessiné dans toute la zone (carrée de préférence), au rendu « pin's » : contour noir épais,
+ * aplat à la couleur du type de l'arène, ombre et reflets en bandes diagonales, gemme rubis incrustée.
+ */
+private fun DrawScope.dessinerBadgeOriginal(badge: BadgeArene, chaleur: Float) {
     val dessin = DESSINS.getValue(badge)
     val couleur = lerp(CouleursTypes.de(badge.type), OR_FONDU, chaleur.coerceIn(0f, 1f))
     val echelle = size.minDimension / REPERE
