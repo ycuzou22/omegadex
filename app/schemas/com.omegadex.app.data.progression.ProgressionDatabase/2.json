@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "1d7e142b97b8be1ccf0738ec1474d47c",
+    "identityHash": "c94274b67060df7193d897df48de6528",
     "entities": [
       {
         "tableName": "utilisateur",
@@ -542,7 +542,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1d7e142b97b8be1ccf0738ec1474d47c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c94274b67060df7193d897df48de6528')"
     ]
   }
 }
