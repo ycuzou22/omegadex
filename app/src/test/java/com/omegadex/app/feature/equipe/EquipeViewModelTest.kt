@@ -129,7 +129,8 @@ class EquipeViewModelTest {
         assertEquals("Massko" to plafond, suggestion.nom to suggestion.niveau)
 
         vm.ajouterSuggestion(suggestion, emplacement = null)
-        val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } }
+        // Membres et suggestions arrivent par deux flux : on attend que les deux aient suivi l'ajout.
+        val etat = vm.equipe { e -> e.membres.any { it.especeId == 253 } && e.suggestions.none { it.especeId == 253 } }
         assertEquals(plafond, etat.membres.first { it.especeId == 253 }.niveau)
         assertTrue(etat.suggestions.none { it.especeId == 253 })
     }
