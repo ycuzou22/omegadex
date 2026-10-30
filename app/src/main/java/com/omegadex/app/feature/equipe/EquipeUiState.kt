@@ -45,12 +45,7 @@ data class MembreVue(
 )
 
 /** Évolution manuelle proposée sur la carte d'un membre ; [detail] et [moment] précisent le bouton. */
-data class EvolutionVue(
-    val cible: EspeceVue,
-    val methode: MethodeEvolution,
-    val detail: String?,
-    val moment: String?,
-)
+data class EvolutionVue(val cible: EspeceVue, val methode: MethodeEvolution, val detail: String?, val moment: String?)
 
 /** Évolution proposée après la saisie d'un niveau ; le joueur confirme ou remet à plus tard. */
 data class EvolutionProposee(val emplacement: Int, val avant: EspeceVue, val cibles: List<CibleEvolution>)

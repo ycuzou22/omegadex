@@ -127,9 +127,10 @@ internal fun libelleEvolution(evolution: EvolutionVue): String {
         MethodeEvolution.BONHEUR -> stringResource(R.string.equipe_evo_bonheur)
         MethodeEvolution.BONHEUR_JOUR -> stringResource(R.string.equipe_evo_bonheur_jour)
         MethodeEvolution.BONHEUR_NUIT -> stringResource(R.string.equipe_evo_bonheur_nuit)
-        MethodeEvolution.OBJET_TENU -> evolution.moment
-            ?.let { stringResource(R.string.equipe_evo_objet_tenu_moment, detail, it) }
-            ?: stringResource(R.string.equipe_evo_objet_tenu, detail)
+        MethodeEvolution.OBJET_TENU ->
+            evolution.moment
+                ?.let { stringResource(R.string.equipe_evo_objet_tenu_moment, detail, it) }
+                ?: stringResource(R.string.equipe_evo_objet_tenu, detail)
         MethodeEvolution.CHAMP_MAGNETIQUE -> stringResource(R.string.equipe_evo_champ_magnetique)
         MethodeEvolution.LIEU -> stringResource(R.string.equipe_evo_lieu, detail)
         MethodeEvolution.ECHANGE -> stringResource(R.string.equipe_evo_echange)
