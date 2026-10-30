@@ -42,6 +42,9 @@ class CompteRepositoryImpl @Inject constructor(base: ProgressionDatabase, privat
 
     override fun run(utilisateurId: Long, runId: Long) = dao.run(utilisateurId, runId).map { it?.versDomaine() }
 
+    // Les tables de progression de la run sont supprimées en cascade (clés étrangères ON DELETE CASCADE).
+    override suspend fun supprimerRun(utilisateurId: Long, runId: Long) = dao.supprimerRun(utilisateurId, runId)
+
     override suspend fun creerRun(
         utilisateurId: Long,
         nom: String,
