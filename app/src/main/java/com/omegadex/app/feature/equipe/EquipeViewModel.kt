@@ -5,18 +5,22 @@ import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
 import com.omegadex.app.domain.equipe.AjouterMembreUseCase
 import com.omegadex.app.domain.equipe.ChangerNiveauUseCase
+import com.omegadex.app.domain.equipe.EvolutionManuelle
+import com.omegadex.app.domain.equipe.EvolutionsManuelles
 import com.omegadex.app.domain.equipe.FaireEvoluerUseCase
 import com.omegadex.app.domain.equipe.ObserverSuggestionsRotationUseCase
 import com.omegadex.app.domain.equipe.ResultatEvolution
 import com.omegadex.app.domain.equipe.ResultatNiveau
 import com.omegadex.app.domain.equipe.RetirerMembreUseCase
 import com.omegadex.app.domain.model.Espece
+import com.omegadex.app.domain.model.MembreEquipe
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +29,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -57,11 +62,13 @@ class EquipeViewModel @Inject constructor(
         if (enCours == null) return@flatMapLatest flowOf(EquipeUiState.AucuneRun)
         val etape = enCours.etape
         combine(
-            progression.equipe(enCours.run.id),
+            progression.equipe(enCours.run.id).flatMapLatest { equipe ->
+                evolutionsManuelles(equipe).map { equipe to it }
+            },
             jeu.pokedexNational(),
             observerDefis(),
             if (etape == null) flowOf(emptyList()) else composition.suggestions(enCours.run.id, etape),
-        ) { equipe, especes, defis, suggestions ->
+        ) { (equipe, evolutions), especes, defis, suggestions ->
             val parId = especes.associateBy { it.id }
             val plafond = enCours.etape?.plafond
             val actifs = defis?.actifs.orEmpty()
@@ -84,6 +91,9 @@ class EquipeViewModel @Inject constructor(
                                 ecartPlafond = plafond?.let { p -> it.niveau - p },
                                 defiActif = actifs.firstOrNull { d -> d.defi.especeId == it.especeId }
                                     ?.modele?.titre,
+                                evolutions = evolutions[it.especeId].orEmpty().map { e ->
+                                    EvolutionVue(vue(parId, e.evolution.especeCibleId), e.methode, e.detail, e.moment)
+                                },
                             )
                         },
                     )
@@ -122,6 +132,26 @@ class EquipeViewModel @Inject constructor(
                 _evolutionEnCours.value = EvolutionEnCours(proposition.avant, apres)
             }
         }
+    }
+
+    /**
+     * Évolution manuelle confirmée depuis le ruban de la carte (pierre, bonheur, échange…) : enregistrée,
+     * avec un niveau de plus si la méthode le demande, puis jouée en plein écran.
+     */
+    fun evoluerManuellement(emplacement: Int, evolution: EvolutionVue) = surLaRun { runId ->
+        val membre = progression.equipe(runId).first().firstOrNull { it.emplacement == emplacement } ?: return@surLaRun
+        val especes = jeu.pokedexNational().first().associateBy { it.id }
+        val resultat = faireEvoluer(runId, emplacement, evolution.cible.id, evolution.methode.monteDUnNiveau)
+        if (resultat is ResultatEvolution.Evolue) {
+            _evolutionEnCours.value = EvolutionEnCours(vue(especes, membre.especeId), evolution.cible)
+        }
+    }
+
+    /** Évolutions manuelles de chaque espèce de l'équipe, lues dans sa famille d'évolution. */
+    private fun evolutionsManuelles(equipe: List<MembreEquipe>): Flow<Map<Int, List<EvolutionManuelle>>> {
+        val ids = equipe.map { it.especeId }.distinct()
+        if (ids.isEmpty()) return flowOf(emptyMap())
+        return combine(ids.map { id -> jeu.famille(id).map { id to EvolutionsManuelles.de(id, it) } }) { it.toMap() }
     }
 
     /** Fait entrer la [suggestion] au niveau du plafond, dans l'[emplacement] donné ou le premier libre. */

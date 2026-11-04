@@ -65,6 +65,15 @@ class ChaineEvolutionTest {
     }
 
     @Test
+    fun `une espece jamais vue garde son sprite en ombre`() {
+        val statuts = mapOf(280 to StatutEspece.CAPTUREE, 281 to StatutEspece.VUE, 282 to StatutEspece.NON_VUE)
+        val chaine = ChaineEvolution.construire(280, familleTarsal, tarsal, SuiviRun(statuts, emptyList()))
+        val vues = chaine.stades.flatten().associate { it.id to it.vue }
+        assertEquals(mapOf(280 to true, 281 to true, 282 to false, 475 to false), vues)
+        assertTrue(ChaineEvolution.construire(280, familleTarsal, tarsal, null).stades.flatten().all { it.vue })
+    }
+
+    @Test
     fun `une chaine simple de trois stades s'affiche en ligne, une espece seule n'a pas de palier`() {
         val gobou = listOf(espece(258, "Gobou"), espece(259, "Flobio"), espece(260, "Laggron"))
         val famille = listOf(

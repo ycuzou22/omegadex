@@ -105,4 +105,10 @@ class EvolutionUseCasesTest {
         assertEquals(MembreEquipe(1, 252, "Gecko", 15), membre())
         assertTrue(progression.statuts(run).first().isEmpty())
     }
+
+    @Test
+    fun `une evolution manuelle qui demande un niveau monte le membre d'un niveau`() = runTest {
+        assertEquals(ResultatEvolution.Evolue(252, 253), faireEvoluer(run, 1, 253, monterDUnNiveau = true))
+        assertEquals(253 to 16, membre().especeId to membre().niveau)
+    }
 }
