@@ -3,8 +3,13 @@ package com.omegadex.app.feature.pokedex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.IndexFiltres
+import com.omegadex.app.domain.pokedex.MethodeFiltre
+import com.omegadex.app.domain.pokedex.ObserverOriginesUseCase
 import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
+import com.omegadex.app.domain.pokedex.OriginesEspece
 import com.omegadex.app.domain.pokedex.Pokedex
+import com.omegadex.app.domain.repository.FiltresPokedexRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -17,6 +22,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -35,6 +42,8 @@ class PokedexViewModel @Inject constructor(
     observerPokedex: ObserverPokedexUseCase,
     jeu: JeuRepository,
     private val progression: ProgressionRepository,
+    observerOrigines: ObserverOriginesUseCase,
+    private val memoire: FiltresPokedexRepository,
 ) : ViewModel() {
     private val evenementsInternes = Channel<StatutModifie>(Channel.BUFFERED)
 
@@ -54,8 +63,12 @@ class PokedexViewModel @Inject constructor(
         } else {
             // Run terminée : toutes les zones sont débloquées.
             val etapeId = enCours.etape?.id ?: Int.MAX_VALUE
-            combine(observerPokedex(enCours.run.id), jeu.especesAccessibles(etapeId)) { pokedex, accessibles ->
-                versUiState(enCours.run.id, pokedex, accessibles)
+            combine(
+                observerPokedex(enCours.run.id),
+                jeu.especesAccessibles(etapeId),
+                observerOrigines(),
+            ) { pokedex, accessibles, index ->
+                versUiState(enCours.run.id, pokedex, accessibles, index)
             }
         }
     }.map { etat ->
@@ -72,7 +85,26 @@ class PokedexViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), PokedexUiState.Chargement)
 
+    init {
+        // Les filtres du compte reviennent au démarrage, puis chaque changement est gardé (pas la recherche).
+        viewModelScope.launch {
+            val enregistres = memoire.filtres.first()
+            filtresInternes.update { FiltresPokedex.depuis(enregistres, it.recherche) }
+            filtresInternes.map { it.memorises() }.distinctUntilChanged().drop(1).collect { memoire.enregistrer(it) }
+        }
+    }
+
     fun rechercher(texte: String) = filtresInternes.update { it.copy(recherche = texte) }
+
+    /** Retient une seule zone ; choisir à nouveau la zone retenue retire le filtre. */
+    fun choisirZone(zoneId: Int?) = filtresInternes.update { actuels ->
+        actuels.copy(zoneId = if (zoneId == actuels.zoneId) null else zoneId)
+    }
+
+    /** Retient une seule méthode ; choisir à nouveau la méthode retenue retire le filtre. */
+    fun choisirMethode(methode: MethodeFiltre?) = filtresInternes.update { actuels ->
+        actuels.copy(methode = if (methode == actuels.methode) null else methode)
+    }
 
     /** Ajoute ou retire un statut du filtre ; plusieurs statuts peuvent être retenus ensemble. */
     fun basculerStatut(statut: StatutEspece) = filtresInternes.update {
@@ -107,7 +139,7 @@ class PokedexViewModel @Inject constructor(
         }
     }
 
-    private fun versUiState(runId: Long, pokedex: Pokedex, accessibles: Set<Int>): PokedexUiState {
+    private fun versUiState(runId: Long, pokedex: Pokedex, accessibles: Set<Int>, index: IndexFiltres): PokedexUiState {
         val especes = pokedex.entrees.map { entree ->
             EspeceAffichee(
                 id = entree.espece.id,
@@ -117,14 +149,17 @@ class PokedexViewModel @Inject constructor(
                 statut = entree.statut,
                 echangeRequis = entree.echangeRequis,
                 aPortee = entree.espece.id in accessibles && entree.statut < StatutEspece.CAPTUREE,
+                origines = index.origines[entree.espece.id] ?: OriginesEspece(),
             )
         }
+        val lieuxPresents = especes.flatMap { it.origines.lieux }.toSet()
         return PokedexUiState.Pret(
             runId = runId,
             national = pokedex.national,
             especes = especes,
             vues = especes.count { it.statut >= StatutEspece.VUE },
             capturees = especes.count { it.statut >= StatutEspece.CAPTUREE },
+            zonesDisponibles = index.zones.filter { it.id in lieuxPresents },
         )
     }
 
