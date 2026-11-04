@@ -388,4 +388,71 @@
     <string name="reglages_vibrations">Vibrations</string>
     <string name="reglages_ambiance">Ambiance dans l\'Aventure</string>
     <string name="reglages_ambiance_aide">Grondement volcanique discret, en boucle</string>
+    <string name="succes_retour">Retour</string>
+    <string name="succes_titre">Succès · %1$d/%2$d</string>
+    <string name="succes_sous_titre">Chaque palier de la run allume sa gemme une seule fois, pour de bon.</string>
+    <string name="succes_debloque_le">Débloqué le %1$s</string>
+    <string name="succes_avancement">%1$d / %2$d</string>
+    <string name="succes_carte_titre">Succès</string>
+    <string name="succes_carte_compte">%1$d sur %2$d débloqués</string>
+    <string name="succes_annonce">Succès débloqué</string>
+    <string name="succes_captures_10">Premiers pas</string>
+    <string name="succes_captures_50">Collectionneur</string>
+    <string name="succes_captures_100">Chercheur de Hoenn</string>
+    <string name="succes_captures_200">Encyclopédie vivante</string>
+    <string name="succes_maitrises_1">Premier maître</string>
+    <string name="succes_maitrises_10">Entraîneur aguerri</string>
+    <string name="succes_maitrises_50">Grand maître</string>
+    <string name="succes_evolutions_10">Métamorphoses</string>
+    <string name="succes_evolutions_30">Éveil Oméga</string>
+    <string name="succes_badges_1">Premier badge</string>
+    <string name="succes_badges_4">Mi-parcours</string>
+    <string name="succes_badges_8">Huit badges</string>
+    <string name="succes_ligue">Champion de la Ligue</string>
+    <string name="succes_aventure_terminee">Légende de Hoenn</string>
+    <string name="succes_defis_1">Défi relevé</string>
+    <string name="succes_defis_10">Audacieux</string>
+    <string name="succes_defis_25">Intrépide</string>
+    <string name="succes_defis_50">Inarrêtable</string>
+    <string name="succes_equipe_complete">Équipe au complet</string>
+    <plurals name="succes_condition_captures">
+        <item quantity="one">Capturer %d espèce</item>
+        <item quantity="many">Capturer %d espèces</item>
+        <item quantity="other">Capturer %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_maitrises">
+        <item quantity="one">Maîtriser %d espèce</item>
+        <item quantity="many">Maîtriser %d espèces</item>
+        <item quantity="other">Maîtriser %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_evolutions">
+        <item quantity="one">Faire évoluer %d espèce</item>
+        <item quantity="many">Faire évoluer %d espèces</item>
+        <item quantity="other">Faire évoluer %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_badges">
+        <item quantity="one">Obtenir %d badge</item>
+        <item quantity="many">Obtenir %d badges</item>
+        <item quantity="other">Obtenir %d badges</item>
+    </plurals>
+    <plurals name="succes_condition_ligue">
+        <item quantity="one">Vaincre la Ligue Pokémon</item>
+        <item quantity="many">Vaincre la Ligue Pokémon</item>
+        <item quantity="other">Vaincre la Ligue Pokémon</item>
+    </plurals>
+    <plurals name="succes_condition_fin">
+        <item quantity="one">Valider toutes les étapes</item>
+        <item quantity="many">Valider toutes les étapes</item>
+        <item quantity="other">Valider toutes les étapes</item>
+    </plurals>
+    <plurals name="succes_condition_defis">
+        <item quantity="one">Réussir %d défi</item>
+        <item quantity="many">Réussir %d défis</item>
+        <item quantity="other">Réussir %d défis</item>
+    </plurals>
+    <plurals name="succes_condition_equipe">
+        <item quantity="one">Avoir %d Pokémon dans l\'équipe</item>
+        <item quantity="many">Avoir %d Pokémon dans l\'équipe</item>
+        <item quantity="other">Avoir %d Pokémon dans l\'équipe</item>
+    </plurals>
 </resources>
