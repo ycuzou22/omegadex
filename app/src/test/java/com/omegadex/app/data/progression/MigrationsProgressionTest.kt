@@ -124,6 +124,41 @@ class MigrationsProgressionTest {
         base.close()
     }
 
+    @Test
+    fun `migrer de 2 vers 3 ajoute les succes, debloques une seule fois par run`() {
+        creerBaseVersion(2).apply {
+            execSQL(
+                "INSERT INTO utilisateur (identifiant, hashMotDePasse, sel, dateCreation) VALUES ('y', 'h', 's', 0)",
+            )
+            execSQL(
+                "INSERT INTO run (utilisateurId, nom, starterId, difficulte, regles, dateDebut) " +
+                    "VALUES (1, 'Run', 252, 'NORMAL', '', 0)",
+            )
+            close()
+        }
+        val base = Room.databaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            ProgressionDatabase::class.java,
+            NOM,
+        )
+            .addMigrations(*MigrationsProgression.TOUTES)
+            .allowMainThreadQueries()
+            .build()
+        val sql = base.openHelper.writableDatabase
+        sql.execSQL("INSERT INTO succes (runId, succesId, dateDeblocage) VALUES (1, 'CAPTURES_10', 5)")
+        sql.execSQL("INSERT OR IGNORE INTO succes (runId, succesId, dateDeblocage) VALUES (1, 'CAPTURES_10', 9)")
+        sql.query("SELECT COUNT(*), MIN(dateDeblocage) FROM succes").use {
+            it.moveToFirst()
+            assertEquals(1 to 5L, it.getInt(0) to it.getLong(1))
+        }
+        sql.execSQL("DELETE FROM run")
+        sql.query("SELECT COUNT(*) FROM succes").use {
+            it.moveToFirst()
+            assertEquals("les succès suivent la run (suppression en cascade)", 0, it.getInt(0))
+        }
+        base.close()
+    }
+
     private companion object {
         const val NOM = "migration-test.db"
         const val JETON_TABLE = "\${TABLE_NAME}"
