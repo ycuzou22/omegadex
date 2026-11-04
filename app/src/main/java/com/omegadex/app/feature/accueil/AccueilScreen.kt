@@ -43,6 +43,7 @@ import com.omegadex.app.feature.aventure.CelebrationEtape
 import com.omegadex.app.feature.aventure.EtapeValidee
 import com.omegadex.app.feature.defis.nomTypeDefi
 import com.omegadex.app.feature.runs.titreDifficulte
+import com.omegadex.app.feature.statistiques.CarteStatistiquesAccueil
 import com.omegadex.app.feature.succes.CarteSuccesAccueil
 import com.omegadex.app.ui.components.BoiteBadges
 import com.omegadex.app.ui.components.OmegaButton
@@ -55,6 +56,7 @@ fun AccueilScreen(
     onMesRuns: () -> Unit,
     modifier: Modifier = Modifier,
     onSucces: () -> Unit = {},
+    onStatistiques: () -> Unit = {},
     viewModel: AccueilViewModel = hiltViewModel(),
     aventureViewModel: AventureViewModel = hiltViewModel(),
 ) {
@@ -74,7 +76,10 @@ fun AccueilScreen(
                 onCocher = aventureViewModel::cocher,
                 onRelever = viewModel::releverDefiDuJour,
             ),
-            cartesRun = { CarteSuccesAccueil(onOuvrir = onSucces) },
+            cartesRun = {
+                CarteSuccesAccueil(onOuvrir = onSucces)
+                CarteStatistiquesAccueil(onOuvrir = onStatistiques)
+            },
         )
     }
 }

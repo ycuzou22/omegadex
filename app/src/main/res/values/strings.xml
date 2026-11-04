@@ -468,4 +468,26 @@
     <string name="pokedex_methode_mirage">Lieux mirages</string>
     <string name="pokedex_methode_fixe">Fixe ou cadeau</string>
     <string name="pokedex_methode_legendaire">Légendaires</string>
+    <string name="stats_retour">Retour</string>
+    <string name="stats_titre">Statistiques</string>
+    <string name="stats_carte">Temps par étape, défis réussis, Pokémon les plus sollicités</string>
+    <string name="stats_defis">Défis</string>
+    <string name="stats_taux">%1$d %% réussis</string>
+    <string name="stats_taux_vide">Aucun défi terminé</string>
+    <string name="stats_bilan">%1$d défis réussis, %2$d ratés</string>
+    <string name="stats_bilan_detail">%1$d réussis · %2$d ratés · %3$d en cours</string>
+    <string name="stats_temps">Temps par étape</string>
+    <string name="stats_temps_vide">Aucune étape validée pour l\'instant.</string>
+    <string name="stats_temps_total">Total : %1$s</string>
+    <string name="stats_especes">Pokémon les plus sollicités par les défis</string>
+    <string name="stats_especes_vide">Aucun défi de Pokémon relevé pour l\'instant.</string>
+    <string name="stats_duree_jours">%1$d j %2$d h</string>
+    <string name="stats_duree_heures">%1$d h %2$d min</string>
+    <string name="stats_duree_minutes">%1$d min</string>
+    <string name="stats_duree_courte">moins d\'une minute</string>
+    <plurals name="stats_defis_espece">
+        <item quantity="one">%1$d défi · %2$d réussi</item>
+        <item quantity="many">%1$d défis · %2$d réussis</item>
+        <item quantity="other">%1$d défis · %2$d réussis</item>
+    </plurals>
 </resources>
