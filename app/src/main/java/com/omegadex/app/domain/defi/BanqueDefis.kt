@@ -70,7 +70,12 @@ object BanqueDefis {
             modele = modele,
             especeId = espece.id,
             etapeId = null,
-            enonce = GenerateurDefis.enonce(modele, contexte.etape, contexte.starterNom, espece.nom),
+            enonce = GenerateurDefis.enonce(
+                modele,
+                GenerateurDefis.etapeVisee(modele, contexte),
+                contexte.starterNom,
+                espece.nom,
+            ),
             especeNom = espece.nom,
         )
     }

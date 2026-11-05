@@ -177,6 +177,30 @@ class GenerateurDefisTest {
     }
 
     @Test
+    fun `en partie 0, les evolutions visent la prochaine arene`() {
+        val depart = Etape(0, "Départ", "Rival", null, 5, "Bourg-en-Vol")
+        val armulys = arcko.copy(
+            id = 266,
+            nom = "Armulys",
+            evolutions = listOf(EvolutionPossible("Charmillon", ConditionEvolution.NIVEAU, "10")),
+        )
+        val evolution = modele(
+            3001,
+            TypeDefi.EVOLUTION,
+            gabarit = "Faire évoluer {espece} en {evolution} avant {adversaire}, sans dépasser le niveau {niveau}",
+            conditions = setOf(ConditionDeblocage.ESPECE_CAPTUREE, ConditionDeblocage.EVOLUTION_SOUS_PLAFOND),
+        )
+        val contexte = contexte(especes = listOf(armulys), etape = depart)
+        assertTrue("plafond du rival : 5", GenerateurDefis.generer(contexte, listOf(evolution)).isEmpty())
+
+        val arene = ProchaineArene.de(depart, listOf(depart, roxanne))
+        assertEquals(roxanne, arene)
+        val propose = GenerateurDefis.generer(contexte.copy(arene = arene), listOf(evolution)).single()
+        assertEquals("Faire évoluer Armulys en Charmillon avant Roxanne, sans dépasser le niveau 10", propose.enonce)
+        assertEquals(roxanne, ProchaineArene.de(roxanne, listOf(depart, roxanne)))
+    }
+
+    @Test
     fun `le marqueur type liste les types en francais`() {
         val monotype = modele(
             5014,

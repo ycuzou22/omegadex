@@ -2,6 +2,7 @@ package com.omegadex.app.domain.defi
 
 import com.omegadex.app.domain.badge.BadgeArene
 import com.omegadex.app.domain.model.Difficulte
+import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.Quete
 import com.omegadex.app.domain.model.TypeDefi
 import com.omegadex.app.domain.model.TypeQuete
@@ -86,4 +87,10 @@ object VerrouChampion {
         val requise = principales.getOrNull(principales.size - 2) ?: return null
         return requise.takeIf { it.id !in cochees }
     }
+}
+
+/** Prochaine arène : l'étape en cours si elle donne un badge, sinon la première étape à badge qui suit. */
+object ProchaineArene {
+    fun de(etape: Etape, etapes: List<Etape>): Etape =
+        etapes.sortedBy { it.id }.firstOrNull { it.id >= etape.id && BadgeArene.pourEtape(it.id) != null } ?: etape
 }

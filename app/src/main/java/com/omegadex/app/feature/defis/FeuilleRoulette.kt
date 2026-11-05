@@ -276,6 +276,8 @@ internal fun PuceDifficulte(difficulte: Difficulte, modifier: Modifier = Modifie
         stringResource(titreDifficulte(difficulte)).uppercase(),
         style = MaterialTheme.typography.labelSmall,
         color = texte,
+        maxLines = 1,
+        softWrap = false,
         modifier = modifier.background(fond, CircleShape).padding(horizontal = 8.dp, vertical = 2.dp),
     )
 }

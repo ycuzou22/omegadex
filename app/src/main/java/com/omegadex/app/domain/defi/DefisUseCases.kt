@@ -2,6 +2,7 @@ package com.omegadex.app.domain.defi
 
 import com.omegadex.app.domain.model.Defi
 import com.omegadex.app.domain.model.Espece
+import com.omegadex.app.domain.model.Etape
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.StatutEspece
 import com.omegadex.app.domain.pokedex.RegleNational
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 /** Statuts à partir desquels une espèce compte comme capturée. */
@@ -49,10 +51,11 @@ class ProposerDefisUseCase @Inject constructor(
         val championOuvert = combine(jeu.quetes(etape.id), progression.quetesCochees(runId)) { quetes, cochees ->
             VerrouChampion.queteRequise(etape.id, quetes, cochees) == null
         }
-        val tout = combine(suivi, donnees, championOuvert) { a, b, c -> Triple(a, b, c) }
-        tout.mapLatest { (suiviRun, donneesJeu, ouvert) ->
-            val (equipe, statuts, defis) = suiviRun
-            val (etapes, modeles, especes) = donneesJeu
+        val arene = jeu.etapes().map { ProchaineArene.de(etape, it) }
+        val tout = combine(suivi, donnees, championOuvert, arene) { a, b, c, d -> Entrees(a, b, c, d) }
+        tout.mapLatest { entrees ->
+            val (equipe, statuts, defis) = entrees.suivi
+            val (etapes, modeles, especes) = entrees.donnees
             val parId = especes.associateBy { it.id }
             val equipeIds = equipe.map { it.especeId }.toSet()
             val captureesIds = statuts.filterValues { it in STATUTS_CAPTURE }.keys
@@ -65,7 +68,8 @@ class ProposerDefisUseCase @Inject constructor(
                 },
                 defisExistants = defis,
                 nationalObtenu = RegleNational.debloque(etapes),
-                championOuvert = ouvert,
+                championOuvert = entrees.championOuvert,
+                arene = entrees.arene,
             )
             val tirages = tirer(contexte, runId, defis)
             GenerateurDefis.generer(contexte, modeles).filterNot {
@@ -98,6 +102,9 @@ class ProposerDefisUseCase @Inject constructor(
                 .map { EvolutionPossible(parId[it.especeCibleId]?.nom.orEmpty(), it.condition, it.valeur) },
         )
 }
+
+/** Ce que [ProposerDefisUseCase] combine avant de générer les défis. */
+private data class Entrees<A, B>(val suivi: A, val donnees: B, val championOuvert: Boolean, val arene: Etape)
 
 /** Refus d'accepter un défi proposé. */
 enum class RefusDefi { ESPECE_DEJA_ENGAGEE, CATEGORIE_OCCUPEE }
