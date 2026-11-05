@@ -49,7 +49,8 @@ import org.junit.Test
 class CasUsageDefisTest {
     private val etapes = listOf(
         Etape(0, "Départ", "Rival", null, 20, "Bourg-en-Vol"),
-        Etape(1, "Roxanne", "Roxanne", "roche", 14, "Mérouville"),
+        // Plafond volontairement haut : les évolutions de la Partie 0 visent cette arène.
+        Etape(1, "Roxanne", "Roxanne", "roche", 20, "Mérouville"),
     )
     private val especes = listOf(
         espece(252, "Arcko"),
@@ -102,7 +103,7 @@ class CasUsageDefisTest {
         assertEquals(listOf(null), parModele[1001])
         assertEquals("équipe et captures, pas une espèce seulement vue", listOf(252, 258), parModele[2001])
         assertEquals(listOf(252), parModele[2002])
-        assertEquals("évolution d'Arcko au niveau 16 sous le plafond 20", listOf(252), parModele[3001])
+        assertEquals("évolution d'Arcko au niveau 16 sous le plafond 20 de l'arène", listOf(252), parModele[3001])
         assertNull("national pas encore obtenu", parModele[9001])
         assertEquals("Battre Rival avec Arcko", proposes.first { it.modele.id == 1001 }.enonce)
         assertEquals("Faire évoluer Arcko en Massko au niveau 16", proposes.first { it.modele.id == 3001 }.enonce)
