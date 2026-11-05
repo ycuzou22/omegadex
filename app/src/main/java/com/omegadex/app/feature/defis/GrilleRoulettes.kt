@@ -38,13 +38,6 @@ import com.omegadex.app.R
 import com.omegadex.app.domain.defi.CategorieDefi
 import com.omegadex.app.ui.theme.OmegadexTheme
 
-/** Ce que le joueur peut faire depuis la grille des roulettes. */
-internal class ActionsRoulettes(
-    val onTourner: (CategorieDefi) -> Unit,
-    val onVoirTirage: (CategorieDefi) -> Unit,
-    val onVoirEnCours: () -> Unit,
-)
-
 /** Les six roulettes, deux par ligne : une tuile par catégorie (proposition 1 du canvas). */
 @Composable
 internal fun GrilleRoulettes(roulette: RouletteUi, actions: ActionsRoulettes, modifier: Modifier = Modifier) {

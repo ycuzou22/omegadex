@@ -38,6 +38,7 @@ class CycleDefisTest {
     private lateinit var jeuBase: JeuDatabase
     private lateinit var progressionBase: ProgressionDatabase
     private lateinit var progression: ProgressionRepositoryImpl
+    private lateinit var jeu: JeuRepositoryImpl
     private lateinit var proposer: ProposerDefisUseCase
     private lateinit var observer: ObserverDefisUseCase
     private var maintenant = 1_000L
@@ -48,7 +49,7 @@ class CycleDefisTest {
         context.deleteDatabase(JeuDatabase.NOM_FICHIER)
         jeuBase = DatabaseModule.jeuDatabase(context)
         progressionBase = BasesDeTest.progression()
-        val jeu = JeuRepositoryImpl(jeuBase)
+        jeu = JeuRepositoryImpl(jeuBase)
         val session = FausseSession()
         val horloge = Horloge { maintenant++ }
         val comptes = CompteRepositoryImpl(progressionBase, horloge)

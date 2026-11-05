@@ -4,7 +4,6 @@ import com.omegadex.app.core.Horloge
 import com.omegadex.app.core.HorlogeSysteme
 import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.FiltresPokedexDataStore
-import com.omegadex.app.data.repository.TiragesDefisDataStore
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
@@ -12,13 +11,13 @@ import com.omegadex.app.data.repository.ReglagesDataStore
 import com.omegadex.app.data.repository.RunActiveDataStore
 import com.omegadex.app.data.repository.SessionDataStore
 import com.omegadex.app.data.repository.SuccesRepositoryImpl
+import com.omegadex.app.data.repository.TiragesDefisDataStore
 import com.omegadex.app.data.securite.CleBaseKeystore
 import com.omegadex.app.data.securite.FournisseurCleBase
 import com.omegadex.app.data.securite.HacheurArgon2
 import com.omegadex.app.domain.compte.HacheurMotDePasse
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.FiltresPokedexRepository
-import com.omegadex.app.domain.repository.TiragesDefisRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
@@ -26,6 +25,7 @@ import com.omegadex.app.domain.repository.ReglagesRepository
 import com.omegadex.app.domain.repository.RunActiveRepository
 import com.omegadex.app.domain.repository.SessionRepository
 import com.omegadex.app.domain.repository.SuccesRepository
+import com.omegadex.app.domain.repository.TiragesDefisRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

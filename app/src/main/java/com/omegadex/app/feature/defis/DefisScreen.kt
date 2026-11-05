@@ -1,9 +1,5 @@
 package com.omegadex.app.feature.defis
 
-import com.omegadex.app.domain.defi.CategorieDefi
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -30,10 +26,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
@@ -44,6 +43,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.defi.BilanDefis
+import com.omegadex.app.domain.defi.CategorieDefi
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.TypeDefi

@@ -50,11 +50,11 @@ class TiragesDefisDataStore internal constructor(private val magasin: DataStore<
     private fun lire(valeur: String): Tirage? {
         val champs = valeur.split(SEPARATEUR)
         if (champs.size != NOMBRE_CHAMPS) return null
-        val modeleId = champs[2].toIntOrNull()
+        val (etape, relances, modele, espece, etapeVisee) = champs.map { it.toIntOrNull() }
         return Tirage(
-            etapeId = champs[0].toIntOrNull() ?: return null,
-            defi = modeleId?.let { CleDefi(it, champs[3].toIntOrNull(), champs[4].toIntOrNull()) },
-            relances = champs[1].toIntOrNull() ?: 0,
+            etapeId = etape ?: return null,
+            defi = modele?.let { CleDefi(it, espece, etapeVisee) },
+            relances = relances ?: 0,
         )
     }
 
