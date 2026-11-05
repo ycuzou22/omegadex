@@ -139,6 +139,13 @@ class RetenterDefiUseCase @Inject constructor(private val progression: Progressi
     }
 }
 
+/**
+ * Défis de combat encore actifs contre l'adversaire de l'étape [etapeId] : l'étape validée, le combat a eu lieu,
+ * le joueur dit s'ils sont réussis ou ratés.
+ */
+fun defisAClore(defis: DefisDeLaRun?, etapeId: Int): List<DefiAffiche> =
+    defis?.actifs.orEmpty().filter { it.defi.etapeId == etapeId && it.modele.type in GenerateurDefis.TYPES_COMBAT }
+
 /** Les trois actions du joueur sur ses défis, regroupées pour les écrans. */
 class ActionsSurDefis @Inject constructor(
     val accepter: AccepterDefiUseCase,

@@ -43,6 +43,8 @@ import com.omegadex.app.feature.aventure.CelebrationEtape
 import com.omegadex.app.feature.aventure.EtapeValidee
 import com.omegadex.app.feature.defis.nomTypeDefi
 import com.omegadex.app.feature.runs.titreDifficulte
+import com.omegadex.app.feature.statistiques.CarteStatistiquesAccueil
+import com.omegadex.app.feature.succes.CarteSuccesAccueil
 import com.omegadex.app.ui.components.BoiteBadges
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.VarianteBouton
@@ -53,6 +55,8 @@ import com.omegadex.app.ui.theme.OmegadexTheme
 fun AccueilScreen(
     onMesRuns: () -> Unit,
     modifier: Modifier = Modifier,
+    onSucces: () -> Unit = {},
+    onStatistiques: () -> Unit = {},
     viewModel: AccueilViewModel = hiltViewModel(),
     aventureViewModel: AventureViewModel = hiltViewModel(),
 ) {
@@ -72,6 +76,10 @@ fun AccueilScreen(
                 onCocher = aventureViewModel::cocher,
                 onRelever = viewModel::releverDefiDuJour,
             ),
+            cartesRun = {
+                CarteSuccesAccueil(onOuvrir = onSucces)
+                CarteStatistiquesAccueil(onOuvrir = onStatistiques)
+            },
         )
     }
 }
@@ -82,6 +90,7 @@ private fun AccueilContenu(
     etape: AventureUiState.EtapeEnCours?,
     actions: ActionsAccueil,
     modifier: Modifier = Modifier,
+    cartesRun: @Composable () -> Unit = {},
 ) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(
@@ -96,6 +105,7 @@ private fun AccueilContenu(
             uiState.jauges?.let { RangeeJauges(it) }
             uiState.badges?.let { BoiteBadges(it, Modifier.fillMaxWidth()) }
             uiState.defiDuJour?.let { CarteDefiDuJour(it, actions.onRelever) }
+            cartesRun()
             OmegaButton(
                 stringResource(R.string.accueil_changer_run),
                 onClick = actions.onMesRuns,

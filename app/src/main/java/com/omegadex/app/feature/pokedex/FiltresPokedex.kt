@@ -1,18 +1,37 @@
 package com.omegadex.app.feature.pokedex
 
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.MethodeFiltre
+import com.omegadex.app.domain.repository.FiltresMemorises
 import java.text.Normalizer
 
 /**
- * Recherche et filtres du Pokédex. Un ensemble [statuts] vide et un [type] nul ne filtrent rien.
- * [recherche] porte sur le nom (sans tenir compte des accents ni de la casse) ou sur le numéro affiché.
+ * Recherche et filtres du Pokédex, tous combinables (F12). Un ensemble [statuts] vide, un [type], une [zoneId]
+ * ou une [methode] nuls ne filtrent rien. [recherche] porte sur le nom (sans tenir compte des accents ni de la
+ * casse) ou sur le numéro affiché.
  */
 data class FiltresPokedex(
     val recherche: String = "",
     val statuts: Set<StatutEspece> = emptySet(),
     val type: String? = null,
+    val zoneId: Int? = null,
+    val methode: MethodeFiltre? = null,
 ) {
-    val actifs: Boolean get() = recherche.isNotBlank() || statuts.isNotEmpty() || type != null
+    val actifs: Boolean
+        get() = recherche.isNotBlank() || statuts.isNotEmpty() || type != null || zoneId != null || methode != null
+
+    /** Ce qui est gardé pour le compte : tout sauf la recherche texte. */
+    fun memorises() = FiltresMemorises(statuts, type, zoneId, methode)
+
+    companion object {
+        fun depuis(memorises: FiltresMemorises, recherche: String = "") = FiltresPokedex(
+            recherche,
+            memorises.statuts,
+            memorises.type,
+            memorises.zoneId,
+            memorises.methode,
+        )
+    }
 }
 
 private val ACCENTS = Regex("\\p{Mn}+")
@@ -41,7 +60,10 @@ fun filtrer(especes: List<EspeceAffichee>, filtres: FiltresPokedex): List<Espece
             numero != null -> numero.isNotEmpty() && espece.numero.toString().startsWith(numero)
             else -> texte in normaliser(espece.nom)
         }
-        trouvee && filtres.garde(espece.statut) && espece.estDuType(type)
+        trouvee &&
+            filtres.garde(espece.statut) &&
+            espece.estDuType(type) &&
+            espece.origines.correspond(filtres.zoneId, filtres.methode)
     }
 }
 

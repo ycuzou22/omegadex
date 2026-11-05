@@ -21,6 +21,8 @@ import com.omegadex.app.feature.lieu.FicheLieuViewModel
 import com.omegadex.app.feature.pokedex.PokedexScreen
 import com.omegadex.app.feature.runs.CreationRunScreen
 import com.omegadex.app.feature.runs.MesRunsScreen
+import com.omegadex.app.feature.statistiques.StatistiquesScreen
+import com.omegadex.app.feature.succes.SuccesScreen
 
 /** Écrans hors onglets, ouverts depuis l'accueil. */
 private const val ROUTE_MES_RUNS = "mes-runs"
@@ -29,6 +31,8 @@ private const val ROUTE_LIEU = "lieu"
 private const val ROUTE_ESPECE = "espece"
 private const val ROUTE_DEFIS_ESPECE = "defis-espece"
 private const val ROUTE_AJOUT_MEMBRE = "equipe-ajout"
+private const val ROUTE_SUCCES = "succes"
+private const val ROUTE_STATISTIQUES = "statistiques"
 
 @Composable
 fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -38,7 +42,11 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
         modifier = modifier,
     ) {
         composable(Destination.ACCUEIL.route) {
-            AccueilScreen(onMesRuns = { navController.navigate(ROUTE_MES_RUNS) })
+            AccueilScreen(
+                onMesRuns = { navController.navigate(ROUTE_MES_RUNS) },
+                onSucces = { navController.navigate(ROUTE_SUCCES) },
+                onStatistiques = { navController.navigate(ROUTE_STATISTIQUES) },
+            )
         }
         composable(Destination.AVENTURE.route) {
             AventureScreen(onLieu = { navController.navigate("$ROUTE_LIEU/$it") })
@@ -88,6 +96,12 @@ fun OmegadexNavHost(navController: NavHostController, modifier: Modifier = Modif
                 onDefis = { navController.navigate("$ROUTE_DEFIS_ESPECE/$it") },
                 onEspece = { navController.navigate("$ROUTE_ESPECE/$it") },
             )
+        }
+        composable(ROUTE_STATISTIQUES) {
+            StatistiquesScreen(onRetour = { navController.popBackStack() })
+        }
+        composable(ROUTE_SUCCES) {
+            SuccesScreen(onRetour = { navController.popBackStack() })
         }
         composable(ROUTE_MES_RUNS) {
             MesRunsScreen(

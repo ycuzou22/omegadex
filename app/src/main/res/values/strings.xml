@@ -178,6 +178,9 @@
     <string name="defis_vide_actifs">Aucun défi en cours. Relève un défi disponible !</string>
     <string name="defis_vide_disponibles">Aucun défi disponible pour l\'instant : capture des Pokémon et avance dans l\'aventure.</string>
     <string name="defis_vide_termines">Aucun défi terminé.</string>
+    <string name="cloture_defis_titre">Et ce combat ?</string>
+    <string name="cloture_defis_texte">Tu avais relevé un défi contre cet adversaire. L\'as-tu réussi ?</string>
+    <string name="cloture_defis_plus_tard">Plus tard</string>
     <string name="defis_refus_espece">Ce Pokémon relève déjà un défi : termine-le d\'abord.</string>
     <string name="defis_aucune_run">Aucune run en cours.</string>
     <string name="defis_retour">Retour</string>
@@ -388,4 +391,106 @@
     <string name="reglages_vibrations">Vibrations</string>
     <string name="reglages_ambiance">Ambiance dans l\'Aventure</string>
     <string name="reglages_ambiance_aide">Grondement volcanique discret, en boucle</string>
+    <string name="succes_retour">Retour</string>
+    <string name="succes_titre">Succès · %1$d/%2$d</string>
+    <string name="succes_sous_titre">Chaque palier de la run allume sa gemme une seule fois, pour de bon.</string>
+    <string name="succes_debloque_le">Débloqué le %1$s</string>
+    <string name="succes_avancement">%1$d / %2$d</string>
+    <string name="succes_carte_titre">Succès</string>
+    <string name="succes_carte_compte">%1$d sur %2$d débloqués</string>
+    <string name="succes_annonce">Succès débloqué</string>
+    <string name="succes_captures_10">Premiers pas</string>
+    <string name="succes_captures_50">Collectionneur</string>
+    <string name="succes_captures_100">Chercheur de Hoenn</string>
+    <string name="succes_captures_200">Encyclopédie vivante</string>
+    <string name="succes_maitrises_1">Premier maître</string>
+    <string name="succes_maitrises_10">Entraîneur aguerri</string>
+    <string name="succes_maitrises_50">Grand maître</string>
+    <string name="succes_evolutions_10">Métamorphoses</string>
+    <string name="succes_evolutions_30">Éveil Oméga</string>
+    <string name="succes_badges_1">Premier badge</string>
+    <string name="succes_badges_4">Mi-parcours</string>
+    <string name="succes_badges_8">Huit badges</string>
+    <string name="succes_ligue">Champion de la Ligue</string>
+    <string name="succes_aventure_terminee">Légende de Hoenn</string>
+    <string name="succes_defis_1">Défi relevé</string>
+    <string name="succes_defis_10">Audacieux</string>
+    <string name="succes_defis_25">Intrépide</string>
+    <string name="succes_defis_50">Inarrêtable</string>
+    <string name="succes_equipe_complete">Équipe au complet</string>
+    <plurals name="succes_condition_captures">
+        <item quantity="one">Capturer %d espèce</item>
+        <item quantity="many">Capturer %d espèces</item>
+        <item quantity="other">Capturer %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_maitrises">
+        <item quantity="one">Maîtriser %d espèce</item>
+        <item quantity="many">Maîtriser %d espèces</item>
+        <item quantity="other">Maîtriser %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_evolutions">
+        <item quantity="one">Faire évoluer %d espèce</item>
+        <item quantity="many">Faire évoluer %d espèces</item>
+        <item quantity="other">Faire évoluer %d espèces</item>
+    </plurals>
+    <plurals name="succes_condition_badges">
+        <item quantity="one">Obtenir %d badge</item>
+        <item quantity="many">Obtenir %d badges</item>
+        <item quantity="other">Obtenir %d badges</item>
+    </plurals>
+    <plurals name="succes_condition_ligue">
+        <item quantity="one">Vaincre la Ligue Pokémon</item>
+        <item quantity="many">Vaincre la Ligue Pokémon</item>
+        <item quantity="other">Vaincre la Ligue Pokémon</item>
+    </plurals>
+    <plurals name="succes_condition_fin">
+        <item quantity="one">Valider toutes les étapes</item>
+        <item quantity="many">Valider toutes les étapes</item>
+        <item quantity="other">Valider toutes les étapes</item>
+    </plurals>
+    <plurals name="succes_condition_defis">
+        <item quantity="one">Réussir %d défi</item>
+        <item quantity="many">Réussir %d défis</item>
+        <item quantity="other">Réussir %d défis</item>
+    </plurals>
+    <plurals name="succes_condition_equipe">
+        <item quantity="one">Avoir %d Pokémon dans l\'équipe</item>
+        <item quantity="many">Avoir %d Pokémon dans l\'équipe</item>
+        <item quantity="other">Avoir %d Pokémon dans l\'équipe</item>
+    </plurals>
+    <string name="pokedex_zone">Zone ▾</string>
+    <string name="pokedex_zone_choisie">%1$s ▾</string>
+    <string name="pokedex_zone_toutes">Toutes les zones</string>
+    <string name="pokedex_methode_herbe">Herbes</string>
+    <string name="pokedex_methode_horde">Hordes</string>
+    <string name="pokedex_methode_surf">Surf</string>
+    <string name="pokedex_methode_peche">Pêche</string>
+    <string name="pokedex_methode_plongee">Plongée</string>
+    <string name="pokedex_methode_roche">Éclate-Roc</string>
+    <string name="pokedex_methode_navi_dex">Navi-Dex</string>
+    <string name="pokedex_methode_mirage">Lieux mirages</string>
+    <string name="pokedex_methode_fixe">Fixe ou cadeau</string>
+    <string name="pokedex_methode_legendaire">Légendaires</string>
+    <string name="stats_retour">Retour</string>
+    <string name="stats_titre">Statistiques</string>
+    <string name="stats_carte">Temps par étape, défis réussis, Pokémon les plus sollicités</string>
+    <string name="stats_defis">Défis</string>
+    <string name="stats_taux">%1$d %% réussis</string>
+    <string name="stats_taux_vide">Aucun défi terminé</string>
+    <string name="stats_bilan">%1$d défis réussis, %2$d ratés</string>
+    <string name="stats_bilan_detail">%1$d réussis · %2$d ratés · %3$d en cours</string>
+    <string name="stats_temps">Temps par étape</string>
+    <string name="stats_temps_vide">Aucune étape validée pour l\'instant.</string>
+    <string name="stats_temps_total">Total : %1$s</string>
+    <string name="stats_especes">Pokémon les plus sollicités par les défis</string>
+    <string name="stats_especes_vide">Aucun défi de Pokémon relevé pour l\'instant.</string>
+    <string name="stats_duree_jours">%1$d j %2$d h</string>
+    <string name="stats_duree_heures">%1$d h %2$d min</string>
+    <string name="stats_duree_minutes">%1$d min</string>
+    <string name="stats_duree_courte">moins d\'une minute</string>
+    <plurals name="stats_defis_espece">
+        <item quantity="one">%1$d défi · %2$d réussi</item>
+        <item quantity="many">%1$d défis · %2$d réussis</item>
+        <item quantity="other">%1$d défis · %2$d réussis</item>
+    </plurals>
 </resources>

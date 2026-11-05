@@ -25,6 +25,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,7 +35,10 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.model.Lieu
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.MethodeFiltre
 import com.omegadex.app.ui.components.ChampTexte
 import com.omegadex.app.ui.components.IconeType
 import com.omegadex.app.ui.components.IconesTypes
@@ -98,6 +105,8 @@ fun PokedexScreen(
             onRecherche = viewModel::rechercher,
             onStatut = viewModel::basculerStatut,
             onType = viewModel::choisirType,
+            onZone = viewModel::choisirZone,
+            onMethode = viewModel::choisirMethode,
             onEffacer = viewModel::effacerFiltres,
         ),
         modifier = modifier,
@@ -112,6 +121,8 @@ private class ActionsPokedex(
     val onRecherche: (String) -> Unit = {},
     val onStatut: (StatutEspece) -> Unit = {},
     val onType: (String) -> Unit = {},
+    val onZone: (Int?) -> Unit = {},
+    val onMethode: (MethodeFiltre) -> Unit = {},
     val onEffacer: () -> Unit = {},
 )
 
@@ -383,11 +394,74 @@ private fun BarreFiltres(etat: PokedexUiState.Pret, actions: ActionsPokedex) {
                     },
                 )
             }
+        }
+        LigneFiltres {
+            MenuZone(etat.zonesDisponibles, filtres.zoneId) {
+                sons.jouer(Son.CLIC)
+                actions.onZone(it)
+            }
+            MethodeFiltre.entries.forEach { methode ->
+                PuceFiltre(
+                    libelle = stringResource(libelleMethode(methode)),
+                    choisie = methode == filtres.methode,
+                    onBascule = {
+                        sons.jouer(Son.CLIC)
+                        actions.onMethode(methode)
+                    },
+                )
+            }
             if (filtres.actifs) {
                 TextButton(onClick = actions.onEffacer) { Text(stringResource(R.string.pokedex_effacer_filtres)) }
             }
         }
     }
+}
+
+/** Filtre par zone : une puce « Zone » qui ouvre la liste des lieux, dans l'ordre de l'aventure. */
+@Composable
+private fun MenuZone(zones: List<Lieu>, choisie: Int?, onZone: (Int?) -> Unit) {
+    var ouvert by remember { mutableStateOf(false) }
+    val nom = zones.firstOrNull { it.id == choisie }?.nom
+    Box {
+        PuceFiltre(
+            libelle = nom?.let { stringResource(R.string.pokedex_zone_choisie, it) }
+                ?: stringResource(R.string.pokedex_zone),
+            choisie = nom != null,
+            onBascule = { ouvert = true },
+        )
+        DropdownMenu(expanded = ouvert, onDismissRequest = { ouvert = false }) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.pokedex_zone_toutes)) },
+                onClick = {
+                    ouvert = false
+                    onZone(null)
+                },
+            )
+            zones.forEach { zone ->
+                DropdownMenuItem(
+                    text = { Text(zone.nom) },
+                    onClick = {
+                        ouvert = false
+                        if (zone.id != choisie) onZone(zone.id)
+                    },
+                )
+            }
+        }
+    }
+}
+
+@StringRes
+private fun libelleMethode(methode: MethodeFiltre): Int = when (methode) {
+    MethodeFiltre.HERBE -> R.string.pokedex_methode_herbe
+    MethodeFiltre.HORDE -> R.string.pokedex_methode_horde
+    MethodeFiltre.SURF -> R.string.pokedex_methode_surf
+    MethodeFiltre.PECHE -> R.string.pokedex_methode_peche
+    MethodeFiltre.PLONGEE -> R.string.pokedex_methode_plongee
+    MethodeFiltre.ROCHE_FRACASSEE -> R.string.pokedex_methode_roche
+    MethodeFiltre.NAVI_DEX -> R.string.pokedex_methode_navi_dex
+    MethodeFiltre.LIEU_MIRAGE -> R.string.pokedex_methode_mirage
+    MethodeFiltre.FIXE_OU_CADEAU -> R.string.pokedex_methode_fixe
+    MethodeFiltre.LEGENDAIRE -> R.string.pokedex_methode_legendaire
 }
 
 @Composable

@@ -28,5 +28,16 @@ object MigrationsProgression {
         }
     }
 
-    val TOUTES: Array<Migration> = arrayOf(DE_1_A_2)
+    /** Version 3 : succès débloqués de chaque run (T18). */
+    val DE_2_A_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `succes` (`runId` INTEGER NOT NULL, `succesId` TEXT NOT NULL, " +
+                    "`dateDeblocage` INTEGER NOT NULL, PRIMARY KEY(`runId`, `succesId`), " +
+                    "FOREIGN KEY(`runId`) REFERENCES `run`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+            )
+        }
+    }
+
+    val TOUTES: Array<Migration> = arrayOf(DE_1_A_2, DE_2_A_3)
 }

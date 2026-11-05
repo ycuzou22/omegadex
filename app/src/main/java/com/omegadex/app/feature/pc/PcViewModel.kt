@@ -100,10 +100,10 @@ class PcViewModel @Inject constructor(
                 is PlacePokemon.Equipe -> deposerAuPc(runId, place.emplacement, boite.value)
                 is PlacePokemon.Pc -> retirerDuPc(runId, place.id)
             }
+            // Seule la sélection déplacée est effacée : un choix fait pendant l'écriture est gardé.
             if (resultat == ResultatPc.Fait) {
-                selection.value = null
-                refus.value = null
-            } else {
+                if (selection.compareAndSet(place, null)) refus.value = null
+            } else if (selection.value == place) {
                 refus.value = resultat
             }
         }
