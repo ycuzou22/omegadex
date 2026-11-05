@@ -1,0 +1,332 @@
+{
+  "source": "Poképédia, équipes du premier combat dans Pokémon Rubis Oméga / Saphir Alpha",
+  "dresseurs": [
+    {
+      "cle": "roxanne",
+      "etapeId": 1,
+      "nom": "Roxanne",
+      "titre": "Championne",
+      "lieu": "Arène de Mérouville",
+      "type": "roche",
+      "queteId": 7,
+      "equipe": [
+        {
+          "especeId": 74,
+          "niveau": 12,
+          "attaques": [
+            "Boul'Armure",
+            "Tomberoche"
+          ]
+        },
+        {
+          "especeId": 299,
+          "niveau": 14,
+          "attaques": [
+            "Armure",
+            "Tomberoche"
+          ]
+        }
+      ],
+      "attention": "Tomberoche baisse la Vitesse de ta cible, et Racaillou tient une Potion."
+    },
+    {
+      "cle": "bastien",
+      "etapeId": 2,
+      "nom": "Bastien",
+      "titre": "Champion",
+      "lieu": "Arène de Myokara",
+      "type": "combat",
+      "queteId": 11,
+      "equipe": [
+        {
+          "especeId": 66,
+          "niveau": 14,
+          "attaques": [
+            "Poing-Karaté",
+            "Frappe Atlas",
+            "Gonflette"
+          ]
+        },
+        {
+          "especeId": 296,
+          "niveau": 16,
+          "attaques": [
+            "Sabotage",
+            "Jet de Sable",
+            "Gonflette"
+          ]
+        }
+      ],
+      "attention": "Gonflette augmente son Attaque à chaque fois : ne le laisse pas se renforcer."
+    },
+    {
+      "cle": "voltere",
+      "etapeId": 3,
+      "nom": "Voltère",
+      "titre": "Champion",
+      "lieu": "Arène de Lavandia",
+      "type": "electrik",
+      "queteId": 15,
+      "equipe": [
+        {
+          "especeId": 81,
+          "niveau": 19,
+          "attaques": [
+            "Cage-Éclair",
+            "Charge",
+            "Change Éclair"
+          ]
+        },
+        {
+          "especeId": 100,
+          "niveau": 19,
+          "attaques": [
+            "Roulade",
+            "Chargeur",
+            "Change Éclair"
+          ]
+        },
+        {
+          "especeId": 82,
+          "niveau": 21,
+          "attaques": [
+            "Ultrason",
+            "Bombaimant",
+            "Change Éclair"
+          ]
+        }
+      ],
+      "attention": "Change Éclair le fait changer de Pokémon après l'attaque, et Cage-Éclair peut paralyser."
+    },
+    {
+      "cle": "adriane",
+      "etapeId": 4,
+      "nom": "Adriane",
+      "titre": "Championne",
+      "lieu": "Arène de Vermilava",
+      "type": "feu",
+      "queteId": 20,
+      "equipe": [
+        {
+          "especeId": 218,
+          "niveau": 26,
+          "attaques": [
+            "Surchauffe",
+            "Jet-Pierres",
+            "Mur Lumière",
+            "Zénith"
+          ]
+        },
+        {
+          "especeId": 322,
+          "niveau": 26,
+          "attaques": [
+            "Telluriforce",
+            "Ébullilave",
+            "Amnésie",
+            "Zénith"
+          ]
+        },
+        {
+          "especeId": 324,
+          "niveau": 28,
+          "attaques": [
+            "Surchauffe",
+            "Plaquage",
+            "Malédiction",
+            "Zénith"
+          ]
+        }
+      ],
+      "attention": "Zénith renforce ses attaques Feu ; Chamallot craint l'Eau quatre fois."
+    },
+    {
+      "cle": "norman",
+      "etapeId": 5,
+      "nom": "Norman",
+      "titre": "Champion",
+      "lieu": "Arène de Clémenti-Ville",
+      "type": "normal",
+      "queteId": 22,
+      "equipe": [
+        {
+          "especeId": 289,
+          "niveau": 28,
+          "attaques": [
+            "Encore",
+            "Bâillement",
+            "Vengeance",
+            "Feinte"
+          ]
+        },
+        {
+          "especeId": 288,
+          "niveau": 28,
+          "attaques": [
+            "Encore",
+            "Combo-Griffe",
+            "Vengeance",
+            "Feinte"
+          ]
+        },
+        {
+          "especeId": 289,
+          "niveau": 30,
+          "attaques": [
+            "Attrition",
+            "Vantardise",
+            "Vengeance",
+            "Feinte"
+          ]
+        }
+      ],
+      "attention": "Monaflèmit n'attaque qu'un tour sur deux, mais Vengeance frappe deux fois plus fort s'il a été touché."
+    },
+    {
+      "cle": "alizee",
+      "etapeId": 6,
+      "nom": "Alizée",
+      "titre": "Championne",
+      "lieu": "Arène de Cimetronelle",
+      "type": "vol",
+      "queteId": 26,
+      "equipe": [
+        {
+          "especeId": 277,
+          "niveau": 33,
+          "attaques": [
+            "Vive-Attaque",
+            "Aéropique",
+            "Reflet",
+            "Effort"
+          ]
+        },
+        {
+          "especeId": 279,
+          "niveau": 33,
+          "attaques": [
+            "Vibraqua",
+            "Atterrissage",
+            "Abri",
+            "Aéropique"
+          ]
+        },
+        {
+          "especeId": 227,
+          "niveau": 33,
+          "attaques": [
+            "Jet de Sable",
+            "Tranch'Air",
+            "Aile d'Acier",
+            "Aéropique"
+          ]
+        },
+        {
+          "especeId": 334,
+          "niveau": 35,
+          "attaques": [
+            "Séisme",
+            "Dracosouffle",
+            "Cotogarde",
+            "Atterrissage"
+          ]
+        }
+      ],
+      "attention": "Altaria connaît Séisme et craint la Glace quatre fois ; Hélédelle tient une Hyper Potion."
+    },
+    {
+      "cle": "levy-et-tatia",
+      "etapeId": 7,
+      "nom": "Lévy et Tatia",
+      "titre": "Champions",
+      "lieu": "Arène d'Algatia",
+      "type": "psy",
+      "queteId": 30,
+      "duo": true,
+      "equipe": [
+        {
+          "especeId": 337,
+          "niveau": 45,
+          "attaques": [
+            "Hypnose",
+            "Plénitude",
+            "Mur Lumière",
+            "Psyko"
+          ]
+        },
+        {
+          "especeId": 338,
+          "niveau": 45,
+          "attaques": [
+            "Zénith",
+            "Éboulement",
+            "Lance-Soleil",
+            "Psyko"
+          ]
+        }
+      ],
+      "attention": "Combat en duo : Séléroc peut endormir avec Hypnose, et Solaroc lance Lance-Soleil sans charger sous Zénith."
+    },
+    {
+      "cle": "marc",
+      "etapeId": 9,
+      "nom": "Marc",
+      "titre": "Champion",
+      "lieu": "Arène d'Atalanopolis",
+      "type": "eau",
+      "queteId": 34,
+      "equipe": [
+        {
+          "especeId": 370,
+          "niveau": 44,
+          "attaques": [
+            "Vibraqua",
+            "Attraction",
+            "Vampibaiser"
+          ]
+        },
+        {
+          "especeId": 119,
+          "niveau": 44,
+          "attaques": [
+            "Anneau Hydro",
+            "Danse Pluie",
+            "Cascade",
+            "Empal'Korne"
+          ]
+        },
+        {
+          "especeId": 340,
+          "niveau": 44,
+          "attaques": [
+            "Lance-Boue",
+            "Cascade",
+            "Psykoud'Boul",
+            "Séisme"
+          ]
+        },
+        {
+          "especeId": 364,
+          "niveau": 44,
+          "attaques": [
+            "Encore",
+            "Plaquage",
+            "Cascade",
+            "Onde Boréale"
+          ]
+        },
+        {
+          "especeId": 350,
+          "niveau": 46,
+          "attaques": [
+            "Hydrocanon",
+            "Voix Enjôleuse",
+            "Soin",
+            "Laser Glace"
+          ]
+        }
+      ],
+      "attention": "Milobellus se soigne avec Soin et connaît Laser Glace ; Barbicha (Eau et Sol) est immunisé à l'Électrik."
+    }
+  ]
+}
