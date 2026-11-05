@@ -4,6 +4,7 @@ import com.omegadex.app.domain.equipe.Affinite
 import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.model.Stats
 import com.omegadex.app.feature.aventure.decouperNom
+import com.omegadex.app.feature.aventure.tailleNom
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -57,5 +58,15 @@ class StrategieCombatTest {
         assertEquals("ROXA" to "NNE", decouperNom("Roxanne"))
         assertEquals("LÉVY" to "TATIA", decouperNom("Lévy et Tatia"))
         assertEquals("MARC" to "", decouperNom("Marc"))
+        assertEquals("PIERRE" to "ROCHARD", decouperNom("Pierre Rochard"))
+        assertEquals("LES" to "MIA", decouperNom("Les & Mia"))
+        assertEquals("SBIRE DE LA" to "TEAM MAGMA", decouperNom("Sbire de la Team Magma"))
+    }
+
+    @Test
+    fun `un nom long est ecrit plus petit sans descendre sous le minimum`() {
+        assertEquals(84, tailleNom(6))
+        assertEquals(42, tailleNom(12))
+        assertEquals(30, tailleNom(40))
     }
 }
