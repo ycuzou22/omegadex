@@ -51,20 +51,33 @@ data class DefiPropose(
  *   ou de l'équipe, **un seul défi espèce actif par Pokémon** ;
  * - aucun défi ne fixe un niveau au-dessus du plafond, et une évolution n'est proposée que si elle est
  *   atteignable sous le plafond ;
- * - un défi déjà actif ou réussi n'est pas reproposé (un défi raté peut être retenté).
+ * - un défi déjà actif ou réussi n'est pas reproposé (un défi raté peut être retenté) ;
+ * - **un seul défi de combat par adversaire** : dès qu'un défi d'étape, Monotype ou Rotation est accepté pour
+ *   l'étape en cours, les autres défis de combat de cette étape ne sont plus proposés (ils reviennent s'il est raté).
  */
 object GenerateurDefis {
     /** Types de défis attachés à une espèce. */
     val TYPES_ESPECE = setOf(TypeDefi.ESPECE, TypeDefi.EVOLUTION, TypeDefi.NAVI_DEX, TypeDefi.MEGA, TypeDefi.CONCOURS)
 
-    fun generer(contexte: ContexteDefis, modeles: List<ModeleDefi>): List<DefiPropose> =
-        modeles.filter { estDebloque(it, contexte) }.flatMap { modele ->
-            if (modele.type in TYPES_ESPECE) {
-                defisEspece(modele, contexte)
-            } else {
-                listOfNotNull(defiEtape(modele, contexte))
+    /** Types de défis qui portent sur le combat contre l'adversaire de l'étape. */
+    val TYPES_COMBAT = setOf(TypeDefi.ETAPE, TypeDefi.MONOTYPE, TypeDefi.ROTATION)
+
+    fun generer(contexte: ContexteDefis, modeles: List<ModeleDefi>): List<DefiPropose> {
+        val types = modeles.associate { it.id to it.type }
+        val combatEngage = combatEngage(contexte.defisExistants, contexte.etape.id, types)
+        return modeles.filter { estDebloque(it, contexte) }.flatMap { modele ->
+            when {
+                modele.type in TYPES_ESPECE -> defisEspece(modele, contexte)
+                combatEngage -> emptyList()
+                else -> listOfNotNull(defiEtape(modele, contexte))
             }
         }
+    }
+
+    /** Vrai si un défi de combat de l'étape [etapeId] est en cours ou réussi (un défi raté libère le combat). */
+    fun combatEngage(defis: List<Defi>, etapeId: Int, types: Map<Int, TypeDefi>): Boolean = defis.any {
+        it.etapeId == etapeId && it.etat != EtatDefi.RATE && types[it.modeleId] in TYPES_COMBAT
+    }
 
     /** Difficulté, étape de déblocage et conditions qui ne dépendent pas d'une espèce. */
     fun estDebloque(modele: ModeleDefi, contexte: ContexteDefis): Boolean =

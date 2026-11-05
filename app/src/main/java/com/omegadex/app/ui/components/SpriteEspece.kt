@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -67,12 +70,17 @@ object Sprites {
     }.also { presents = it }
 }
 
-/** Charge l'image de l'espèce hors du fil principal ; null tant qu'elle charge ou si elle n'existe pas. */
+/**
+ * Charge l'image de l'espèce hors du fil principal ; null tant qu'elle charge ou si elle n'existe pas.
+ * L'état repart de zéro quand [especeId] change (après une évolution, par exemple) : sinon l'ancienne image
+ * resterait affichée jusqu'à ce que l'écran soit recomposé de zéro.
+ */
 @Composable
 fun rememberSprite(especeId: Int): ImageBitmap? {
     val context = LocalContext.current.applicationContext
-    val image by produceState(Sprites.enCache(especeId), especeId) {
-        if (value == null) value = Sprites.charger(context, especeId)
+    var image by remember(especeId) { mutableStateOf(Sprites.enCache(especeId)) }
+    LaunchedEffect(especeId) {
+        if (image == null) image = Sprites.charger(context, especeId)
     }
     return image
 }
