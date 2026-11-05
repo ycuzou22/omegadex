@@ -348,7 +348,12 @@ private fun BoutonBattu(fiche: FicheDresseur, onBattu: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
         )
     } else {
-        OmegaButton(stringResource(marquer, nom), onClick = onBattu, avecOmega = true, modifier = Modifier.fillMaxWidth())
+        OmegaButton(
+            stringResource(marquer, nom),
+            onClick = onBattu,
+            avecOmega = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
