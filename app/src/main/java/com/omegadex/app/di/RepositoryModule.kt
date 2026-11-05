@@ -9,6 +9,7 @@ import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.data.repository.ReglagesDataStore
 import com.omegadex.app.data.repository.RunActiveDataStore
 import com.omegadex.app.data.repository.SessionDataStore
+import com.omegadex.app.data.repository.SuccesRepositoryImpl
 import com.omegadex.app.data.securite.CleBaseKeystore
 import com.omegadex.app.data.securite.FournisseurCleBase
 import com.omegadex.app.data.securite.HacheurArgon2
@@ -20,6 +21,7 @@ import com.omegadex.app.domain.repository.ProgressionRepository
 import com.omegadex.app.domain.repository.ReglagesRepository
 import com.omegadex.app.domain.repository.RunActiveRepository
 import com.omegadex.app.domain.repository.SessionRepository
+import com.omegadex.app.domain.repository.SuccesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -45,6 +47,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindProgressionRepository(impl: ProgressionRepositoryImpl): ProgressionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSuccesRepository(impl: SuccesRepositoryImpl): SuccesRepository
 
     @Binds
     abstract fun bindHorloge(impl: HorlogeSysteme): Horloge
