@@ -178,6 +178,9 @@
     <string name="defis_vide_actifs">Aucun défi en cours. Relève un défi disponible !</string>
     <string name="defis_vide_disponibles">Aucun défi disponible pour l\'instant : capture des Pokémon et avance dans l\'aventure.</string>
     <string name="defis_vide_termines">Aucun défi terminé.</string>
+    <string name="cloture_defis_titre">Et ce combat ?</string>
+    <string name="cloture_defis_texte">Tu avais relevé un défi contre cet adversaire. L\'as-tu réussi ?</string>
+    <string name="cloture_defis_plus_tard">Plus tard</string>
     <string name="defis_refus_espece">Ce Pokémon relève déjà un défi : termine-le d\'abord.</string>
     <string name="defis_aucune_run">Aucune run en cours.</string>
     <string name="defis_retour">Retour</string>

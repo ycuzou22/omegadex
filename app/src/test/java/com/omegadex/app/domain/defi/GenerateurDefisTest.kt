@@ -140,6 +140,43 @@ class GenerateurDefisTest {
     }
 
     @Test
+    fun `un seul defi de combat par adversaire, libere par un echec`() {
+        val plante = modele(5012, TypeDefi.MONOTYPE, parametres = mapOf("type" to "plante"))
+        val tenebres = modele(5017, TypeDefi.MONOTYPE, parametres = mapOf("type" to "tenebres"))
+        val rotation = modele(4001, TypeDefi.ROTATION)
+        val espece = modele(2002, TypeDefi.ESPECE)
+        val modeles = modelesEtape + listOf(plante, tenebres, rotation, espece)
+        val accepte = Defi(1, 5012, null, 1, EtatDefi.ACTIF, 0, null)
+
+        // Monotype Plante accepté contre Roxanne : plus aucun autre combat, les défis espèce restent.
+        assertEquals(listOf(2002), ids(GenerateurDefis.generer(contexte(defis = listOf(accepte)), modeles)))
+        val reussi = accepte.copy(etat = EtatDefi.REUSSI)
+        assertEquals(listOf(2002), ids(GenerateurDefis.generer(contexte(defis = listOf(reussi)), modeles)))
+
+        // Raté : les défis de combat reviennent.
+        val rate = accepte.copy(etat = EtatDefi.RATE)
+        assertTrue(5017 in ids(GenerateurDefis.generer(contexte(defis = listOf(rate)), modeles)))
+
+        // Un défi de combat d'une autre étape ne bloque pas Roxanne.
+        val ailleurs = accepte.copy(etapeId = 0)
+        assertTrue(1011 in ids(GenerateurDefis.generer(contexte(defis = listOf(ailleurs)), modeles)))
+    }
+
+    @Test
+    fun `a la validation de l'etape, seuls ses defis de combat actifs sont a clore`() {
+        fun affiche(id: Long, modele: ModeleDefi, etapeId: Int?, etat: EtatDefi = EtatDefi.ACTIF) =
+            DefiAffiche(Defi(id, modele.id, null, etapeId, etat, 0, null), modele, "Défi $id", null)
+        val combat = affiche(1, modele(5012, TypeDefi.MONOTYPE), etapeId = 1)
+        val autreEtape = affiche(2, modele(1021, TypeDefi.ETAPE), etapeId = 2)
+        val espece = affiche(3, modele(2002, TypeDefi.ESPECE), etapeId = null)
+        val run =
+            DefisDeLaRun(Difficulte.HARDCORE, listOf(combat, autreEtape, espece), emptyList(), BilanDefis(3, 0, 0))
+
+        assertEquals(listOf(combat), defisAClore(run, etapeId = 1))
+        assertTrue(defisAClore(null, etapeId = 1).isEmpty())
+    }
+
+    @Test
     fun `le marqueur type liste les types en francais`() {
         val monotype = modele(
             5014,
