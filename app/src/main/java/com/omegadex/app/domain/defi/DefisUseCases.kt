@@ -46,7 +46,11 @@ class ProposerDefisUseCase @Inject constructor(
         val donnees = combine(progression.etapes(runId), jeu.modelesDefis(), jeu.pokedexNational()) { et, m, p ->
             Triple(et, m, p)
         }
-        combine(suivi, donnees) { a, b -> a to b }.mapLatest { (suiviRun, donneesJeu) ->
+        val championOuvert = combine(jeu.quetes(etape.id), progression.quetesCochees(runId)) { quetes, cochees ->
+            VerrouChampion.queteRequise(etape.id, quetes, cochees) == null
+        }
+        val tout = combine(suivi, donnees, championOuvert) { a, b, c -> Triple(a, b, c) }
+        tout.mapLatest { (suiviRun, donneesJeu, ouvert) ->
             val (equipe, statuts, defis) = suiviRun
             val (etapes, modeles, especes) = donneesJeu
             val parId = especes.associateBy { it.id }
@@ -61,6 +65,7 @@ class ProposerDefisUseCase @Inject constructor(
                 },
                 defisExistants = defis,
                 nationalObtenu = RegleNational.debloque(etapes),
+                championOuvert = ouvert,
             )
             val tirages = tirer(contexte, runId, defis)
             GenerateurDefis.generer(contexte, modeles).filterNot {
@@ -95,17 +100,26 @@ class ProposerDefisUseCase @Inject constructor(
 }
 
 /** Refus d'accepter un défi proposé. */
-enum class RefusDefi { ESPECE_DEJA_ENGAGEE, }
+enum class RefusDefi { ESPECE_DEJA_ENGAGEE, CATEGORIE_OCCUPEE }
 
 /**
  * Accepte un défi proposé : il devient actif dans la run. Un Pokémon ne porte qu'un seul défi espèce
- * actif à la fois ; un second est refusé tant que le premier n'est pas terminé.
+ * actif à la fois, et chaque catégorie qu'un seul défi en cours ; un second est refusé tant que le premier
+ * n'est pas terminé.
  */
-class AccepterDefiUseCase @Inject constructor(private val progression: ProgressionRepository) {
+class AccepterDefiUseCase @Inject constructor(
+    private val progression: ProgressionRepository,
+    private val jeu: JeuRepository,
+) {
     suspend operator fun invoke(runId: Long, defi: DefiPropose): Result<Long> {
+        val defis = progression.defis(runId).first()
         val especeId = defi.especeId
-        if (especeId != null && especeId in GenerateurDefis.especesOccupees(progression.defis(runId).first())) {
+        if (especeId != null && especeId in GenerateurDefis.especesOccupees(defis)) {
             return Result.failure(IllegalStateException(RefusDefi.ESPECE_DEJA_ENGAGEE.name))
+        }
+        val types = jeu.modelesDefis().first().associate { it.id to it.type }
+        if (CategorieDefi.de(defi.modele.type) in GenerateurDefis.categoriesOccupees(defis, types)) {
+            return Result.failure(IllegalStateException(RefusDefi.CATEGORIE_OCCUPEE.name))
         }
         return Result.success(progression.ajouterDefi(runId, defi.modele.id, especeId, defi.etapeId))
     }

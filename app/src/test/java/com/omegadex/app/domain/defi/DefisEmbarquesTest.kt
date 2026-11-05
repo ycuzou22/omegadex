@@ -112,7 +112,7 @@ class DefisEmbarquesTest {
         progression.placerMembre(run, MembreEquipe(1, 252, null, 5))
         val runEnCours = ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu)
         val proposer = ProposerDefisUseCase(runEnCours, progression, jeu)
-        val accepter = AccepterDefiUseCase(progression)
+        val accepter = AccepterDefiUseCase(progression, jeu)
 
         val proposes = proposer().first()
         assertTrue(proposes.any { it.modele.type == TypeDefi.ETAPE && it.etapeId == 0 })

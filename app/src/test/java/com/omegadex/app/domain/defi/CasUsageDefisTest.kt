@@ -77,7 +77,7 @@ class CasUsageDefisTest {
     private val runEnCours = ObserverRunEnCoursUseCase(session, RunActiveFixe(), comptes, progression, jeu)
     private val proposer = ProposerDefisUseCase(runEnCours, progression, jeu)
     private val observer = ObserverDefisUseCase(runEnCours, progression, jeu)
-    private val accepter = AccepterDefiUseCase(progression)
+    private val accepter = AccepterDefiUseCase(progression, jeu)
     private val valider = ValiderDefiUseCase(progression)
     private val retenter = RetenterDefiUseCase(progression)
 
@@ -116,15 +116,16 @@ class CasUsageDefisTest {
     }
 
     @Test
-    fun `accepter un second defi espece pour le meme pokemon est refuse`() = runTest {
+    fun `un second defi pour le meme pokemon ou la meme categorie est refuse`() = runTest {
         demarrerRun()
         val proposes = proposer().first()
         assertTrue(accepter(RUN, proposes.first { it.modele.id == 1001 }).isSuccess)
         assertTrue(accepter(RUN, proposes.first { it.modele.id == 2001 && it.especeId == 252 }).isSuccess)
         val refus = accepter(RUN, proposes.first { it.modele.id == 2002 })
         assertEquals(RefusDefi.ESPECE_DEJA_ENGAGEE.name, refus.exceptionOrNull()?.message)
-        assertTrue(accepter(RUN, proposes.first { it.especeId == 258 }).isSuccess)
-        assertEquals(3, progression.defis(RUN).first().size)
+        val categorie = accepter(RUN, proposes.first { it.modele.id == 2001 && it.especeId == 258 })
+        assertEquals(RefusDefi.CATEGORIE_OCCUPEE.name, categorie.exceptionOrNull()?.message)
+        assertEquals(2, progression.defis(RUN).first().size)
         assertTrue("Arcko est occupé", proposer().first().none { it.especeId == 252 })
     }
 

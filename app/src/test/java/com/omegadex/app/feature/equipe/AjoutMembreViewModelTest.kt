@@ -73,7 +73,7 @@ class AjoutMembreViewModelTest {
             jeu,
             AjouterMembreUseCase(progression),
             ProposerDefisUseCase(runEnCours, progression, jeu),
-            AccepterDefiUseCase(progression),
+            AccepterDefiUseCase(progression, jeu),
         )
     }
 

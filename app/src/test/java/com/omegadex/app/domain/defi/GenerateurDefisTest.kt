@@ -157,8 +157,8 @@ class GenerateurDefisTest {
         val rate = accepte.copy(etat = EtatDefi.RATE)
         assertTrue(5017 in ids(GenerateurDefis.generer(contexte(defis = listOf(rate)), modeles)))
 
-        // Un défi de combat d'une autre étape ne bloque pas Roxanne.
-        val ailleurs = accepte.copy(etapeId = 0)
+        // Un défi de combat réussi contre un autre adversaire ne bloque pas Roxanne.
+        val ailleurs = accepte.copy(etapeId = 0, etat = EtatDefi.REUSSI)
         assertTrue(1011 in ids(GenerateurDefis.generer(contexte(defis = listOf(ailleurs)), modeles)))
     }
 

@@ -3,11 +3,15 @@ package com.omegadex.app.feature.defis
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omegadex.app.domain.defi.ActionsRoulette
 import com.omegadex.app.domain.defi.ActionsSurDefis
+import com.omegadex.app.domain.defi.CaseRoulette
+import com.omegadex.app.domain.defi.CategorieDefi
 import com.omegadex.app.domain.defi.DefiAffiche
 import com.omegadex.app.domain.defi.DefiPropose
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
-import com.omegadex.app.domain.defi.ProposerDefisUseCase
+import com.omegadex.app.domain.defi.Roulette
+import com.omegadex.app.domain.defi.RouletteDefis
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
@@ -26,47 +30,48 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** Espace Défis (onglet) et page « Défis de … » d'un Pokémon (avec l'argument [ARGUMENT_ESPECE]). */
+/** Espace Défis (onglet, avec ses six roulettes) et page « Défis de … » d'un Pokémon (argument [ARGUMENT_ESPECE]). */
 @HiltViewModel
 class DefisViewModel @Inject constructor(
     etatNavigation: SavedStateHandle,
     observerDefis: ObserverDefisUseCase,
-    proposerDefis: ProposerDefisUseCase,
     private val observerRunEnCours: ObserverRunEnCoursUseCase,
     private val actions: ActionsSurDefis,
+    private val roulette: ActionsRoulette,
     jeu: JeuRepository,
 ) : ViewModel() {
     private val especeId: Int? = etatNavigation[ARGUMENT_ESPECE]
-    private val onglet = MutableStateFlow(OngletDefis.ACTIFS)
+    private val onglet = MutableStateFlow(if (especeId == null) OngletDefis.ROULETTE else OngletDefis.ACTIFS)
     private val filtre = MutableStateFlow<Difficulte?>(null)
-    private val propositions = mutableMapOf<String, DefiPropose>()
     private val refus = Channel<Unit>(Channel.CONFLATED)
+    private val tours = Channel<TourDeRoulette>(Channel.BUFFERED)
 
-    /** Émis quand un défi est refusé (le Pokémon relève déjà un défi). */
+    /** Émis quand un défi est refusé (le Pokémon ou la catégorie porte déjà un défi). */
     val refusEspece: Flow<Unit> = refus.receiveAsFlow()
+
+    /** Émis à chaque tour de roulette, pour l'animer. */
+    val toursDeRoulette: Flow<TourDeRoulette> = tours.receiveAsFlow()
 
     val uiState: StateFlow<DefisUiState> = combine(
         observerDefis(),
-        proposerDefis(),
+        if (especeId == null) roulette.observer() else flowOf(null),
         onglet,
         filtre,
         especeId?.let { id -> jeu.espece(id).map { it?.nom } } ?: flowOf(null),
-    ) { run, proposes, o, f, nomEspece ->
+    ) { run, roues, o, f, nomEspece ->
         if (run == null) return@combine DefisUiState.AucuneRun
-        val disponibles = proposes.filter { especeId == null || it.especeId == especeId }
-        // Les propositions restent connues : un « Relever » tardif sur une carte déjà disparue est refusé proprement.
-        synchronized(propositions) { disponibles.forEach { propositions[cle(it)] = it } }
         fun garder(carte: CarteDefi) =
             (especeId == null || carte.especeId == especeId) && (f == null || carte.difficulte == f)
+        val rouletteUi = roues?.let(::rouletteUi)
         DefisUiState.Espace(
             especeNom = nomEspece,
             difficulteRun = run.difficulte,
-            onglet = o,
+            onglet = if (rouletteUi == null && o == OngletDefis.ROULETTE) OngletDefis.ACTIFS else o,
             filtre = f,
             actifs = run.actifs.map { carte(it) }.filter(::garder),
-            disponibles = disponibles.map { carte(it) }.filter(::garder),
             termines = run.historique.map { carte(it) }.filter(::garder),
             bilan = run.bilan,
+            roulette = rouletteUi,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(ARRET_MS), DefisUiState.Chargement)
 
@@ -78,11 +83,15 @@ class DefisViewModel @Inject constructor(
         filtre.value = difficulte
     }
 
-    fun relever(cle: String) {
-        val propose = synchronized(propositions) { propositions[cle] } ?: return
-        executerSurLaRun { runId ->
-            if (actions.accepter(runId, propose).isFailure) refus.trySend(Unit) else onglet.value = OngletDefis.ACTIFS
-        }
+    /** Fait tourner la roulette d'une catégorie ; le tour est émis dans [toursDeRoulette]. */
+    fun tourner(categorie: CategorieDefi) = surLaRoulette(categorie) { runId, roues, case ->
+        val gagnant = roulette.tourner(runId, roues.etape.id, case) ?: return@surLaRoulette
+        tours.send(TourDeRoulette(categorie, carte(gagnant), RouletteDefis.rouleau(case.pool, gagnant).map(::carte)))
+    }
+
+    /** Relève le défi tiré d'une catégorie. */
+    fun releverTirage(categorie: CategorieDefi) = surLaRoulette(categorie) { runId, roues, case ->
+        if (roulette.relever(runId, roues.etape.id, case).isFailure) refus.trySend(Unit)
     }
 
     fun valider(defiId: Long, reussi: Boolean) = executerSurLaRun { actions.valider(it, defiId, reussi) }
@@ -91,12 +100,41 @@ class DefisViewModel @Inject constructor(
         if (actions.retenter(runId, defiId) == null) refus.trySend(Unit) else onglet.value = OngletDefis.ACTIFS
     }
 
+    private fun surLaRoulette(categorie: CategorieDefi, action: suspend (Long, Roulette, CaseRoulette) -> Unit) =
+        executerSurLaRun { runId ->
+            val roues = roulette.observer().first() ?: return@executerSurLaRun
+            action(runId, roues, roues.cases.first { it.categorie == categorie })
+        }
+
     private fun executerSurLaRun(action: suspend (Long) -> Unit) {
         viewModelScope.launch {
             val runId = observerRunEnCours().first()?.run?.id ?: return@launch
             action(runId)
         }
     }
+
+    private fun rouletteUi(roues: Roulette) = RouletteUi(
+        numeroEtape = roues.etape.id,
+        adversaire = roues.etape.adversaire,
+        cases = roues.cases.map { case ->
+            val etat = when {
+                case.actif != null -> EtatCase.EN_COURS
+                case.tirage != null -> EtatCase.TIRE
+                case.queteRequise != null -> EtatCase.VERROU
+                case.pool.isEmpty() -> EtatCase.VIDE
+                else -> EtatCase.LIBRE
+            }
+            CaseRouletteUi(
+                categorie = case.categorie,
+                etat = etat,
+                nombre = case.pool.size,
+                defi = case.actif?.let { carte(it) } ?: case.tirage?.let { carte(it) },
+                relancesRestantes = case.relancesRestantes,
+                peutTourner = case.peutTourner,
+                queteRequise = case.queteRequise?.description,
+            )
+        },
+    )
 
     private fun carte(affiche: DefiAffiche) = CarteDefi(
         cle = "defi-${affiche.defi.id}",
@@ -111,7 +149,7 @@ class DefisViewModel @Inject constructor(
     )
 
     private fun carte(propose: DefiPropose) = CarteDefi(
-        cle = cle(propose),
+        cle = "propose-${propose.modele.id}-${propose.especeId}-${propose.etapeId}",
         defiId = null,
         titre = propose.modele.titre,
         enonce = propose.enonce,
@@ -121,8 +159,6 @@ class DefisViewModel @Inject constructor(
         especeNom = propose.especeNom,
         etat = null,
     )
-
-    private fun cle(propose: DefiPropose) = "propose-${propose.modele.id}-${propose.especeId}-${propose.etapeId}"
 
     companion object {
         const val ARGUMENT_ESPECE = "especeId"

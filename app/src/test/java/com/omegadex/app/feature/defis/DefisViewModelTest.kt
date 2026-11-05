@@ -12,20 +12,26 @@ import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
 import com.omegadex.app.di.DatabaseModule
 import com.omegadex.app.domain.defi.AccepterDefiUseCase
+import com.omegadex.app.domain.defi.ActionsRoulette
 import com.omegadex.app.domain.defi.ActionsSurDefis
+import com.omegadex.app.domain.defi.CategorieDefi
 import com.omegadex.app.domain.defi.ObserverDefisUseCase
+import com.omegadex.app.domain.defi.ObserverRouletteUseCase
 import com.omegadex.app.domain.defi.ProposerDefisUseCase
+import com.omegadex.app.domain.defi.ReleverTirageUseCase
 import com.omegadex.app.domain.defi.RetenterDefiUseCase
+import com.omegadex.app.domain.defi.RouletteDefis
+import com.omegadex.app.domain.defi.TournerRouletteUseCase
 import com.omegadex.app.domain.defi.ValiderDefiUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.EtatDefi
 import com.omegadex.app.domain.model.MembreEquipe
-import com.omegadex.app.domain.model.TypeDefi
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.Starter
 import com.omegadex.app.testutil.FausseRunActive
 import com.omegadex.app.testutil.FausseSession
+import com.omegadex.app.testutil.FauxTirages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -35,6 +41,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -67,16 +75,20 @@ class DefisViewModelTest {
         val run = requireNotNull(runActive.runActive(1).first())
         progression.placerMembre(run, MembreEquipe(1, 252, null, 5))
         val runEnCours = ObserverRunEnCoursUseCase(session, runActive, comptes, progression, jeu)
+        val observerDefis = ObserverDefisUseCase(runEnCours, progression, jeu)
+        val proposer = ProposerDefisUseCase(runEnCours, progression, jeu)
+        val accepter = AccepterDefiUseCase(progression, jeu)
+        val tirages = FauxTirages()
         fabrique = { etat ->
             DefisViewModel(
                 etat,
-                ObserverDefisUseCase(runEnCours, progression, jeu),
-                ProposerDefisUseCase(runEnCours, progression, jeu),
+                observerDefis,
                 runEnCours,
-                ActionsSurDefis(
-                    AccepterDefiUseCase(progression),
-                    ValiderDefiUseCase(progression),
-                    RetenterDefiUseCase(progression),
+                ActionsSurDefis(accepter, ValiderDefiUseCase(progression), RetenterDefiUseCase(progression)),
+                ActionsRoulette(
+                    ObserverRouletteUseCase(runEnCours, proposer, observerDefis, tirages, progression, jeu),
+                    TournerRouletteUseCase(tirages),
+                    ReleverTirageUseCase(accepter, tirages),
                 ),
                 jeu,
             )
@@ -94,42 +106,47 @@ class DefisViewModelTest {
     private suspend fun DefisViewModel.espace(condition: (DefisUiState.Espace) -> Boolean = { true }) =
         uiState.first { it is DefisUiState.Espace && condition(it) } as DefisUiState.Espace
 
+    private fun DefisUiState.Espace.case(categorie: CategorieDefi) =
+        requireNotNull(roulette).cases.first { it.categorie == categorie }
+
     @Test
-    fun `relever puis valider un defi met a jour les listes et la jauge`() = runTest {
+    fun `tourner la roulette, relever le defi tire puis le valider`() = runTest {
         val vm = fabrique(SavedStateHandle())
-        val depart = vm.espace()
-        assertTrue(depart.actifs.isEmpty())
-        val defiEtape = depart.disponibles.first { it.type == TypeDefi.ETAPE }
+        val depart = vm.espace { it.roulette != null }
+        assertEquals(OngletDefis.ROULETTE, depart.onglet)
+        assertEquals(CategorieDefi.entries, requireNotNull(depart.roulette).cases.map { it.categorie })
+        val champion = depart.case(CategorieDefi.CHAMPION)
+        assertEquals("l'étape de départ n'a pas de badge : le combat est ouvert", EtatCase.LIBRE, champion.etat)
 
-        vm.choisirOnglet(OngletDefis.DISPONIBLES)
-        vm.relever(defiEtape.cle)
-        // Le défi relevé quitte les disponibles dès que les propositions sont recalculées.
-        val actif = vm.espace { espace ->
-            espace.actifs.size == 1 && espace.disponibles.none { it.titre == defiEtape.titre }
-        }
-        assertEquals(OngletDefis.ACTIFS, actif.onglet)
+        vm.tourner(CategorieDefi.CHAMPION)
+        val tour = vm.toursDeRoulette.first()
+        assertEquals(tour.gagnant, tour.rouleau[RouletteDefis.ARRET_ROULEAU])
+        val tire = vm.espace { it.case(CategorieDefi.CHAMPION).etat == EtatCase.TIRE }.case(CategorieDefi.CHAMPION)
+        assertEquals(tour.gagnant.titre, tire.defi?.titre)
+        assertNull("relances illimitées en Normal", tire.relancesRestantes)
 
+        vm.releverTirage(CategorieDefi.CHAMPION)
+        val actif = vm.espace { it.actifs.size == 1 && it.case(CategorieDefi.CHAMPION).etat == EtatCase.EN_COURS }
+        assertFalse("une catégorie occupée ne tourne plus", actif.case(CategorieDefi.CHAMPION).peutTourner)
+        assertEquals(1, requireNotNull(actif.roulette).occupees)
+
+        vm.choisirOnglet(OngletDefis.ACTIFS)
         vm.valider(requireNotNull(actif.actifs.single().defiId), reussi = true)
         val termine = vm.espace { it.termines.size == 1 }
         assertEquals(EtatDefi.REUSSI, termine.termines.single().etat)
         assertEquals(1f, termine.bilan.tauxReussite)
 
         vm.filtrer(Difficulte.DIFFICILE)
-        assertTrue(vm.espace { it.filtre == Difficulte.DIFFICILE }.disponibles.isEmpty())
+        assertTrue(vm.espace { it.filtre == Difficulte.DIFFICILE }.termines.isEmpty())
     }
 
     @Test
-    fun `la page d'un pokemon montre son defi tire au sort et refuse un second defi actif`() = runTest {
+    fun `la page d'un pokemon n'a pas de roulette`() = runTest {
         val vm = fabrique(SavedStateHandle(mapOf(DefisViewModel.ARGUMENT_ESPECE to 252)))
-        val page = vm.espace { it.especeNom != null && it.disponibles.isNotEmpty() }
+        val page = vm.espace { it.especeNom != null }
         assertEquals("Arcko", page.especeNom)
-        val tire = page.disponibles.single()
-        assertEquals(252, tire.especeId)
-
-        vm.relever(tire.cle)
-        vm.espace { it.actifs.size == 1 && it.disponibles.isEmpty() }
-        vm.relever(tire.cle)
-        vm.refusEspece.first()
-        assertEquals(1, vm.espace().actifs.size)
+        assertNull(page.roulette)
+        assertEquals(listOf(OngletDefis.ACTIFS, OngletDefis.TERMINES), page.onglets)
+        assertEquals(OngletDefis.ACTIFS, page.onglet)
     }
 }
