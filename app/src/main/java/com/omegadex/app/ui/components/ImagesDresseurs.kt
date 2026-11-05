@@ -25,20 +25,22 @@ object ImagesDresseurs {
     private val EXTENSIONS = listOf("jpg", "png", "webp")
 
     /** Image du dresseur [cle], ou à défaut celle de [repli] ; null si aucun fichier n'est fourni. */
-    suspend fun charger(context: Context, cle: String, repli: String = cle): ImageBitmap? = withContext(Dispatchers.IO) {
-        val fichiers = try {
-            context.assets.list(DOSSIER).orEmpty().toSet()
-        } catch (_: IOException) {
-            emptySet()
+    suspend fun charger(context: Context, cle: String, repli: String = cle): ImageBitmap? =
+        withContext(Dispatchers.IO) {
+            val fichiers = try {
+                context.assets.list(DOSSIER).orEmpty().toSet()
+            } catch (_: IOException) {
+                emptySet()
+            }
+            val nom =
+                listOf(cle, repli).flatMap { base -> EXTENSIONS.map { "$base.$it" } }.firstOrNull { it in fichiers }
+                    ?: return@withContext null
+            try {
+                context.assets.open("$DOSSIER/$nom").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+            } catch (_: IOException) {
+                null
+            }
         }
-        val nom = listOf(cle, repli).flatMap { base -> EXTENSIONS.map { "$base.$it" } }.firstOrNull { it in fichiers }
-            ?: return@withContext null
-        try {
-            context.assets.open("$DOSSIER/$nom").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
-        } catch (_: IOException) {
-            null
-        }
-    }
 }
 
 /** Charge l'image du dresseur hors du fil principal ; null tant qu'elle charge ou si elle n'existe pas. */

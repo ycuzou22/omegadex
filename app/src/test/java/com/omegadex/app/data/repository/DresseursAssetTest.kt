@@ -16,7 +16,10 @@ class DresseursAssetTest {
 
     @Test
     fun `les huit champions sont decrits, chacun ferme son etape`() {
-        val champions = dresseurs.filter { it.titre in setOf("Champion", "Championne", "Champions") && it.queteId != null }
+        val champions = dresseurs.filter {
+            it.titre in setOf("Champion", "Championne", "Champions") &&
+                it.queteId != null
+        }
         assertEquals(listOf(1, 2, 3, 4, 5, 6, 7, 9), champions.map { it.etapeId })
         assertTrue(champions.all { it.equipe.isNotEmpty() && it.attention != null })
         assertEquals(listOf(12, 14), champions.first().equipe.map { it.niveau })

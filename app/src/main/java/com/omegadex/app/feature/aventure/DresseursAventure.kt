@@ -111,12 +111,6 @@ internal fun ParcoursDresseurs(
     }
 }
 
-/** Ouvrir la stratégie d'un dresseur (par sa clé) et le marquer battu ou non. */
-internal class ActionsDresseurs(
-    val onStrategie: (String) -> Unit = {},
-    val onBattu: (FicheDresseur, Boolean) -> Unit = { _, _ -> },
-)
-
 @Composable
 private fun EtapeParcours(fiche: FicheDresseur, enAvant: Boolean, dernier: Boolean, actions: ActionsDresseurs) {
     val couleurs = OmegadexTheme.couleurs
