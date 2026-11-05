@@ -166,8 +166,8 @@ class MoteurDefisEmbarqueTest {
             progression.deverrouillerEtape(run, it.id)
             progression.validerEtape(run, it.id)
         }
-        val proposes = proposer().first { defis -> defis.any { it.etapeId == cible.id } }
-        val evolution = evolutionArcko(proposes).single()
+        // Le combat de l'arène attend sa quête : on attend que l'évolution d'Arcko soit proposée.
+        val evolution = proposer().first { evolutionArcko(it).isNotEmpty() }.let(::evolutionArcko).single()
         assertTrue(evolution.enonce, evolution.enonce.contains("Massko"))
     }
 
