@@ -167,11 +167,13 @@ private fun EnTete(espace: DefisUiState.Espace) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    // Le nom de l'étape cède la place à la pastille : sans poids, il la réduisait à une colonne.
                     Text(
                         stringResource(R.string.defis_entete_etape, roulette.numeroEtape, roulette.adversaire)
                             .uppercase(),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
                     PuceDifficulte(espace.difficulteRun)
                 }

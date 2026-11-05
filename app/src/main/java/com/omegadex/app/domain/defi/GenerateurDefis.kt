@@ -33,6 +33,11 @@ data class ContexteDefis(
     val nationalObtenu: Boolean,
     /** Faux tant que l'avant-dernière quête principale de l'étape n'est pas cochée (voir [VerrouChampion]). */
     val championOuvert: Boolean = true,
+    /**
+     * Arène visée par les défis d'évolution : l'étape en cours, ou la prochaine arène quand l'étape n'a pas
+     * de badge (Partie 0 : on fait évoluer ses Pokémon avant Roxanne, pas avant le rival).
+     */
+    val arene: Etape = etape,
 )
 
 /** Défi proposé au joueur, pas encore accepté. [enonce] est le gabarit rempli. */
@@ -89,10 +94,14 @@ object GenerateurDefis {
         it.etapeId == etapeId && it.etat != EtatDefi.RATE && types[it.modeleId] in TYPES_COMBAT
     }
 
+    /** Étape dont un défi prend le plafond et le champion : l'arène visée pour un défi d'évolution. */
+    fun etapeVisee(modele: ModeleDefi, contexte: ContexteDefis): Etape =
+        if (modele.type == TypeDefi.EVOLUTION) contexte.arene else contexte.etape
+
     /** Difficulté, étape de déblocage et conditions qui ne dépendent pas d'une espèce. */
     fun estDebloque(modele: ModeleDefi, contexte: ContexteDefis): Boolean =
         ReglesDifficulte.estProposable(contexte.difficulte, modele.difficulteMin) &&
-            contexte.etape.id >= modele.etapeMin &&
+            etapeVisee(modele, contexte).id >= modele.etapeMin &&
             (modele.type != TypeDefi.ETAPE || modele.etapeId == contexte.etape.id) &&
             (ConditionDeblocage.POKEDEX_NATIONAL !in modele.conditions || contexte.nationalObtenu)
 
@@ -111,8 +120,9 @@ object GenerateurDefis {
 
     private fun defisEspece(modele: ModeleDefi, contexte: ContexteDefis): List<DefiPropose> {
         val occupees = especesOccupees(contexte.defisExistants)
+        val etape = etapeVisee(modele, contexte)
         return contexte.especes.mapNotNull { espece ->
-            val evolution = evolutionAtteignable(espece, contexte.etape.plafond)
+            val evolution = evolutionAtteignable(espece, etape.plafond)
             val possible = conditionsEspece(modele, espece, evolution) &&
                 espece.id !in occupees &&
                 !dejaEngage(contexte.defisExistants, modele.id, espece.id, etapeId = null)
@@ -121,7 +131,7 @@ object GenerateurDefis {
                 modele,
                 espece.id,
                 null,
-                enonce(modele, contexte.etape, contexte.starterNom, espece.nom, evolution),
+                enonce(modele, etape, contexte.starterNom, espece.nom, evolution),
                 espece.nom,
             )
         }
