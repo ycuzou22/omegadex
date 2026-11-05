@@ -16,34 +16,38 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Images des dresseurs, fournies localement par le propriétaire du projet : `assets/dresseurs/<clé>.jpg|png|webp`.
+ * Images des dresseurs, fournies localement par le propriétaire du projet : `assets/dresseurs/<clé>.jpg|png|webp`,
+ * sinon l'image de repli du dresseur (le personnage ou sa classe : `flora.jpg`, `gamin.png`…).
  * Le dossier est ignoré par Git (voir `assets/dresseurs/LISEZMOI.md`).
  */
 object ImagesDresseurs {
     private const val DOSSIER = "dresseurs"
     private val EXTENSIONS = listOf("jpg", "png", "webp")
 
-    /** Image du dresseur [cle], ou null si aucun fichier n'est fourni. */
-    suspend fun charger(context: Context, cle: String): ImageBitmap? = withContext(Dispatchers.IO) {
-        val fichiers = try {
-            context.assets.list(DOSSIER).orEmpty().toSet()
-        } catch (_: IOException) {
-            emptySet()
+    /** Image du dresseur [cle], ou à défaut celle de [repli] ; null si aucun fichier n'est fourni. */
+    suspend fun charger(context: Context, cle: String, repli: String = cle): ImageBitmap? =
+        withContext(Dispatchers.IO) {
+            val fichiers = try {
+                context.assets.list(DOSSIER).orEmpty().toSet()
+            } catch (_: IOException) {
+                emptySet()
+            }
+            val nom =
+                listOf(cle, repli).flatMap { base -> EXTENSIONS.map { "$base.$it" } }.firstOrNull { it in fichiers }
+                    ?: return@withContext null
+            try {
+                context.assets.open("$DOSSIER/$nom").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+            } catch (_: IOException) {
+                null
+            }
         }
-        val nom = EXTENSIONS.map { "$cle.$it" }.firstOrNull { it in fichiers } ?: return@withContext null
-        try {
-            context.assets.open("$DOSSIER/$nom").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
-        } catch (_: IOException) {
-            null
-        }
-    }
 }
 
 /** Charge l'image du dresseur hors du fil principal ; null tant qu'elle charge ou si elle n'existe pas. */
 @Composable
-fun rememberImageDresseur(cle: String): ImageBitmap? {
+fun rememberImageDresseur(cle: String, repli: String = cle): ImageBitmap? {
     val context = LocalContext.current.applicationContext
-    var image by remember(cle) { mutableStateOf<ImageBitmap?>(null) }
-    LaunchedEffect(cle) { image = ImagesDresseurs.charger(context, cle) }
+    var image by remember(cle, repli) { mutableStateOf<ImageBitmap?>(null) }
+    LaunchedEffect(cle, repli) { image = ImagesDresseurs.charger(context, cle, repli) }
     return image
 }

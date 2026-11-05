@@ -1,0 +1,366 @@
+# lieu|classe|nom|pokemons   (niveau après le nom)
+@FLORA Route 103|Arcko|Poussifeu 5
+@FLORA Route 103|Poussifeu|Gobou 5
+@FLORA Route 103|Gobou|Arcko 5
+@FLORA Route 110|Arcko|Wailmer 18, Balignon 18, Galifeu 20
+@FLORA Route 110|Poussifeu|Balignon 18, Limagma 18, Flobio 20
+@FLORA Route 110|Gobou|Limagma 18, Wailmer 18, Massko 20
+@FLORA Route 119|Arcko|Wailmer 31, Balignon 31, Galifeu 33
+@FLORA Route 119|Poussifeu|Balignon 31, Limagma 31, Flobio 33
+@FLORA Route 119|Gobou|Limagma 31, Wailmer 31, Massko 33
+@FLORA Nénucrique|Arcko|Hélédelle 37, Wailord 37, Chapignon 37, Braségali 39
+@FLORA Nénucrique|Poussifeu|Hélédelle 37, Chapignon 37, Volcaropod 37, Laggron 39
+@FLORA Nénucrique|Gobou|Hélédelle 37, Volcaropod 37, Wailord 37, Jungko 39
+Route 102|Gamin|Philippe|Zigzaton 4
+Route 102|Scout|Ricky|Chenipotte 4
+Route 102|Gamin|Achille|Medhyèna 4, Nirondelle 2
+Route 102|Fillette|Dixie|Zigzaton 5
+Route 103|Aromathérapeute|Carla|Rosélia 17
+Route 103|Jumelles|Eve & Lyn|Posipi 16, Négapi 16
+Route 103|Pokéfan|Michaël|Skitty 17
+Route 103|Pêcheur|Abdel|Magicarpe 14, Magicarpe 16
+Route 104|Gamin|Raymond|Grainipiot 4, Nirondelle 6
+Route 104|Richard|Tristan|Zigzaton 8
+Route 104|Mademoiselle|Émilie|Zigzaton 10
+Route 104|Fillette|Eliza|Nénupiot 6, Balignon 8
+Route 104|Jumelles|Ava & Aya|Grainipiot 9, Nénupiot 9
+Route 104|Pêcheur|Stéphane|Magicarpe 7, Magicarpe 7, Magicarpe 7
+Bois Clémenti|Scout|Jullion|Chenipotte 5, Chenipotte 5, Chenipotte 5
+Bois Clémenti|Scout|Odon|Ningale 8
+Bois Clémenti|Sbire de la Team Magma||Medhyèna 9
+Route 116|Gamin|Fred|Zigzaton 7, Machoc 9
+Route 116|Scout|Emilio|Chenipotte 7, Ningale 7, Armulys 7
+Route 116|Fillette|Monique|Marill 10
+Route 116|Montagnard|Norbert|Racaillou 8, Racaillou 10
+Route 116|Élève|Connor|Tarsal 10
+Route 116|Élève|Hillary|Balignon 8, Chuchmur 8
+Tunnel Mérazon|Montagnard|Anselme|Racaillou 16, Machoc 16
+Tunnel Mérazon|Sbire de la Team Magma||Medhyèna 13
+Arène de Mérouville|Gamin|Ali|Racaillou 7, Racaillou 9
+Arène de Mérouville|Gamin|Pietro|Racaillou 10
+Arène de Mérouville|Élève|Nicolette|Racaillou 10
+Grotte Granite|Ruinemaniac|Enid|Sabelette 15
+Grotte Granite|Montagnard|Wilhem|Racaillou 15
+@DELTA Grotte Granite|Dresseur|Amaryllis|Rexillius 55, Altaria 55, Drattak 57
+Arène de Myokara|Combattante|Cammie|Méditikka 13
+Arène de Myokara|Karatéka|Ken|Machoc 13
+Arène de Myokara|Combattante|Shinobu|Méditikka 11, Machoc 11
+Chenal 106|Pêcheur|Smith|Tentacool 13
+Chenal 106|Randonneur|Johnny|Parecool 13
+Chenal 106|Pêcheur|Chaz|Magicarpe 10, Tentacool 12
+Chenal 106|Nageur|Enzo|Léviator 27
+Chenal 106|Nageuse|Prune|Poissirène 27
+Chenal 106|Triathlète|Reginald|Wailmer 27
+Chenal 109|Marin|Florent|Machoc 15
+Chenal 109|Marin|Sergei|Goélise 12, Machoc 14
+Chenal 109|Garçon à la Bouée|Daniel|Azurill 14
+Chenal 109|Flotteur|Aurélia|Marill 26
+Chenal 109|Flotteur|Gwenaelle|Marill 26
+Chenal 109|Nageur|David|Tentacool 25, Carvanha 25
+Chenal 109|Nageuse|Alice|Poissirène 24, Goélise 24, Poissirène 24
+Chenal 109|Pêcheur|Francis|Wailmer 25, Tentacruel 25
+Chenal 109|Ornithologue|Elliah|Airmure 25, Airmure 25
+Chenal 109|Jeune Couple|Mel & Paul|Papinox 27, Charmillon 27
+Route 110|Pokéfan|Abigail|Posipi 15, Négapi 15
+Route 110|Gamin|Flavien|Medhyèna 12, Galekid 13, Dynavolt 14
+Route 110|Collectionneur|Donald|Lombre 15, Pifeuil 15
+Route 110|Kinésiste|Boris|Abra 17
+Route 110|Pêcheur|Dale|Tentacool 14, Wailmer 16
+Route 110|Canon|Megumi|Poissirène 17
+Route 110|Triathlète|Kaz|Négapi 17
+Route 110|Triathlète|Macias|Voltorbe 17
+Route 110|Triathlète|Eugène|Magnéti 17
+Route 110|Triathlète|Patxi|Voltorbe 14, Magnéti 16
+Route 110|Triathlète|Hervé|Posipi 17
+Route 117|Triathlète|Clark|Doduo 18
+Route 117|Entomomaniac|Oscar|Ningale 15, Charmillon 15, Papinox 15
+Route 117|Éleveuse|Frigg|Goélise 17, Balignon 17, Skitty 17, Azurill 17, Poissirène 17, Rozbouton 17
+Route 117|Éleveur|Brutus|Chuchmur 17, Zigzaton 17, Galekid 17, Medhyèna 17, Nirondelle 17, Makuhita 17
+Route 117|Senior et Junior|Ruth & Nini|Zigzaton 17, Makuhita 18
+Route 118|Aromathérapeute|Hollie|Mystherbe 16, Rosélia 16
+Route 118|Pêcheur|Sergio|Carvanha 17
+Route 118|Guitariste|José|Magnéti 16, Chuchmur 16
+Route 118|Journalistes|Pat & Joe|Magnéton 29, Ramboum 29
+Route 118|Pêcheur|Felipe|Carvanha 26, Léviator 26
+Route 118|Ornithologue|Michel|Bekipan 29
+Route 118|Ornithologue|Gabriel|Tylton 26, Hélédelle 28
+Route 118|Terreur|Joanna|Cacnea 26, Grahyèna 28
+Arène de Lavandia|Guitariste|Henri|Magnéti 16, Dynavolt 16
+Arène de Lavandia|Gamin|Pedro|Dynavolt 17
+Arène de Lavandia|Guitariste|Manuel|Voltorbe 15, Voltorbe 17
+Arène de Lavandia|Combattante|Makoto|Méditikka 19
+@LATE Poivressel|Sbire de la Team Magma||Grahyèna 36
+@LATE Poivressel|Sbire de la Team Magma||Chamallot 34, Nosferalto 34
+Route 111|Journalistes|Pat & Joe|Magnéti 20, Chuchmur 20
+Route 111|Fan de Pique-Nique|Mami|Posipi 16, Lumivole 18
+Route 111|Fan de Camping|Murphy|Sabelette 19
+Route 111|Randonneur|Jamel|Nirondelle 21
+Route 111|Topdresseur|Hannibal|Dynavolt 20, Draby 20, Makuhita 20
+Route 111|Fillette de Conte|Yumeko|Spoink 19, Mysdibule 19
+Route 111|Topdresseuse|Mariah|Goélise 20, Chamallot 20, Rosélia 20
+Route 111|Randonneur|Fumito|Linéon 21
+Route 111 (désert)|Karatéka|Andy|Machopeur 28
+Route 111 (désert)|Fan de Camping|Enzio|Sablaireau 26
+Route 111 (désert)|Fan de Pique-Nique|Mireille|Sablaireau 26
+Route 111 (désert)|Fan de Camping|Benjamin|Gravalanch 26
+Route 111 (désert)|Fan de Pique-Nique|Becky|Cacnea 26
+Route 111 (désert)|Ruinemaniac|Abraham|Balbuto 24, Sablaireau 26
+Route 112|Fan de Camping|Grigor|Nirondelle 16, Nosferapti 18
+Route 112|Fan de Pique-Nique|Ani|Gloupti 19
+Route 112|Montagnard|Anthony|Racaillou 17, Racaillou 17, Racaillou 17
+Route 112|Montagnard|Ridge|Chamallot 18, Machoc 18
+Route 112|Terreur|Antonin|Grahyèna 21
+Route 113|Gamin|Kenneth|Kraknoix 19, Dynavolt 19
+Route 113|Ninja Amateur|Antoine|Smogo 16, Smogo 17, Smogo 18
+Route 113|Sœur Parasol|Samantha|Chamallot 22
+Route 113|Gamin|Dylan|Galekid 21
+Route 113|Ninja Amateur|Muramasa|Ningale 18, Ninjask 20
+Route 114|Pêcheur|Louis|Écrapince 21, Wailmer 21
+Route 114|Pêcheur|Erwan|Léviator 23
+Route 114|Senior et Junior|Tara & Aida|Azumarill 23, Rosélia 21
+Route 114|Pokémaniac|Nicolas|Galekid 23
+Route 114|Fan de Camping|Lucius|Négapi 20, Muciole 20
+Route 114|Saltimbanque|Pierrot|Limagma 20, Goélise 22
+Route 114|Montagnard|Paulin|Racaillou 22, Racaillou 20
+Route 114|Montagnard|Valérian|Machoc 23
+Route 115|Karatéka|Kendall|Machoc 25
+Route 115|Collectionneur|Ganymède|Séviper 24
+Route 115|Combattante|June|Méditikka 25
+Route 115|Karatéka|Ralf|Machoc 25, Machoc 27
+Route 115|Expert|Cain|Hariyama 30
+Route 115|Ruinemaniac|Félix|Sablaireau 25, Sablaireau 25
+Site Météore|Admin de la Team Magma|Kelvin|Grahyèna 23, Chamallot 23
+Site Météore|Sbire de la Team Magma||Smogo 23
+Site Météore|Dracologue|Javier|Libégon 47
+Site Météore|Combattante|Maki|Shaofouine 46
+Site Météore|Dracologue|Burt|Altaria 47
+Site Météore|Vieux Couple|Jules & Nana|Hariyama 47, Charmina 47
+Mont Chimnée|Sbire de la Team Magma||Medhyèna 22, Smogo 22
+Mont Chimnée|Admin de la Team Magma|Kelvin|Smogo 24, Chamallot 24
+@BOSS Mont Chimnée|Leader de la Team Magma|Max|Grahyèna 25, Nosferalto 25, Camérupt 27
+Sentier Sinuroc|Experte|Marsha|Méditikka 24, Hariyama 26
+Sentier Sinuroc|Fan de Camping|Jean-Édouard|Gloupti 24
+Sentier Sinuroc|Montagnard|Fabio|Gravalanch 25
+Sentier Sinuroc|Fillette de Conte|Dolorès|Skitty 21, Rondoudou 23
+Sentier Sinuroc|Fan de Pique-Nique|Marionna|Ortide 22, Tylton 22
+Arène de Vermilava|Saltimbanque|Akira|Chamallot 23, Limagma 23
+Arène de Vermilava|Ninja Amateur|Alexandre|Smogo 24
+Arène de Vermilava|Saltimbanque|Lorenzo|Limagma 25
+Arène de Vermilava|Combattante|Naoko|Méditikka 26
+Arène de Vermilava|Ninja Amateur|Sofiane|Smogo 24
+Arène de Vermilava|Topdresseur|Gaultier|Limagma 24, Kecleon 26
+Arène de Vermilava|Saltimbanque|Léonard|Chamallot 25
+Arène de Clémenti-Ville|Topdresseur|Hank|Delcatty 28
+Arène de Clémenti-Ville|Topdresseuse|Ayaka|Delcatty 28
+Arène de Clémenti-Ville|Topdresseur|Clothaire|Linéon 28
+Arène de Clémenti-Ville|Topdresseuse|Hitomi|Linéon 28
+Arène de Clémenti-Ville|Topdresseur|Clifford|Linéon 28
+Arène de Clémenti-Ville|Topdresseuse|Midler|Mangriff 28
+Arène de Clémenti-Ville|Topdresseur|Norpois|Mangriff 28
+Route 119|Scout|Hiroyuki|Charmillon 29
+Route 119|Scout|Luigi|Papinox 29
+Route 119|Scout|Conan|Muciole 26, Lumivole 28
+Route 119|Entomomaniac|Gui|Charmillon 30
+Route 119|Entomomaniac|Albin|Papinox 30
+Route 119|Entomomaniac|Tommy|Maskadra 28, Ninjask 28
+Route 119|Pokémon Ranger|Manami|Chapignon 31
+Route 119|Cerveau et Muscles|Manu & Milo|Machopeur 31, Kadabra 31
+Route 119|Pêcheur|Masashi|Carvanha 27, Carvanha 27, Barpau 27
+Route 119|Pokémon Ranger|Sébastien|Séviper 29, Vigoroth 29
+Route 119|Ninja Amateur|Shirô|Smogo 29
+Route 119|Ornithologue|Nathanaël|Doduo 30
+Route 119|Ornithologue|Takumi|Hélédelle 30
+Route 119|Ninja Amateur|Calvin|Ninjask 27
+Centre Météo|Sbire de la Team Magma||Grahyèna 28, Nosferalto 28
+Centre Météo|Sbire de la Team Magma||Smogo 30
+Centre Météo|Sbire de la Team Magma||Chamallot 28, Grahyèna 28
+Centre Météo|Sbire de la Team Magma||Nosferalto 30
+Centre Météo|Admin de la Team Magma|Kelvin|Camérupt 32
+Arène de Cimetronelle|Ornithologue|Vicente|Hélédelle 30, Airmure 30
+Arène de Cimetronelle|Fan de Pique-Nique|Mikiko|Tylton 31
+Arène de Cimetronelle|Fan de Camping|Eyric|Doduo 28, Bekipan 30
+Arène de Cimetronelle|Ornithologue|Titou|Dodrio 32
+Arène de Cimetronelle|Ornithologue|Lucas|Bekipan 32
+Chenal 105|Nageuse|Christie|Wailmer 25, Azumarill 25
+Chenal 105|Triathlète|Ernest|Wailmer 25, Obalie 25
+Chenal 105|Nageuse|Sherbatoff|Azumarill 27
+Chenal 105|Nageur|Logan|Goélise 24, Bekipan 26
+Chenal 105|Nageur|Chris|Carvanha 27
+Chenal 105|Ruinemaniac|Andreï|Tarinor 27
+Chenal 107|Nageuse|Oriane|Bekipan 27
+Chenal 107|Nageuse|Danaé|Poissirène 25, Wailmer 25
+Chenal 107|Nageur|Daryl|Barloche 27
+Chenal 107|Frère et Sœur|Josh & Fy|Poissirène 27, Écrapince 26
+Chenal 107|Nageur|Thomas|Tentacool 27
+Chenal 107|Plongeur|Rufus|Wailmer 38, Wailord 40
+Chenal 107|Pêcheuse de Perles|Martina|Lanturn 41
+Chenal 108|Nageur|Noël|Tentacool 25, Bekipan 25
+Chenal 108|Nageuse|Christine|Goélise 24, Barloche 24, Wailmer 24
+Chenal 108|Nageuse|Chihiro|Wailmer 27
+Chenal 108|Topdresseuse|Henrietta|Séviper 26, Hélédelle 28
+Chenal 108|Topdresseur|Baptiste|Mangriff 26, Chapignon 28
+Chenal 108|Nageur|Angel|Lombre 27
+Route 120|Sœur Parasol|Aline|Poissirène 31, Poissoroy 33
+Route 120|Ornithologue|Tsubasa|Tylton 34
+Route 120|Ornithologue|Bruno|Hélédelle 32, Xatu 32
+Route 120|Ninja Amateur|Gaspar|Smogo 29, Smogo 30, Smogo 31
+Route 120|Sœur Parasol|Lynette|Morphéo 34
+Route 120|Topdresseuse|Ingrid|Milobellus 36
+Route 120|Entomomaniac|Carl|Maskadra 34
+Route 120|Terreur|Romain|Cacturne 34
+Route 120|Terreur|Dana|Sharpedo 34
+Route 120|Ruinemaniac|Henry|Balbuto 32, Tarinor 32
+Route 120|Ninja Amateur|Sean|Ninjask 32, Smogo 30
+Route 120|Pokémon Ranger|Jared|Pifeuil 33, Élecsprint 33
+Route 120|Pokémon Ranger|Danielle|Lombre 33, Groret 33
+Route 121|Mystimaniac|Layla|Skelénox 33, Ténéfix 33
+Route 121|Canon|Dalliah|Kecleon 32, Séviper 34
+Route 121|Senior et Junior|Fanny & Sora|Monaflèmit 35, Spinda 34
+Route 121|Gentleman|Florian|Élecsprint 35
+Route 121|Pokéfan|Nicole|Pikachu 35
+Route 123|Kinésiste|Sancho|Kadabra 34, Solaroc 36
+Route 123|Fan de Pique-Nique|Valérie|Lumivole 33, Grodoudou 33
+Route 123|Terreur|Maurice|Colhomard 36
+Route 123|Topdresseuse|Mika|Rhinocorne 36, Tropius 36
+Route 123|Terreur|Emmanuelle|Grahyèna 36
+Route 123|Topdresseur|Boone|Vibraninf 35, Airmure 37
+Route 123|Jumelles|Lilas & Lali|Papinox 35, Charmillon 35
+Route 123|Aromathérapeute|Rosaline|Rafflesia 36
+Route 123|Topdresseuse|Claire|Feunard 35, Joliflor 37
+Route 123|Pêcheur|Johan|Poissoroy 36
+Route 123|Pêcheur|Mitsuo|Barbicha 36
+Route 123|Pêcheur|Walid|Colhomard 34, Léviator 34
+Mont Mémoria|Sbire de la Team Magma||Smogo 36
+Mont Mémoria|Sbire de la Team Magma||Chamallot 33, Grahyèna 35
+Mont Mémoria|Sbire de la Team Magma||Grahyèna 34, Nosferalto 34
+Mont Mémoria|Admin de la Team Magma|Lilie|Camérupt 38
+Planque Magma|Sbire de la Team Magma||Smogo 35, Chamallot 35
+Planque Magma|Sbire de la Team Magma||Chamallot 35, Smogo 35
+Planque Magma|Sbire de la Team Magma||Grahyèna 37
+Planque Magma|Sbire de la Team Magma||Nosferalto 37
+Planque Magma|Sbire de la Team Magma||Grahyèna 34, Nosferalto 36
+Planque Magma|Sbire de la Team Magma||Chamallot 37
+Planque Magma|Admin de la Team Magma|Lilie|Camérupt 39
+Arène d'Algatia|Kinésiste|Rafik|Kadabra 42
+Arène d'Algatia|Kinésiste|Carlos|Kadabra 40, Charmina 40
+Arène d'Algatia|Mystimaniac|Brenda|Kirlia 39, Groret 39
+Arène d'Algatia|Kinésiste|Cyril|Kaorine 39, Staross 41
+Arène d'Algatia|Mystimaniac|Célesta|Éoko 41
+Arène d'Algatia|Kinésiste|Gérald|Kadabra 40, Girafarig 40
+Chenal 124|Nageuse|Eileen|Lovdisc 39
+Chenal 124|Nageur|Yannick|Phogleur 39
+Chenal 124|Frère et Sœur|Ben & Nami|Barbicha 38, Bekipan 39
+Chenal 124|Nageur|Youssouf|Stari 37, Tentacruel 37
+Chenal 124|Nageuse|Isabel|Wailmer 36, Azumarill 38
+Chenal 124|Nageur|Frédéric|Akwakwak 39
+Chenal 124|Plongeur|Ian|Hypocéan 41
+Chenal 124|Pêcheuse de Perles|Nathalie|Poissoroy 41
+Chenal 124|Pêcheuse de Perles|Julie|Coquiperl 39, Coquiperl 39
+Chenal 124|Plongeur|Akio|Staross 41
+Chenal 125|Nageur|Zaid|Hypocéan 39
+Chenal 125|Marin|Jirô|Wailmer 36, Tentacruel 36, Machopeur 36
+Chenal 125|Senior et Junior|Lumi & Lamia|Camérupt 39, Altaria 38
+Chenal 125|Nageuse|Shelly|Lovdisc 39
+Chenal 125|Nageuse|Anabelle|Coquiperl 38, Poissoroy 36
+Chenal 125|Nageur|César|Stari 37, Stari 37
+Lavandia Sea|Marin|Obéron|Wailmer 26, Machopeur 28
+Lavandia Sea|Garçon à la Bouée|Arnaud|Écrapince 28
+Lavandia Sea|Jeune Couple|Louisa & Hal|Lumivole 29, Muciole 29
+Lavandia Sea|Sœurs Étranges|Gally & Gina|Korillon 29, Kirlia 28
+@DELTA Centre Spatial d'Algatia|Admin de la Team Magma|Lilie|Camérupt 55
+Chenal 126|Triathlète|Christian|Azumarill 39
+Chenal 126|Nageur|Yvain|Léviator 39
+Chenal 126|Nageuse|Marianne|Ludicolo 39
+Chenal 126|Topdresseur|Alexis|Vibraninf 39, Rhinoféros 39
+Chenal 126|Topdresseuse|Anna|Nostenfer 41
+Chenal 126|Nageur|Floyd|Wailmer 35, Akwakwak 37, Stari 36
+Chenal 126|Nageuse|Marie|Lovdisc 36, Tentacruel 38
+Chenal 126|Plongeur|Yvan|Wailord 41
+Chenal 126|Plongeur|Thierry|Bekipan 39, Lanturn 39
+Chenal 126|Pêcheuse de Perles|Bettie|Azumarill 41
+Chenal 127|Ornithologue|Archer|Dodrio 38, Xatu 38
+Chenal 127|Pêcheur|Jean-Pierre|Lovdisc 37, Relicanth 37
+Chenal 127|Pêcheur|Ronald|Tentacruel 39
+Chenal 127|Pêcheur|Dan|Wailmer 37, Sharpedo 37
+Chenal 127|Topdresseur|Zack|Scarabrute 41
+Chenal 127|Triathlète|Patrice|Tentacruel 39
+Chenal 127|Topdresseuse|Joséphine|Stalgamin 38, Maskadra 38, Téraclope 38
+Chenal 127|Karatéka|Michael|Machopeur 37, Hariyama 39
+Chenal 127|Plongeur|Brian|Relicanth 41
+Chenal 127|Pêcheuse de Perles|Meg|Staross 41
+Chenal 127|Pêcheuse de Perles|Célia|Phogleur 41
+Chenal 128|Topdresseur|Richard|Grolem 39, Raichu 39
+Chenal 128|Pêcheur|Yoshiro|Wailmer 37, Hypocéan 37
+Chenal 128|Garçon à la Bouée|Elron|Lovdisc 38
+Chenal 128|Fille à la Bouée|Fedra|Lovdisc 38
+Chenal 128|Triathlète|Aimé|Staross 36
+Chenal 128|Pêcheuse de Perles|Mélusine|Lovdisc 39, Lovdisc 39
+Chenal 129|Pêcheur|Donnie|Lanturn 39
+Chenal 129|Pêcheur|Seymour|Sharpedo 37, Barbicha 37
+Chenal 129|Nageur|Aki|Bekipan 37, Hypocéan 37
+Chenal 129|Topdresseuse|Pauline|Chartor 39, Charmina 39
+Chenal 129|Nageuse|Kate|Lovdisc 36, Corayon 36, Azumarill 36
+Chenal 129|Triathlète|Claudius|Hypocéan 39
+Chenal 129|Plongeur|Clarence|Lanturn 41
+Chenal 129|Plongeur|Hugues|Akwakwak 38, Léviator 40
+Chenal 129|Pêcheuse de Perles|Alice|Coquiperl 38, Tentacruel 40
+Chenal 130|Nageuse|Clémentine|Akwakwak 38, Poissoroy 36
+Chenal 130|Triathlète|Gildas|Akwakwak 37, Tentacruel 37
+Chenal 130|Nageur|Abel|Colhomard 39
+Chenal 130|Plongeur|Roger|Phogleur 39, Barbicha 39
+Chenal 130|Pêcheuse de Perles|Carine|Corayon 41
+Chenal 131|Nageuse|Kara|Coquiperl 39
+Chenal 131|Nageur|Christophe|Wailmer 39
+Chenal 131|Nageur|Jacques|Hypocéan 37, Léviator 37
+Chenal 131|Nageuse|Clara|Staross 39
+Chenal 131|Frère et Sœur|Jean & May|Azumarill 39, Phogleur 38
+Caverne Fondmer|Sbire de la Team Magma||Chamallot 39, Grahyèna 39
+Caverne Fondmer|Sbire de la Team Magma||Nosferalto 41
+Caverne Fondmer|Sbire de la Team Magma||Chamallot 41
+Caverne Fondmer|Sbire de la Team Magma||Smogogo 41
+Caverne Fondmer|Sbire de la Team Magma||Grahyèna 38, Smogogo 40
+@BOSS Caverne Fondmer|Leader de la Team Magma|Max|Grahyèna 41, Smogogo 41, Nostenfer 41, Camérupt 43
+Arène d'Atalanopolis|Fillette|Miki|Ludicolo 42
+Arène d'Atalanopolis|Canon|Carmen|Akwakwak 41, Wailord 41
+Arène d'Atalanopolis|Canon|Barbara|Rosabyss 43
+Arène d'Atalanopolis|Canon|Coralie|Serpang 43
+Arène d'Atalanopolis|Canon|Brigitte|Staross 43
+Arène d'Atalanopolis|Mademoiselle|Vélude|Coquiperl 41, Corayon 41
+Arène d'Atalanopolis|Pokéfan|Abby|Azumarill 43
+Arène d'Atalanopolis|Fillette|Crissy|Lovdisc 39, Hypocéan 41
+Chenal 132|Nageur|Gilbert|Tentacruel 37, Sharpedo 37
+Chenal 132|Pêcheur|Kazuo|Léviator 36, Léviator 36, Léviator 36
+Chenal 132|Karatéka|Takuma|Mackogneur 40
+Chenal 133|Nageuse|Farrah|Corayon 39
+Chenal 133|Nageur|Rémi|Barbicha 38, Hypocéan 36
+Chenal 133|Nageuse|Harumi|Bekipan 37, Poissoroy 37
+Chenal 133|Nageuse|Simone|Lovdisc 36, Bekipan 38
+Chenal 133|Pêcheur|Harry|Hypocéan 39
+Chenal 133|Ornithologue|Balthazar|Airmure 39
+Chenal 133|Topdresseur|Ingo|Galegon 38, Élecsprint 38, Alakazam 38
+Chenal 133|Randonneur|Gilles|Girafarig 39
+Chenal 134|Dracologue|Roméo|Drackhaus 39, Hyporoi 39
+Chenal 134|Nageur|Dean|Stari 36, Sharpedo 38
+Chenal 134|Ornithologue|Léon|Hélédelle 37, Altaria 37
+Chenal 134|Nageuse|Helia|Lovdisc 36, Lovdisc 36, Lovdisc 36
+Chenal 134|Karatéka|Denis|Machopeur 37, Scarhino 39
+Chenal 134|Topdresseuse|Nina|Galegon 38, Tropius 40
+@DELTA Pilier Céleste|Gardienne du Savoir|Amaryllis|Muplodocus 60, Altaria 60, Bruyverne 60, Rexillius 60, Drattak 62
+Route Victoire|Topdresseur|Forrest|Cryptéro 45, Rhinastoc 45
+Route Victoire|Topdresseuse|Léa|Momartik 47
+Route Victoire|Experte|Crystale|Kapoera 45, Judokrak 45
+Route Victoire|Topdresseur|Florimond|Mysdibule 47
+Route Victoire|Terreur|Miguelito|Démolosse 43, Tengalice 43
+Route Victoire|Topduo|Les & Mia|Vacilys 47, Armaldo 47
+Route Victoire|Expert|Sigmund|Karaclée 47
+Route Victoire|Topdresseur|Adalbert|Électrode 44, Darumacho 44, Avaltout 44
+Route Victoire|Dracologue|Akim|Hyporoi 47
+Route Victoire|Cerveau et Muscles|Aden & Énée|Colossinge 47, Mushana 47
+@BOSS Route Victoire|Dresseur|Timmy|Altaria 46, Delcatty 46, Rosélia 46, Magnéton 46, Gallame 48
+@BOSS Lavandia|Dresseur|Timmy|Tarsal 17
+@LIGUE Ligue Pokémon|Conseil 4|Damien|Grahyèna 50, Tengalice 50, Cacturne 50, Sharpedo 50, Absol 52
+@LIGUE Ligue Pokémon|Conseil 4|Spectra|Téraclope 51, Branette 51, Ténéfix 51, Branette 51, Noctunoir 53
+@LIGUE Ligue Pokémon|Conseil 4|Glacia|Oniglali 52, Momartik 52, Oniglali 52, Momartik 52, Kaimorse 54
+@LIGUE Ligue Pokémon|Conseil 4|Aragon|Altaria 53, Libégon 53, Hyporoi 53, Libégon 53, Drattak 55
+@LIGUE Ligue Pokémon|Maître|Pierre Rochard|Airmure 57, Kaorine 57, Galeking 57, Vacilys 57, Armaldo 57, Métalosse 59
+@DELTA Chenal 131|Champion|Marc|Wailord 55, Tentacruel 55, Ludicolo 55, Barbicha 55, Léviator 55, Milobellus 57

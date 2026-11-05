@@ -2,6 +2,7 @@ package com.omegadex.app.data.repository
 
 import android.content.Context
 import com.omegadex.app.domain.dresseur.Dresseur
+import com.omegadex.app.domain.dresseur.Genre
 import com.omegadex.app.domain.dresseur.PokemonDresseur
 import com.omegadex.app.domain.repository.DresseursRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -44,13 +45,18 @@ class DresseursAsset @Inject constructor(@ApplicationContext private val context
             titre = o.getString("titre"),
             lieu = o.getString("lieu"),
             type = o.getString("type"),
-            queteId = o.getInt("queteId"),
+            queteId = if (o.has("queteId")) o.getInt("queteId") else null,
             equipe = o.getJSONArray("equipe").objets().map { p ->
                 PokemonDresseur(p.getInt("especeId"), p.getInt("niveau"), p.optJSONArray("attaques").textes())
             },
             attention = o.optString("attention").takeIf { it.isNotBlank() },
             duo = o.optBoolean("duo", false),
+            starter = if (o.has("starter")) o.getInt("starter") else null,
+            image = o.optString("image").ifBlank { o.getString("cle") },
+            genre = GENRES[o.optString("genre")] ?: Genre.MASCULIN,
         )
+
+        private val GENRES = mapOf("f" to Genre.FEMININ, "p" to Genre.PLURIEL)
 
         private fun JSONArray.objets(): List<JSONObject> = List(length()) { getJSONObject(it) }
 

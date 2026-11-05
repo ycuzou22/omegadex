@@ -1,5 +1,6 @@
 package com.omegadex.app.feature.aventure
 
+import com.omegadex.app.domain.dresseur.FicheDresseur
 import com.omegadex.app.domain.model.MethodeRencontre
 import com.omegadex.app.domain.rencontre.Debloqueur
 import com.omegadex.app.domain.rencontre.Echange
@@ -73,3 +74,9 @@ data class QueteAffichee(val id: Int, val description: String, val recompense: S
 
 /** Les trois rubriques de l'Aventure. */
 enum class OngletAventure { QUETES, RENCONTRES, DRESSEURS }
+
+/** Ouvrir la stratégie d'un dresseur (par sa clé) et le marquer battu ou non. */
+internal class ActionsDresseurs(
+    val onStrategie: (String) -> Unit = {},
+    val onBattu: (FicheDresseur, Boolean) -> Unit = { _, _ -> },
+)

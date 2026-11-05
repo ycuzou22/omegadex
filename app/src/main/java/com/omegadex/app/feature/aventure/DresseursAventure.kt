@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,6 +38,8 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -46,8 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.omegadex.app.R
-import com.omegadex.app.domain.dresseur.DresseursEtape
 import com.omegadex.app.domain.dresseur.FicheDresseur
+import com.omegadex.app.domain.dresseur.Genre
+import com.omegadex.app.domain.dresseur.LieuDresseurs
 import com.omegadex.app.domain.equipe.Affinite
 import com.omegadex.app.ui.components.OmegaButton
 import com.omegadex.app.ui.components.SpriteEspece
@@ -58,71 +62,104 @@ import com.omegadex.app.ui.components.rememberImageDresseur
 import com.omegadex.app.ui.theme.CouleursTypes
 import com.omegadex.app.ui.theme.OmegadexTheme
 
-/** Parcours des dresseurs de l'étape, dans l'ordre de rencontre, jusqu'au champion. */
+/** Message de l'onglet quand l'étape n'a aucun dresseur. */
+@Composable
+internal fun AucunDresseur(modifier: Modifier = Modifier) {
+    Text(
+        stringResource(R.string.dresseurs_aucun),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier,
+    )
+}
+
+/**
+ * Les dresseurs d'un lieu, dans l'ordre de rencontre. Le point de chaque dresseur se coche pour le marquer battu,
+ * le bouton ouvre sa stratégie ; le [chef] de l'étape (champion…) est mis en avant.
+ */
 @Composable
 internal fun ParcoursDresseurs(
-    dresseurs: DresseursEtape?,
-    onStrategie: (String) -> Unit,
+    groupe: LieuDresseurs,
+    chef: FicheDresseur?,
+    actions: ActionsDresseurs,
     modifier: Modifier = Modifier,
 ) {
-    val fiches = dresseurs?.fiches.orEmpty()
-    if (fiches.isEmpty()) {
-        Text(
-            stringResource(R.string.dresseurs_aucun),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = modifier,
-        )
-        return
-    }
     Surface(
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, OmegadexTheme.couleurs.trait),
         modifier = modifier.fillMaxWidth(),
     ) {
-        Column(Modifier.padding(14.dp)) {
-            fiches.forEachIndexed { i, fiche ->
-                EtapeParcours(fiche, dernier = i == fiches.lastIndex, onStrategie = { onStrategie(fiche.dresseur.cle) })
+        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                groupe.lieu.uppercase(),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.semantics { heading() },
+            )
+            Column {
+                groupe.fiches.forEachIndexed { i, fiche ->
+                    EtapeParcours(
+                        fiche,
+                        enAvant = fiche == chef,
+                        dernier = i == groupe.fiches.lastIndex,
+                        actions = actions,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun EtapeParcours(fiche: FicheDresseur, dernier: Boolean, onStrategie: () -> Unit) {
+private fun EtapeParcours(fiche: FicheDresseur, enAvant: Boolean, dernier: Boolean, actions: ActionsDresseurs) {
     val couleurs = OmegadexTheme.couleurs
     val vert = Color(COULEUR_BATTU)
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Column(Modifier.width(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    val dresseur = fiche.dresseur
+    val description = stringResource(libellesBattu(fiche).first, dresseur.nom)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.width(32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             val point = when {
                 fiche.battu -> vert
-                dernier -> couleurs.magma
+                enAvant -> couleurs.magma
                 else -> MaterialTheme.colorScheme.surface
             }
             Box(
-                Modifier.size(if (dernier) 18.dp else 14.dp)
-                    .background(point, CircleShape)
-                    .border(3.dp, if (fiche.battu) vert else MaterialTheme.colorScheme.primary, CircleShape),
-            )
+                Modifier.size(32.dp)
+                    .toggleable(
+                        value = fiche.battu,
+                        role = Role.Checkbox,
+                        onValueChange = { actions.onBattu(fiche, it) },
+                    )
+                    .semantics { contentDescription = description },
+                contentAlignment = Alignment.Center,
+            ) {
+                Box(
+                    Modifier.size(if (enAvant) 18.dp else 14.dp)
+                        .background(point, CircleShape)
+                        .border(3.dp, if (fiche.battu) vert else MaterialTheme.colorScheme.primary, CircleShape),
+                )
+            }
             if (!dernier) {
-                Box(Modifier.width(3.dp).height(56.dp).background(if (fiche.battu) vert else couleurs.trait))
+                Box(Modifier.width(3.dp).height(40.dp).background(if (fiche.battu) vert else couleurs.trait))
             }
         }
         Row(
-            Modifier.weight(1f).padding(bottom = if (dernier) 0.dp else 12.dp),
+            Modifier.weight(1f).padding(top = 4.dp, bottom = if (dernier) 0.dp else 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                if (dresseur.titre != dresseur.nom) {
+                    Text(
+                        dresseur.titre,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
                 Text(
-                    fiche.dresseur.lieu,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Text(
-                    fiche.dresseur.nom,
-                    style = if (dernier) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleSmall,
+                    dresseur.nom,
+                    style = if (enAvant) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleSmall,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                     fiche.equipe.forEach { SpriteEspece(it.espece.id, decouverte = 1f, taille = 24.dp) }
@@ -137,8 +174,8 @@ private fun EtapeParcours(fiche: FicheDresseur, dernier: Boolean, onStrategie: (
             } else {
                 OmegaButton(
                     stringResource(R.string.dresseurs_strategie),
-                    onClick = onStrategie,
-                    variante = if (dernier) VarianteBouton.PRINCIPAL else VarianteBouton.CONTOUR,
+                    onClick = { actions.onStrategie(dresseur.cle) },
+                    variante = if (enAvant) VarianteBouton.PRINCIPAL else VarianteBouton.CONTOUR,
                 )
             }
         }
@@ -199,7 +236,7 @@ internal fun FicheDresseurPleinCadre(fiche: FicheDresseur, plafond: Int, onBattu
 @Composable
 private fun HeroDresseur(fiche: FicheDresseur, plafond: Int, modifier: Modifier = Modifier) {
     val dresseur = fiche.dresseur
-    val image = rememberImageDresseur(dresseur.cle)
+    val image = rememberImageDresseur(dresseur.cle, dresseur.image)
     val typeCouleur = CouleursTypes.de(dresseur.type)
     val roche = OmegadexTheme.couleurs.roche
     Box(modifier.background(Brush.verticalGradient(listOf(lerp(roche, typeCouleur, TEINTE_TYPE), roche)))) {
@@ -243,9 +280,10 @@ private fun HeroDresseur(fiche: FicheDresseur, plafond: Int, modifier: Modifier 
 @Composable
 private fun NomEnGrand(nom: String) {
     val (haut, bas) = decouperNom(nom)
+    val taille = tailleNom(maxOf(haut.length, bas.length))
     val style = MaterialTheme.typography.displayLarge.copy(
-        fontSize = TAILLE_NOM.sp,
-        lineHeight = (TAILLE_NOM * 0.9f).sp,
+        fontSize = taille.sp,
+        lineHeight = (taille * 0.9f).sp,
         fontWeight = FontWeight.ExtraBold,
         letterSpacing = (-2).sp,
     )
@@ -263,15 +301,26 @@ private fun NomEnGrand(nom: String) {
     }
 }
 
-/** « Roxanne » → « ROXA », « NNE » ; « Lévy et Tatia » → « LÉVY », « TATIA » ; un nom court tient sur une ligne. */
+/**
+ * « Roxanne » → « ROXA », « NNE » ; « Lévy et Tatia » → « LÉVY », « TATIA » ; « Pierre Rochard » → « PIERRE »,
+ * « ROCHARD » (coupé à l'espace le plus proche du milieu) ; un nom court tient sur une ligne.
+ */
 internal fun decouperNom(nom: String): Pair<String, String> {
     val majuscules = nom.uppercase()
-    val duo = majuscules.split(" ET ")
-    if (duo.size == 2) return duo[0] to duo[1]
+    SEPARATEURS_DUO.forEach { separateur ->
+        val duo = majuscules.split(separateur)
+        if (duo.size == 2) return duo[0] to duo[1]
+    }
     if (majuscules.length <= NOM_COURT) return majuscules to ""
     val milieu = (majuscules.length + 1) / 2
+    val espace = majuscules.indices.filter { majuscules[it] == ' ' }.minByOrNull { kotlin.math.abs(it - milieu) }
+    if (espace != null) return majuscules.substring(0, espace) to majuscules.substring(espace + 1)
     return majuscules.substring(0, milieu) to majuscules.substring(milieu)
 }
+
+/** Taille du nom en sp : pleine jusqu'à [LIGNE_PLEINE] lettres par ligne, réduite au-delà pour tenir en largeur. */
+internal fun tailleNom(lettres: Int): Int =
+    if (lettres <= LIGNE_PLEINE) TAILLE_NOM else (TAILLE_NOM * LIGNE_PLEINE / lettres).coerceAtLeast(TAILLE_MIN)
 
 @Composable
 private fun StrategieDresseur(fiche: FicheDresseur, plafond: Int, onBattu: () -> Unit, modifier: Modifier = Modifier) {
@@ -330,15 +379,11 @@ private fun PuceType(type: String) {
     TypeChip(type, nomDuType(type)?.let { stringResource(it) } ?: type)
 }
 
-/** « Marquer Roxanne comme battue », accordé au titre du dresseur ; une fois battu, une simple mention. */
+/** « Marquer Roxanne comme battue », accordé au dresseur ; une fois battu, une simple mention. */
 @Composable
 private fun BoutonBattu(fiche: FicheDresseur, onBattu: () -> Unit) {
     val nom = fiche.dresseur.nom
-    val (marquer, deja) = when (fiche.dresseur.titre) {
-        "Championne" -> R.string.dresseurs_marquer_battue to R.string.dresseurs_deja_battue
-        "Champions" -> R.string.dresseurs_marquer_battus to R.string.dresseurs_deja_battus
-        else -> R.string.dresseurs_marquer_battu to R.string.dresseurs_deja_battu
-    }
+    val (marquer, deja) = libellesBattu(fiche)
     if (fiche.battu) {
         Text(
             stringResource(deja, nom),
@@ -355,6 +400,13 @@ private fun BoutonBattu(fiche: FicheDresseur, onBattu: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
         )
     }
+}
+
+/** « Marquer … comme battu(e)(s) » et « … déjà battu(e)(s) », accordés au genre du dresseur. */
+private fun libellesBattu(fiche: FicheDresseur): Pair<Int, Int> = when (fiche.dresseur.genre) {
+    Genre.FEMININ -> R.string.dresseurs_marquer_battue to R.string.dresseurs_deja_battue
+    Genre.PLURIEL -> R.string.dresseurs_marquer_battus to R.string.dresseurs_deja_battus
+    Genre.MASCULIN -> R.string.dresseurs_marquer_battu to R.string.dresseurs_deja_battu
 }
 
 /** Plan de combat généré à partir de la stratégie : plafond, atout, Pokémon le plus fort, membres à éviter. */
@@ -454,6 +506,9 @@ private const val TEINTE_TYPE = 0.35f
 private const val PART_FONDU = 0.45f
 private const val TAILLE_NOM = 84
 private const val NOM_COURT = 5
+private const val LIGNE_PLEINE = 6
+private const val TAILLE_MIN = 30
+private val SEPARATEURS_DUO = listOf(" ET ", " & ")
 private const val MAX_ATOUTS = 3
 private const val COULEUR_BATTU = 0xFF1F6B45
 private const val VOILE = 0x33FFFFFF

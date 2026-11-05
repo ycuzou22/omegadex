@@ -8,9 +8,15 @@ import com.omegadex.app.domain.model.Espece
 /** Pokémon de l'équipe d'un dresseur, avec ses attaques connues. */
 data class PokemonDresseur(val especeId: Int, val niveau: Int, val attaques: List<String>)
 
+/** Accord du dresseur : « battu », « battue » ou « battus ». */
+enum class Genre { MASCULIN, FEMININ, PLURIEL }
+
 /**
- * Dresseur à affronter pendant une étape (`assets/donnees/dresseurs.json`). [queteId] : la quête principale
- * « Battre … » de l'étape ; le dresseur est battu quand elle est cochée. [duo] : combat en duo.
+ * Dresseur à affronter pendant une étape (`assets/donnees/dresseurs.json`).
+ * [queteId] : la quête « Battre … » qu'il valide (champions, Timmy, Maître…) ; sans quête, il est marqué battu à part.
+ * [starter] : pour Flora, le starter du joueur pour lequel cette équipe est prévue ; null pour les autres.
+ * [image] : nom du fichier de repli dans `assets/dresseurs/` (le personnage ou sa classe) si `<cle>.*` manque.
+ * [titre] : la classe du dresseur (Championne, Gamin, Sbire de la Team Magma…). [duo] : combat en duo.
  */
 data class Dresseur(
     val cle: String,
@@ -19,11 +25,17 @@ data class Dresseur(
     val titre: String,
     val lieu: String,
     val type: String,
-    val queteId: Int,
+    val queteId: Int?,
     val equipe: List<PokemonDresseur>,
     val attention: String?,
     val duo: Boolean = false,
-)
+    val starter: Int? = null,
+    val image: String = cle,
+    val genre: Genre = Genre.MASCULIN,
+) {
+    /** Les trois équipes de Flora : seule celle prévue contre le starter de la run est proposée. */
+    fun affronte(starterId: Int): Boolean = starter == null || starter == starterId
+}
 
 /** Un Pokémon (de l'adversaire ou du joueur) avec son espèce et son niveau. */
 data class PokemonEnCombat(val espece: Espece, val niveau: Int, val attaques: List<String> = emptyList())

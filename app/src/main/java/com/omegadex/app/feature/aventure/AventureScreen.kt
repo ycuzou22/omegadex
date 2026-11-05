@@ -52,6 +52,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
 import com.omegadex.app.domain.dresseur.DresseursEtape
+import com.omegadex.app.domain.dresseur.FicheDresseur
 import com.omegadex.app.domain.model.MethodeRencontre.HERBE
 import com.omegadex.app.domain.model.MethodeRencontre.SURF
 import com.omegadex.app.domain.rencontre.Debloqueur
@@ -87,6 +88,15 @@ fun AventureScreen(
     var capture by remember { mutableStateOf<CaptureAnimee?>(null) }
     // Centre du rubis de chaque ligne de rencontre : l'onde de la capture en part.
     val rubis = remember { mutableMapOf<Int, Offset>() }
+    // Un dresseur avec quête coche sa quête (et peut valider l'étape) ; les autres sont marqués battus à part.
+    val marquerBattu: (FicheDresseur, Boolean) -> Unit = { fiche, battu ->
+        val queteId = fiche.dresseur.queteId
+        if (queteId != null) {
+            viewModel.cocher(queteId, battu)
+        } else {
+            dresseursViewModel.marquerBattu(fiche.dresseur.cle, battu)
+        }
+    }
     LaunchedEffect(viewModel) { viewModel.evenements.collect { celebration = it } }
     LaunchedEffect(viewModel) { viewModel.captures.collect { capture = it } }
     // Ambiance volcanique tant que l'Aventure est affichée (si elle est activée dans les réglages).
@@ -105,7 +115,12 @@ fun AventureScreen(
                 onAttraper = viewModel::attraper,
                 onRubis = { id, centre -> rubis[id] = centre },
             ),
-            onglets = OngletsAventure(onglet, { onglet = it }, dresseurs, { ficheOuverte = it }),
+            onglets = OngletsAventure(
+                onglet,
+                { onglet = it },
+                dresseurs,
+                ActionsDresseurs(onStrategie = { ficheOuverte = it }, onBattu = marquerBattu),
+            ),
             modifier = Modifier.fillMaxSize(),
         )
         // « Capture → Pokédex » se joue par-dessus l'Aventure, la barre de navigation reste visible.
@@ -118,7 +133,7 @@ fun AventureScreen(
             )
         }
     }
-    // Fiche plein cadre d'un dresseur ; « Marquer comme battu » coche sa quête (et peut valider l'étape).
+    // Fiche plein cadre d'un dresseur ; « Marquer comme battu » le marque battu.
     val fiche = dresseurs?.fiches?.firstOrNull { it.dresseur.cle == ficheOuverte }
     val etapeEnCours = uiState as? AventureUiState.EtapeEnCours
     if (fiche != null && etapeEnCours != null) {
@@ -127,7 +142,7 @@ fun AventureScreen(
             plafond = etapeEnCours.plafond,
             onBattu = {
                 ficheOuverte = null
-                viewModel.cocher(fiche.dresseur.queteId, true)
+                marquerBattu(fiche, true)
             },
             onFermer = { ficheOuverte = null },
         )
@@ -170,9 +185,7 @@ private fun AventureContenu(
                 when (onglets.actif) {
                     OngletAventure.QUETES -> quetes(uiState, derniereValidee, onCocher)
                     OngletAventure.RENCONTRES -> rencontres(uiState, rencontres, onLieu)
-                    OngletAventure.DRESSEURS -> item(key = "dresseurs") {
-                        ParcoursDresseurs(onglets.dresseurs, onglets.onStrategie)
-                    }
+                    OngletAventure.DRESSEURS -> dresseurs(onglets)
                 }
             }
         }
@@ -217,12 +230,24 @@ private fun LazyListScope.rencontres(
     }
 }
 
-/** Onglet affiché, dresseurs de l'étape et ouverture de la fiche d'un dresseur. */
+/** Les dresseurs de l'étape, lieu par lieu. */
+private fun LazyListScope.dresseurs(onglets: OngletsAventure) {
+    val etape = onglets.dresseurs
+    if (etape == null || etape.fiches.isEmpty()) {
+        item(key = "dresseurs-aucun") { AucunDresseur() }
+        return
+    }
+    etape.parLieu.forEachIndexed { i, groupe ->
+        item(key = "dresseurs-$i-${groupe.lieu}") { ParcoursDresseurs(groupe, etape.chef, onglets.actionsDresseurs) }
+    }
+}
+
+/** Onglet affiché, dresseurs de l'étape, ouverture de leur fiche et marquage « battu ». */
 private class OngletsAventure(
     val actif: OngletAventure = OngletAventure.QUETES,
     val onOnglet: (OngletAventure) -> Unit = {},
     val dresseurs: DresseursEtape? = null,
-    val onStrategie: (String) -> Unit = {},
+    val actionsDresseurs: ActionsDresseurs = ActionsDresseurs(),
 )
 
 /** Onglets Quêtes · Rencontres · Dresseurs, chacun avec son compteur. */
