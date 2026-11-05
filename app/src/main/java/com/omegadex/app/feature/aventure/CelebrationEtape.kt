@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.omegadex.app.R
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.omegadex.app.R
 import com.omegadex.app.domain.badge.BadgeArene
 import com.omegadex.app.domain.defi.DefiAffiche
 import com.omegadex.app.domain.defi.defisAClore
@@ -46,8 +46,8 @@ import com.omegadex.app.ui.sons.Son
 @Composable
 internal fun CelebrationEtape(
     evenement: EtapeValidee,
-    onFin: () -> Unit,
     cloture: ClotureDefisViewModel = hiltViewModel(),
+    onFin: () -> Unit,
 ) {
     val charges by cloture.defis.collectAsStateWithLifecycle()
     var bilanDemande by remember(evenement) { mutableStateOf(false) }

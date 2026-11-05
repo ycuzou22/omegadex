@@ -169,7 +169,8 @@ class GenerateurDefisTest {
         val combat = affiche(1, modele(5012, TypeDefi.MONOTYPE), etapeId = 1)
         val autreEtape = affiche(2, modele(1021, TypeDefi.ETAPE), etapeId = 2)
         val espece = affiche(3, modele(2002, TypeDefi.ESPECE), etapeId = null)
-        val run = DefisDeLaRun(Difficulte.HARDCORE, listOf(combat, autreEtape, espece), emptyList(), BilanDefis(3, 0, 0))
+        val run =
+            DefisDeLaRun(Difficulte.HARDCORE, listOf(combat, autreEtape, espece), emptyList(), BilanDefis(3, 0, 0))
 
         assertEquals(listOf(combat), defisAClore(run, etapeId = 1))
         assertTrue(defisAClore(null, etapeId = 1).isEmpty())
