@@ -168,7 +168,7 @@ private fun AventureContenu(
                 }
                 item(key = "onglets") { BarreOnglets(uiState, onglets) }
                 when (onglets.actif) {
-                    OngletAventure.QUETES -> quetes(uiState, derniereValidee, onCocher, onLieu)
+                    OngletAventure.QUETES -> quetes(uiState, derniereValidee, onCocher)
                     OngletAventure.RENCONTRES -> rencontres(uiState, rencontres, onLieu)
                     OngletAventure.DRESSEURS -> item(key = "dresseurs") {
                         ParcoursDresseurs(onglets.dresseurs, onglets.onStrategie)
@@ -183,12 +183,8 @@ private fun LazyListScope.quetes(
     etape: AventureUiState.EtapeEnCours,
     derniereValidee: EtapeValidee?,
     onCocher: (Int, Boolean) -> Unit,
-    onLieu: (Int) -> Unit,
 ) {
     item(key = "etape") { LueurDeblocage(derniereValidee) { CarteEtape(etape, onCocher) } }
-    if (etape.lieux.isNotEmpty()) {
-        item(key = "lieux") { LieuxEtape(etape.lieux, onLieu) }
-    }
     if (etape.annexes.isNotEmpty()) {
         item(key = "annexes") { EnTeteAnnexes(etape.annexes) }
         items(etape.annexes, key = { it.id }) { quete ->
@@ -202,6 +198,10 @@ private fun LazyListScope.rencontres(
     rencontres: ActionsRencontres,
     onLieu: (Int) -> Unit,
 ) {
+    // Les lieux de l'étape ouvrent leur fiche : ils vont avec les rencontres.
+    if (etape.lieux.isNotEmpty()) {
+        item(key = "lieux") { LieuxEtape(etape.lieux, onLieu) }
+    }
     if (etape.rencontres.isEmpty()) return
     item(key = "rencontres") { EnTeteRencontres(etape.rencontres) }
     etape.rencontres.forEach { groupe ->
