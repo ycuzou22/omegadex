@@ -35,11 +35,7 @@ data class AtoutCombat(val pokemon: PokemonEnCombat, val affinite: Affinite)
  * Stratégie contre un dresseur : les types qui touchent fort au moins la moitié de son équipe ([faiblesses]),
  * l'équipe du joueur classée de l'avantage à la faiblesse ([atouts]) et son Pokémon le plus fort.
  */
-data class Strategie(
-    val faiblesses: List<String>,
-    val atouts: List<AtoutCombat>,
-    val plusFort: PokemonEnCombat?,
-) {
+data class Strategie(val faiblesses: List<String>, val atouts: List<AtoutCombat>, val plusFort: PokemonEnCombat?) {
     val meilleurAtout: AtoutCombat? get() = atouts.firstOrNull { it.affinite == Affinite.AVANTAGE }
     val aEviter: List<AtoutCombat> get() = atouts.filter { it.affinite == Affinite.FAIBLESSE }
 }

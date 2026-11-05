@@ -1,11 +1,5 @@
 package com.omegadex.app.feature.aventure
 
-import com.omegadex.app.domain.dresseur.DresseursEtape
-import androidx.compose.ui.semantics.Role
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
@@ -24,7 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +41,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
@@ -52,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.dresseur.DresseursEtape
 import com.omegadex.app.domain.model.MethodeRencontre.HERBE
 import com.omegadex.app.domain.model.MethodeRencontre.SURF
 import com.omegadex.app.domain.rencontre.Debloqueur
@@ -216,9 +216,6 @@ private fun LazyListScope.rencontres(
         }
     }
 }
-
-/** Les trois rubriques de l'Aventure. */
-enum class OngletAventure { QUETES, RENCONTRES, DRESSEURS }
 
 /** Onglet affiché, dresseurs de l'étape et ouverture de la fiche d'un dresseur. */
 private class OngletsAventure(

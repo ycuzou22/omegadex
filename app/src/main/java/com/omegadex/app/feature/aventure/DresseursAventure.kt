@@ -202,7 +202,7 @@ private fun HeroDresseur(fiche: FicheDresseur, plafond: Int, modifier: Modifier 
     val image = rememberImageDresseur(dresseur.cle)
     val typeCouleur = CouleursTypes.de(dresseur.type)
     val roche = OmegadexTheme.couleurs.roche
-    Box(modifier.background(Brush.verticalGradient(listOf(lerp(roche, typeCouleur, 0.35f), roche)))) {
+    Box(modifier.background(Brush.verticalGradient(listOf(lerp(roche, typeCouleur, TEINTE_TYPE), roche)))) {
         image?.let {
             Image(
                 it,
@@ -286,62 +286,69 @@ private fun StrategieDresseur(fiche: FicheDresseur, plafond: Int, onBattu: () ->
             color = MaterialTheme.colorScheme.surface,
             border = BorderStroke(1.dp, OmegadexTheme.couleurs.trait),
         ) {
-            Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Section(stringResource(R.string.dresseurs_son_equipe))
-                fiche.equipe.forEach { p ->
-                    LignePokemon(p.espece.id, p.espece.nom, p.niveau) {
-                        p.espece.types.forEach { type ->
-                            TypeChip(type, nomDuType(type)?.let { stringResource(it) } ?: type)
-                        }
-                    }
-                }
-                if (fiche.strategie.faiblesses.isNotEmpty()) {
-                    Section(stringResource(R.string.dresseurs_faiblesses))
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        fiche.strategie.faiblesses.forEach { type ->
-                            TypeChip(type, nomDuType(type)?.let { stringResource(it) } ?: type)
-                        }
-                    }
-                }
-                if (fiche.strategie.atouts.isNotEmpty()) {
-                    Section(stringResource(R.string.dresseurs_atouts))
-                    fiche.strategie.atouts.take(MAX_ATOUTS).forEach { atout ->
-                        LignePokemon(atout.pokemon.espece.id, atout.pokemon.espece.nom, atout.pokemon.niveau) {
-                            Text(
-                                stringResource(libelleAffinite(atout.affinite)),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = couleurAffinite(atout.affinite),
-                            )
-                        }
-                    }
-                }
-                Section(stringResource(R.string.dresseurs_plan))
-                planDeCombat(fiche, plafond).forEachIndexed { i, etape -> EtapePlan(i + 1, etape) }
-                fiche.dresseur.attention?.let { Attention(it) }
+            CarteStrategie(fiche, plafond, Modifier.fillMaxWidth().padding(14.dp))
+        }
+        BoutonBattu(fiche, onBattu)
+    }
+}
+
+@Composable
+private fun CarteStrategie(fiche: FicheDresseur, plafond: Int, modifier: Modifier = Modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Section(stringResource(R.string.dresseurs_son_equipe))
+        fiche.equipe.forEach { p ->
+            LignePokemon(p.espece.id, p.espece.nom, p.niveau) {
+                p.espece.types.forEach { type -> PuceType(type) }
             }
         }
-        val nom = fiche.dresseur.nom
-        val (marquer, deja) = when (fiche.dresseur.titre) {
-            "Championne" -> R.string.dresseurs_marquer_battue to R.string.dresseurs_deja_battue
-            "Champions" -> R.string.dresseurs_marquer_battus to R.string.dresseurs_deja_battus
-            else -> R.string.dresseurs_marquer_battu to R.string.dresseurs_deja_battu
+        if (fiche.strategie.faiblesses.isNotEmpty()) {
+            Section(stringResource(R.string.dresseurs_faiblesses))
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                fiche.strategie.faiblesses.forEach { type -> PuceType(type) }
+            }
         }
-        if (fiche.battu) {
-            Text(
-                stringResource(deja, nom),
-                style = MaterialTheme.typography.titleSmall,
-                color = Color(COULEUR_BATTU),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        } else {
-            OmegaButton(
-                stringResource(marquer, nom),
-                onClick = onBattu,
-                avecOmega = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
+        if (fiche.strategie.atouts.isNotEmpty()) {
+            Section(stringResource(R.string.dresseurs_atouts))
+            fiche.strategie.atouts.take(MAX_ATOUTS).forEach { atout ->
+                LignePokemon(atout.pokemon.espece.id, atout.pokemon.espece.nom, atout.pokemon.niveau) {
+                    Text(
+                        stringResource(libelleAffinite(atout.affinite)),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = couleurAffinite(atout.affinite),
+                    )
+                }
+            }
         }
+        Section(stringResource(R.string.dresseurs_plan))
+        planDeCombat(fiche, plafond).forEachIndexed { i, etape -> EtapePlan(i + 1, etape) }
+        fiche.dresseur.attention?.let { Attention(it) }
+    }
+}
+
+@Composable
+private fun PuceType(type: String) {
+    TypeChip(type, nomDuType(type)?.let { stringResource(it) } ?: type)
+}
+
+/** « Marquer Roxanne comme battue », accordé au titre du dresseur ; une fois battu, une simple mention. */
+@Composable
+private fun BoutonBattu(fiche: FicheDresseur, onBattu: () -> Unit) {
+    val nom = fiche.dresseur.nom
+    val (marquer, deja) = when (fiche.dresseur.titre) {
+        "Championne" -> R.string.dresseurs_marquer_battue to R.string.dresseurs_deja_battue
+        "Champions" -> R.string.dresseurs_marquer_battus to R.string.dresseurs_deja_battus
+        else -> R.string.dresseurs_marquer_battu to R.string.dresseurs_deja_battu
+    }
+    if (fiche.battu) {
+        Text(
+            stringResource(deja, nom),
+            style = MaterialTheme.typography.titleSmall,
+            color = Color(COULEUR_BATTU),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    } else {
+        OmegaButton(stringResource(marquer, nom), onClick = onBattu, avecOmega = true, modifier = Modifier.fillMaxWidth())
     }
 }
 
@@ -438,6 +445,7 @@ private fun couleurAffinite(affinite: Affinite): Color = when (affinite) {
 }
 
 private const val PART_HERO = 0.92f
+private const val TEINTE_TYPE = 0.35f
 private const val PART_FONDU = 0.45f
 private const val TAILLE_NOM = 84
 private const val NOM_COURT = 5

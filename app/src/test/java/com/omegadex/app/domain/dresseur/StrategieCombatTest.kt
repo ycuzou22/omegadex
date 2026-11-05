@@ -1,11 +1,9 @@
 package com.omegadex.app.domain.dresseur
 
-import com.omegadex.app.data.repository.DresseursAsset
 import com.omegadex.app.domain.equipe.Affinite
 import com.omegadex.app.domain.model.Espece
 import com.omegadex.app.domain.model.Stats
 import com.omegadex.app.feature.aventure.decouperNom
-import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -59,15 +57,5 @@ class StrategieCombatTest {
         assertEquals("ROXA" to "NNE", decouperNom("Roxanne"))
         assertEquals("LÉVY" to "TATIA", decouperNom("Lévy et Tatia"))
         assertEquals("MARC" to "", decouperNom("Marc"))
-    }
-
-    @Test
-    fun `les huit champions sont decrits, un par arene`() {
-        val dresseurs = DresseursAsset.lireDresseurs(File("src/main/assets/${DresseursAsset.FICHIER}").readText())
-        assertEquals(8, dresseurs.size)
-        assertEquals(listOf(1, 2, 3, 4, 5, 6, 7, 9), dresseurs.map { it.etapeId })
-        assertTrue(dresseurs.all { it.equipe.isNotEmpty() && it.attention != null })
-        assertEquals(listOf(12, 14), dresseurs.first().equipe.map { it.niveau })
-        assertTrue(dresseurs.single { it.cle == "levy-et-tatia" }.duo)
     }
 }

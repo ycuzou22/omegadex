@@ -70,3 +70,6 @@ data class EtapeValidee(
 )
 
 data class QueteAffichee(val id: Int, val description: String, val recompense: String?, val cochee: Boolean)
+
+/** Les trois rubriques de l'Aventure. */
+enum class OngletAventure { QUETES, RENCONTRES, DRESSEURS }
