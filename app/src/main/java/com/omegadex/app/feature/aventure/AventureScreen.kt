@@ -18,7 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +41,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
@@ -46,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.omegadex.app.R
+import com.omegadex.app.domain.dresseur.DresseursEtape
 import com.omegadex.app.domain.model.MethodeRencontre.HERBE
 import com.omegadex.app.domain.model.MethodeRencontre.SURF
 import com.omegadex.app.domain.rencontre.Debloqueur
@@ -70,8 +76,12 @@ fun AventureScreen(
     onLieu: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AventureViewModel = hiltViewModel(),
+    dresseursViewModel: DresseursViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val dresseurs by dresseursViewModel.dresseurs.collectAsStateWithLifecycle()
+    var onglet by rememberSaveable { mutableStateOf(OngletAventure.QUETES) }
+    var ficheOuverte by rememberSaveable { mutableStateOf<String?>(null) }
     var celebration by remember { mutableStateOf<EtapeValidee?>(null) }
     var derniereValidee by remember { mutableStateOf<EtapeValidee?>(null) }
     var capture by remember { mutableStateOf<CaptureAnimee?>(null) }
@@ -95,6 +105,7 @@ fun AventureScreen(
                 onAttraper = viewModel::attraper,
                 onRubis = { id, centre -> rubis[id] = centre },
             ),
+            onglets = OngletsAventure(onglet, { onglet = it }, dresseurs, { ficheOuverte = it }),
             modifier = Modifier.fillMaxSize(),
         )
         // « Capture → Pokédex » se joue par-dessus l'Aventure, la barre de navigation reste visible.
@@ -106,6 +117,20 @@ fun AventureScreen(
                 modifier = Modifier.matchParentSize(),
             )
         }
+    }
+    // Fiche plein cadre d'un dresseur ; « Marquer comme battu » coche sa quête (et peut valider l'étape).
+    val fiche = dresseurs?.fiches?.firstOrNull { it.dresseur.cle == ficheOuverte }
+    val etapeEnCours = uiState as? AventureUiState.EtapeEnCours
+    if (fiche != null && etapeEnCours != null) {
+        FicheDresseurPleinCadre(
+            fiche = fiche,
+            plafond = etapeEnCours.plafond,
+            onBattu = {
+                ficheOuverte = null
+                viewModel.cocher(fiche.dresseur.queteId, true)
+            },
+            onFermer = { ficheOuverte = null },
+        )
     }
     // Après l'animation « Étape validée », l'étape validée se résume en haut et la nouvelle étape s'illumine.
     celebration?.let { evenement ->
@@ -124,6 +149,7 @@ private fun AventureContenu(
     modifier: Modifier = Modifier,
     derniereValidee: EtapeValidee? = null,
     rencontres: ActionsRencontres = ActionsRencontres(),
+    onglets: OngletsAventure = OngletsAventure(),
 ) {
     when (uiState) {
         AventureUiState.Chargement -> Box(modifier.fillMaxSize())
@@ -140,34 +166,105 @@ private fun AventureContenu(
                 derniereValidee?.let { validee ->
                     item(key = "validee-${validee.numero}") { ResumeEtapeValidee(validee) }
                 }
-                item { LueurDeblocage(derniereValidee) { CarteEtape(uiState, onCocher) } }
-                if (uiState.lieux.isNotEmpty()) {
-                    item { LieuxEtape(uiState.lieux, onLieu) }
-                }
-                if (uiState.rencontres.isNotEmpty()) {
-                    item(key = "rencontres") { EnTeteRencontres(uiState.rencontres) }
-                    uiState.rencontres.forEach { groupe ->
-                        val cle = "${groupe.lieuId}-${groupe.debloqueur}"
-                        item(key = "groupe-$cle") { EnTeteGroupe(groupe, onLieu) }
-                        items(groupe.lignes, key = { "rencontre-$cle-${it.especeId}" }) { rencontre ->
-                            LigneRencontre(
-                                rencontre,
-                                onAttraper = { rencontres.onAttraper(rencontre.especeId) },
-                                onRubis = { rencontres.onRubis(rencontre.especeId, it) },
-                            )
-                        }
-                    }
-                }
-                if (uiState.annexes.isNotEmpty()) {
-                    item { EnTeteAnnexes(uiState.annexes) }
-                    items(uiState.annexes, key = { it.id }) { quete ->
-                        LigneQuete(quete) { onCocher(quete.id, it) }
+                item(key = "onglets") { BarreOnglets(uiState, onglets) }
+                when (onglets.actif) {
+                    OngletAventure.QUETES -> quetes(uiState, derniereValidee, onCocher)
+                    OngletAventure.RENCONTRES -> rencontres(uiState, rencontres, onLieu)
+                    OngletAventure.DRESSEURS -> item(key = "dresseurs") {
+                        ParcoursDresseurs(onglets.dresseurs, onglets.onStrategie)
                     }
                 }
             }
         }
     }
 }
+
+private fun LazyListScope.quetes(
+    etape: AventureUiState.EtapeEnCours,
+    derniereValidee: EtapeValidee?,
+    onCocher: (Int, Boolean) -> Unit,
+) {
+    item(key = "etape") { LueurDeblocage(derniereValidee) { CarteEtape(etape, onCocher) } }
+    if (etape.annexes.isNotEmpty()) {
+        item(key = "annexes") { EnTeteAnnexes(etape.annexes) }
+        items(etape.annexes, key = { it.id }) { quete ->
+            LigneQuete(quete) { onCocher(quete.id, it) }
+        }
+    }
+}
+
+private fun LazyListScope.rencontres(
+    etape: AventureUiState.EtapeEnCours,
+    rencontres: ActionsRencontres,
+    onLieu: (Int) -> Unit,
+) {
+    // Les lieux de l'étape ouvrent leur fiche : ils vont avec les rencontres.
+    if (etape.lieux.isNotEmpty()) {
+        item(key = "lieux") { LieuxEtape(etape.lieux, onLieu) }
+    }
+    if (etape.rencontres.isEmpty()) return
+    item(key = "rencontres") { EnTeteRencontres(etape.rencontres) }
+    etape.rencontres.forEach { groupe ->
+        val cle = "${groupe.lieuId}-${groupe.debloqueur}"
+        item(key = "groupe-$cle") { EnTeteGroupe(groupe, onLieu) }
+        items(groupe.lignes, key = { "rencontre-$cle-${it.especeId}" }) { rencontre ->
+            LigneRencontre(
+                rencontre,
+                onAttraper = { rencontres.onAttraper(rencontre.especeId) },
+                onRubis = { rencontres.onRubis(rencontre.especeId, it) },
+            )
+        }
+    }
+}
+
+/** Onglet affiché, dresseurs de l'étape et ouverture de la fiche d'un dresseur. */
+private class OngletsAventure(
+    val actif: OngletAventure = OngletAventure.QUETES,
+    val onOnglet: (OngletAventure) -> Unit = {},
+    val dresseurs: DresseursEtape? = null,
+    val onStrategie: (String) -> Unit = {},
+)
+
+/** Onglets Quêtes · Rencontres · Dresseurs, chacun avec son compteur. */
+@Composable
+private fun BarreOnglets(etape: AventureUiState.EtapeEnCours, onglets: OngletsAventure) {
+    val quetes = etape.principales + etape.annexes
+    val lignes = etape.rencontres.flatMap { it.lignes }
+    val compteurs = mapOf(
+        OngletAventure.QUETES to (quetes.count { it.cochee } to quetes.size),
+        OngletAventure.RENCONTRES to (lignes.count { it.capturee } to lignes.size),
+        OngletAventure.DRESSEURS to ((onglets.dresseurs?.battus ?: 0) to (onglets.dresseurs?.fiches?.size ?: 0)),
+    )
+    Row(Modifier.fillMaxWidth().selectableGroup(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        OngletAventure.entries.forEach { onglet ->
+            val choisi = onglet == onglets.actif
+            val (faits, total) = compteurs.getValue(onglet)
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                color = if (choisi) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
+                contentColor = if (choisi) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+                border = if (choisi) null else BorderStroke(1.dp, OmegadexTheme.couleurs.trait),
+                modifier = Modifier.weight(1f)
+                    .selectable(selected = choisi, role = Role.Tab, onClick = { onglets.onOnglet(onglet) }),
+            ) {
+                Column(Modifier.padding(vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(stringResource(NOMS_ONGLETS.getValue(onglet)), style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(R.string.aventure_compteur, faits, total), style = OmegadexTheme.chiffres.petit)
+                }
+            }
+        }
+    }
+}
+
+private val NOMS_ONGLETS = mapOf(
+    OngletAventure.QUETES to R.string.aventure_onglet_quetes,
+    OngletAventure.RENCONTRES to R.string.aventure_onglet_rencontres,
+    OngletAventure.DRESSEURS to R.string.aventure_onglet_dresseurs,
+)
 
 /** Actions des lignes de rencontre : attraper une espèce, et position de son rubis pour l'animation. */
 private data class ActionsRencontres(
