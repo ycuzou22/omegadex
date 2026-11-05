@@ -1,5 +1,9 @@
 package com.omegadex.app.feature.defis
 
+import com.omegadex.app.domain.defi.CategorieDefi
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -53,8 +57,8 @@ import com.omegadex.app.ui.theme.ApercusClairSombre
 import com.omegadex.app.ui.theme.OmegadexTheme
 
 /**
- * Espace Défis : jauge de réussite, filtre par difficulté, défis actifs / disponibles / terminés.
- * Avec [onRetour], c'est la page « Défis de … » d'un Pokémon.
+ * Espace Défis : jauge de réussite, six roulettes (une par catégorie), défis en cours et terminés.
+ * Avec [onRetour], c'est la page « Défis de … » d'un Pokémon, sans roulette.
  */
 @Composable
 fun DefisScreen(
@@ -67,8 +71,12 @@ fun DefisScreen(
     val annonces = remember { SnackbarHostState() }
     val ressources = LocalResources.current
     val sons = LocalSons.current
+    var feuille by remember { mutableStateOf<FeuilleOuverte?>(null) }
     LaunchedEffect(viewModel) {
         viewModel.refusEspece.collect { annonces.showSnackbar(ressources.getString(R.string.defis_refus_espece)) }
+    }
+    LaunchedEffect(viewModel) {
+        viewModel.toursDeRoulette.collect { tour -> feuille = FeuilleOuverte(tour.categorie, tour) }
     }
     Box(modifier.fillMaxSize()) {
         DefisContenu(
@@ -76,7 +84,6 @@ fun DefisScreen(
             actions = ActionsDefis(
                 onOnglet = viewModel::choisirOnglet,
                 onFiltre = viewModel::filtrer,
-                onRelever = viewModel::relever,
                 onValider = { defiId, reussi ->
                     sons.jouer(if (reussi) Son.DEFI_REUSSI else Son.DEFI_ECHOUE)
                     viewModel.valider(defiId, reussi)
@@ -85,13 +92,37 @@ fun DefisScreen(
                 onEspece = onEspece,
                 onRetour = onRetour,
             ),
+            roulettes = ActionsRoulettes(
+                onTourner = viewModel::tourner,
+                onVoirTirage = { feuille = FeuilleOuverte(it, tour = null) },
+                onVoirEnCours = { viewModel.choisirOnglet(OngletDefis.ACTIFS) },
+            ),
         )
         SnackbarHost(annonces, Modifier.align(Alignment.BottomCenter).padding(16.dp))
+    }
+    feuille?.let { ouverte ->
+        val case = (uiState as? DefisUiState.Espace)?.roulette?.cases?.firstOrNull { it.categorie == ouverte.categorie }
+        // Une fois relevé, le défi passe « en cours » : la roulette se referme.
+        LaunchedEffect(case?.etat) { if (case?.etat == EtatCase.EN_COURS) feuille = null }
+        FeuilleRoulette(
+            ouverte,
+            case,
+            ActionsTirage(
+                onRelever = viewModel::releverTirage,
+                onRelancer = viewModel::tourner,
+                onFermer = { feuille = null },
+            ),
+        )
     }
 }
 
 @Composable
-private fun DefisContenu(uiState: DefisUiState, actions: ActionsDefis, modifier: Modifier = Modifier) {
+private fun DefisContenu(
+    uiState: DefisUiState,
+    actions: ActionsDefis,
+    roulettes: ActionsRoulettes,
+    modifier: Modifier = Modifier,
+) {
     when (uiState) {
         DefisUiState.Chargement -> Box(modifier.fillMaxSize())
         DefisUiState.AucuneRun -> Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -107,13 +138,18 @@ private fun DefisContenu(uiState: DefisUiState, actions: ActionsDefis, modifier:
                     item { TextButton(onClick = retour) { Text(stringResource(R.string.defis_retour)) } }
                 }
                 item { EnTete(uiState) }
-                item { Filtres(uiState.difficulteRun, uiState.filtre, actions.onFiltre) }
                 item { Onglets(uiState, actions.onOnglet) }
-                if (uiState.cartes.isEmpty()) {
-                    item { Vide(uiState.onglet) }
-                }
-                items(uiState.cartes, key = { it.cle }) { carte ->
-                    CarteDefiVue(carte, pageEspece = uiState.especeNom != null, actions = actions)
+                val roulette = uiState.roulette
+                if (uiState.onglet == OngletDefis.ROULETTE && roulette != null) {
+                    item { GrilleRoulettes(roulette, roulettes) }
+                } else {
+                    item { Filtres(uiState.difficulteRun, uiState.filtre, actions.onFiltre) }
+                    if (uiState.cartes.isEmpty()) {
+                        item { Vide(uiState.onglet) }
+                    }
+                    items(uiState.cartes, key = { it.cle }) { carte ->
+                        CarteDefiVue(carte, pageEspece = uiState.especeNom != null, actions = actions)
+                    }
                 }
             }
         }
@@ -126,12 +162,32 @@ private fun EnTete(espace: DefisUiState.Espace) {
     val pourcentage = (bilan.tauxReussite * POURCENT).toInt()
     Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            espace.roulette?.let { roulette ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        stringResource(R.string.defis_entete_etape, roulette.numeroEtape, roulette.adversaire)
+                            .uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    PuceDifficulte(espace.difficulteRun)
+                }
+            }
             Text(
                 espace.especeNom?.let { stringResource(R.string.defis_titre_espece, it) }
                     ?: stringResource(R.string.defis_titre),
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.semantics { heading() },
             )
+            espace.roulette?.let { roulette ->
+                Text(
+                    pluralStringResource(R.plurals.defis_categories_en_cours, roulette.occupees, roulette.occupees),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
             Text(
                 stringResource(R.string.defis_bilan, bilan.actifs, bilan.reussis, bilan.rates),
                 style = MaterialTheme.typography.bodyMedium,
@@ -174,10 +230,11 @@ private fun Filtres(difficulteRun: Difficulte, filtre: Difficulte?, onFiltre: (D
 @Composable
 private fun Onglets(espace: DefisUiState.Espace, onOnglet: (OngletDefis) -> Unit) {
     Row(Modifier.fillMaxWidth().selectableGroup(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OngletDefis.entries.forEach { onglet ->
+        espace.onglets.forEach { onglet ->
             val (nom, nombre) = when (onglet) {
+                OngletDefis.ROULETTE ->
+                    R.string.defis_onglet_roulette to espace.roulette?.cases?.count { it.peutTourner }
                 OngletDefis.ACTIFS -> R.string.defis_onglet_actifs to espace.actifs.size
-                OngletDefis.DISPONIBLES -> R.string.defis_onglet_disponibles to espace.disponibles.size
                 OngletDefis.TERMINES -> R.string.defis_onglet_termines to espace.termines.size
             }
             Pastille(
@@ -235,7 +292,7 @@ private fun Vide(onglet: OngletDefis) {
         stringResource(
             when (onglet) {
                 OngletDefis.ACTIFS -> R.string.defis_vide_actifs
-                OngletDefis.DISPONIBLES -> R.string.defis_vide_disponibles
+                OngletDefis.ROULETTE -> R.string.roulette_vide
                 OngletDefis.TERMINES -> R.string.defis_vide_termines
             },
         ),
@@ -274,12 +331,7 @@ private fun CarteDefiVue(carte: CarteDefi, pageEspece: Boolean, actions: Actions
 private fun ActionsCarte(carte: CarteDefi, actions: ActionsDefis) {
     val defiId = carte.defiId
     when {
-        defiId == null -> OmegaButton(
-            stringResource(R.string.defis_relever),
-            onClick = { actions.onRelever(carte.cle) },
-            avecOmega = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        defiId == null -> Unit
         carte.etat == EtatDefi.ACTIF -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OmegaButton(stringResource(R.string.defis_reussi), { actions.onValider(defiId, true) }, Modifier.weight(1f))
             OmegaButton(
@@ -343,14 +395,29 @@ private fun DefisPreview() {
             uiState = DefisUiState.Espace(
                 especeNom = null,
                 difficulteRun = Difficulte.DIFFICILE,
-                onglet = OngletDefis.ACTIFS,
+                onglet = OngletDefis.ROULETTE,
                 filtre = null,
                 actifs = listOf(carte),
-                disponibles = emptyList(),
                 termines = listOf(carte.copy(cle = "b", etat = EtatDefi.RATE)),
                 bilan = BilanDefis(1, 3, 1),
+                roulette = RouletteUi(
+                    numeroEtape = 3,
+                    adversaire = "Voltère",
+                    cases = CategorieDefi.entries.mapIndexed { i, categorie ->
+                        CaseRouletteUi(
+                            categorie = categorie,
+                            etat = EtatCase.entries[i % EtatCase.entries.size],
+                            nombre = i + 1,
+                            defi = carte,
+                            relancesRestantes = 1,
+                            peutTourner = i % 2 == 0,
+                            queteRequise = "Battre le rival sur la Route 110",
+                        )
+                    },
+                ),
             ),
-            actions = ActionsDefis({}, {}, {}, { _, _ -> }, {}, {}, null),
+            actions = ActionsDefis({}, {}, { _, _ -> }, {}, {}, null),
+            roulettes = ActionsRoulettes({}, {}, {}),
         )
     }
 }

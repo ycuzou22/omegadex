@@ -31,6 +31,8 @@ data class ContexteDefis(
     val especes: List<EspeceCandidate>,
     val defisExistants: List<Defi>,
     val nationalObtenu: Boolean,
+    /** Faux tant que l'avant-dernière quête principale de l'étape n'est pas cochée (voir [VerrouChampion]). */
+    val championOuvert: Boolean = true,
 )
 
 /** Défi proposé au joueur, pas encore accepté. [enonce] est le gabarit rempli. */
@@ -52,6 +54,8 @@ data class DefiPropose(
  * - aucun défi ne fixe un niveau au-dessus du plafond, et une évolution n'est proposée que si elle est
  *   atteignable sous le plafond ;
  * - un défi déjà actif ou réussi n'est pas reproposé (un défi raté peut être retenté) ;
+ * - **un seul défi en cours par catégorie** ([CategorieDefi]) ; le défi du champion ne s'ouvre qu'à
+ *   l'avant-dernière quête principale de l'étape ([ContexteDefis.championOuvert]) ;
  * - **un seul défi de combat par adversaire** : dès qu'un défi d'étape, Monotype ou Rotation est accepté pour
  *   l'étape en cours, les autres défis de combat de cette étape ne sont plus proposés (ils reviennent s'il est raté).
  */
@@ -64,15 +68,21 @@ object GenerateurDefis {
 
     fun generer(contexte: ContexteDefis, modeles: List<ModeleDefi>): List<DefiPropose> {
         val types = modeles.associate { it.id to it.type }
-        val combatEngage = combatEngage(contexte.defisExistants, contexte.etape.id, types)
+        val combatFerme = !contexte.championOuvert || combatEngage(contexte.defisExistants, contexte.etape.id, types)
+        val occupees = categoriesOccupees(contexte.defisExistants, types)
         return modeles.filter { estDebloque(it, contexte) }.flatMap { modele ->
             when {
+                CategorieDefi.de(modele.type) in occupees -> emptyList()
                 modele.type in TYPES_ESPECE -> defisEspece(modele, contexte)
-                combatEngage -> emptyList()
+                combatFerme -> emptyList()
                 else -> listOfNotNull(defiEtape(modele, contexte))
             }
         }
     }
+
+    /** Catégories qui ont déjà un défi en cours : un seul défi actif par catégorie. */
+    fun categoriesOccupees(defis: List<Defi>, types: Map<Int, TypeDefi>): Set<CategorieDefi> =
+        defis.filter { it.etat == EtatDefi.ACTIF }.mapNotNull { types[it.modeleId]?.let(CategorieDefi::de) }.toSet()
 
     /** Vrai si un défi de combat de l'étape [etapeId] est en cours ou réussi (un défi raté libère le combat). */
     fun combatEngage(defis: List<Defi>, etapeId: Int, types: Map<Int, TypeDefi>): Boolean = defis.any {

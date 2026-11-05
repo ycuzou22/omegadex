@@ -6,7 +6,6 @@ import com.omegadex.app.domain.model.Difficulte
 class ActionsDefis(
     val onOnglet: (OngletDefis) -> Unit,
     val onFiltre: (Difficulte?) -> Unit,
-    val onRelever: (String) -> Unit,
     val onValider: (Long, Boolean) -> Unit,
     val onRetenter: (Long) -> Unit,
     val onEspece: (Int) -> Unit,

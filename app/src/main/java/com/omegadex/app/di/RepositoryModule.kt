@@ -4,6 +4,7 @@ import com.omegadex.app.core.Horloge
 import com.omegadex.app.core.HorlogeSysteme
 import com.omegadex.app.data.repository.CompteRepositoryImpl
 import com.omegadex.app.data.repository.FiltresPokedexDataStore
+import com.omegadex.app.data.repository.TiragesDefisDataStore
 import com.omegadex.app.data.repository.InfosAppRepositoryImpl
 import com.omegadex.app.data.repository.JeuRepositoryImpl
 import com.omegadex.app.data.repository.ProgressionRepositoryImpl
@@ -17,6 +18,7 @@ import com.omegadex.app.data.securite.HacheurArgon2
 import com.omegadex.app.domain.compte.HacheurMotDePasse
 import com.omegadex.app.domain.repository.CompteRepository
 import com.omegadex.app.domain.repository.FiltresPokedexRepository
+import com.omegadex.app.domain.repository.TiragesDefisRepository
 import com.omegadex.app.domain.repository.InfosAppRepository
 import com.omegadex.app.domain.repository.JeuRepository
 import com.omegadex.app.domain.repository.ProgressionRepository
@@ -57,6 +59,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindSuccesRepository(impl: SuccesRepositoryImpl): SuccesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTiragesDefis(impl: TiragesDefisDataStore): TiragesDefisRepository
 
     @Binds
     abstract fun bindHorloge(impl: HorlogeSysteme): Horloge

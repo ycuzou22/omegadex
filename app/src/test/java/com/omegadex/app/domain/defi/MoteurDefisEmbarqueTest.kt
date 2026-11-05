@@ -188,7 +188,7 @@ class MoteurDefisEmbarqueTest {
             progression,
             jeu,
         )
-        val accepter = AccepterDefiUseCase(progression)
+        val accepter = AccepterDefiUseCase(progression, jeu)
         val valider = ValiderDefiUseCase(progression)
         val retenter = RetenterDefiUseCase(progression)
 

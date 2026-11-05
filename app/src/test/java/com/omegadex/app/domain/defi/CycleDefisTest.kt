@@ -72,7 +72,7 @@ class CycleDefisTest {
 
     private suspend fun accepterDeuxDefis(): Pair<Long, Long> {
         val proposes = proposer().first()
-        val accepter = AccepterDefiUseCase(progression)
+        val accepter = AccepterDefiUseCase(progression, jeu)
         val etape = accepter(run, proposes.first { it.modele.type == TypeDefi.ETAPE }).getOrThrow()
         val espece = accepter(run, proposes.first { it.especeId == 252 }).getOrThrow()
         return etape to espece
