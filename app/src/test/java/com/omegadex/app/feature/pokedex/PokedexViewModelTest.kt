@@ -11,8 +11,12 @@ import com.omegadex.app.domain.accueil.Jauge
 import com.omegadex.app.domain.accueil.ObserverJaugesUseCase
 import com.omegadex.app.domain.model.Difficulte
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.MethodeFiltre
+import com.omegadex.app.domain.pokedex.ObserverOriginesUseCase
 import com.omegadex.app.domain.pokedex.ObserverPokedexUseCase
 import com.omegadex.app.domain.pokedex.RegleNational
+import com.omegadex.app.domain.repository.FiltresMemorises
+import com.omegadex.app.domain.repository.FiltresPokedexRepository
 import com.omegadex.app.domain.run.CreerRunUseCase
 import com.omegadex.app.domain.run.ObserverRunEnCoursUseCase
 import com.omegadex.app.domain.run.ResultatCreationRun
@@ -21,6 +25,8 @@ import com.omegadex.app.testutil.FausseRunActive
 import com.omegadex.app.testutil.FausseSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -50,6 +56,7 @@ class PokedexViewModelTest {
     private lateinit var runActive: FausseRunActive
     private lateinit var jeu: JeuRepositoryImpl
     private val session = FausseSession()
+    private val memoire = MemoireFiltres()
 
     @Before
     fun ouvrir() {
@@ -75,6 +82,8 @@ class PokedexViewModelTest {
         ObserverPokedexUseCase(jeu, progression),
         jeu,
         progression,
+        ObserverOriginesUseCase(jeu),
+        memoire,
     )
 
     private suspend fun nouvelleRun(): Long {
@@ -266,6 +275,25 @@ class PokedexViewModelTest {
     }
 
     @Test
+    fun `la zone et la methode se combinent et restent gardees pour le compte`() = runTest {
+        nouvelleRun()
+        val viewModel = viewModel()
+        viewModel.uiState.first { it is PokedexUiState.Pret }
+
+        viewModel.choisirZone(2)
+        assertEquals(listOf(253), viewModel.resultats(FiltresPokedex(zoneId = 2)))
+        viewModel.choisirMethode(MethodeFiltre.HERBE)
+        assertEquals(listOf(253), viewModel.resultats(FiltresPokedex(zoneId = 2, methode = MethodeFiltre.HERBE)))
+        viewModel.choisirMethode(MethodeFiltre.NAVI_DEX)
+        val combines = FiltresPokedex(zoneId = 2, methode = MethodeFiltre.NAVI_DEX)
+        assertEquals(emptyList<Int>(), viewModel.resultats(combines))
+        assertEquals(FiltresMemorises(zoneId = 2, methode = MethodeFiltre.NAVI_DEX), memoire.filtres.first())
+
+        // Au redémarrage, un nouvel écran retrouve les filtres du compte.
+        assertEquals(emptyList<Int>(), viewModel().resultats(combines))
+    }
+
+    @Test
     fun `choisir deux fois le meme type retire le filtre et effacer remet tout`() = runTest {
         nouvelleRun()
         val viewModel = viewModel()
@@ -308,5 +336,15 @@ class PokedexViewModelTest {
     private suspend fun PokedexViewModel.resultats(filtres: FiltresPokedex): List<Int> {
         val etat = uiState.first { it is PokedexUiState.Pret && it.filtres == filtres } as PokedexUiState.Pret
         return etat.resultats.map { it.id }
+    }
+}
+
+/** Mémoire des filtres en mémoire vive, pour les tests. */
+private class MemoireFiltres : FiltresPokedexRepository {
+    private val etat = MutableStateFlow(FiltresMemorises())
+    override val filtres: Flow<FiltresMemorises> = etat
+
+    override suspend fun enregistrer(filtres: FiltresMemorises) {
+        etat.value = filtres
     }
 }

@@ -455,4 +455,17 @@
         <item quantity="many">Avoir %d Pokémon dans l\'équipe</item>
         <item quantity="other">Avoir %d Pokémon dans l\'équipe</item>
     </plurals>
+    <string name="pokedex_zone">Zone ▾</string>
+    <string name="pokedex_zone_choisie">%1$s ▾</string>
+    <string name="pokedex_zone_toutes">Toutes les zones</string>
+    <string name="pokedex_methode_herbe">Herbes</string>
+    <string name="pokedex_methode_horde">Hordes</string>
+    <string name="pokedex_methode_surf">Surf</string>
+    <string name="pokedex_methode_peche">Pêche</string>
+    <string name="pokedex_methode_plongee">Plongée</string>
+    <string name="pokedex_methode_roche">Éclate-Roc</string>
+    <string name="pokedex_methode_navi_dex">Navi-Dex</string>
+    <string name="pokedex_methode_mirage">Lieux mirages</string>
+    <string name="pokedex_methode_fixe">Fixe ou cadeau</string>
+    <string name="pokedex_methode_legendaire">Légendaires</string>
 </resources>

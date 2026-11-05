@@ -1,5 +1,6 @@
 package com.omegadex.app.domain.pokedex
 
+import com.omegadex.app.domain.model.Lieu
 import com.omegadex.app.domain.model.MethodeRencontre
 import com.omegadex.app.domain.model.Rencontre
 import com.omegadex.app.domain.model.TypeLieu
@@ -71,8 +72,15 @@ object OriginesEspeces {
     }
 }
 
-/** Origines de toutes les espèces, pour les filtres zone et méthode du Pokédex. */
+/** Données des filtres zone et méthode : origines de chaque espèce et zones où l'on rencontre des Pokémon. */
+data class IndexFiltres(val origines: Map<Int, OriginesEspece> = emptyMap(), val zones: List<Lieu> = emptyList())
+
+/** Origines de toutes les espèces et zones proposées, pour les filtres zone et méthode du Pokédex. */
 class ObserverOriginesUseCase @Inject constructor(private val jeu: JeuRepository) {
-    operator fun invoke(): Flow<Map<Int, OriginesEspece>> =
-        jeu.toutesLesRencontres().map { OriginesEspeces.de(it, OriginesEspeces.LEGENDAIRES) }
+    operator fun invoke(): Flow<IndexFiltres> = jeu.toutesLesRencontres().map { rencontres ->
+        val origines = OriginesEspeces.de(rencontres, OriginesEspeces.LEGENDAIRES)
+        val zones = rencontres.filter { it.possibleDansRubisOmega() }.map { it.lieu }.distinctBy { it.id }
+            .sortedWith(compareBy({ it.etapeDeblocageId }, { it.nom }))
+        IndexFiltres(origines, zones)
+    }
 }

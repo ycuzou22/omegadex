@@ -1,6 +1,8 @@
 package com.omegadex.app.feature.pokedex
 
+import com.omegadex.app.domain.model.Lieu
 import com.omegadex.app.domain.model.StatutEspece
+import com.omegadex.app.domain.pokedex.OriginesEspece
 
 /** État de l'écran Pokédex de la run active. */
 sealed interface PokedexUiState {
@@ -22,6 +24,8 @@ sealed interface PokedexUiState {
         val filtres: FiltresPokedex = FiltresPokedex(),
         val resultats: List<EspeceAffichee> = especes,
         val typesDisponibles: List<String> = emptyList(),
+        /** Zones où l'on rencontre des Pokémon, dans l'ordre de l'aventure, pour le filtre par zone. */
+        val zonesDisponibles: List<Lieu> = emptyList(),
     ) : PokedexUiState
 }
 
@@ -47,4 +51,6 @@ data class EspeceAffichee(
     val statut: StatutEspece,
     val echangeRequis: Boolean,
     val aPortee: Boolean,
+    /** Lieux et méthodes de rencontre de l'espèce, pour les filtres zone et méthode. */
+    val origines: OriginesEspece = OriginesEspece(),
 )
