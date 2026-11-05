@@ -1,16 +1,19 @@
 package com.omegadex.app.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.omegadex.app.feature.succes.AnnonceSucces
 import com.omegadex.app.ui.navigation.BarreNavigationOmega
 import com.omegadex.app.ui.navigation.Destination
 import com.omegadex.app.ui.navigation.OmegadexNavHost
@@ -27,31 +30,35 @@ fun OmegadexApp(modifier: Modifier = Modifier) {
         entreeCourante?.destination?.hierarchy?.any { it.route == destination.route } == true
     }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        bottomBar = {
-            // Les écrans de détail (fiche Pokémon, fiche de lieu, Mes runs…) prennent tout l'écran,
-            // comme les maquettes ; ils ont leur propre bouton retour.
-            if (destinationCourante != null) {
-                BarreNavigationOmega(
-                    destinationCourante = destinationCourante,
-                    onDestination = { destination ->
-                        if (destination != destinationCourante) sons.jouer(Son.NAVIGATION)
-                        navController.navigate(destination.route) {
-                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                )
-            }
-        },
-    ) { padding ->
-        // Les marges du Scaffold couvrent déjà les barres système : elles sont consommées pour que les écrans
-        // qui gèrent eux-mêmes les marges (création de run) ne les ajoutent pas une seconde fois.
-        OmegadexNavHost(
-            navController = navController,
-            modifier = Modifier.padding(padding).consumeWindowInsets(padding),
-        )
+    Box(modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                // Les écrans de détail (fiche Pokémon, fiche de lieu, Mes runs…) prennent tout l'écran,
+                // comme les maquettes ; ils ont leur propre bouton retour.
+                if (destinationCourante != null) {
+                    BarreNavigationOmega(
+                        destinationCourante = destinationCourante,
+                        onDestination = { destination ->
+                            if (destination != destinationCourante) sons.jouer(Son.NAVIGATION)
+                            navController.navigate(destination.route) {
+                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                    )
+                }
+            },
+        ) { padding ->
+            // Les marges du Scaffold couvrent déjà les barres système : elles sont consommées pour que les écrans
+            // qui gèrent eux-mêmes les marges (création de run) ne les ajoutent pas une seconde fois.
+            OmegadexNavHost(
+                navController = navController,
+                modifier = Modifier.padding(padding).consumeWindowInsets(padding),
+            )
+        }
+        // Succès débloqués : annoncés par-dessus tous les écrans, sans interrompre la navigation.
+        AnnonceSucces(Modifier.align(Alignment.TopCenter))
     }
 }
