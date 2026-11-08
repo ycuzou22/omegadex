@@ -13,17 +13,20 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import java.io.IOException
+import java.text.Normalizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
  * Images des dresseurs, fournies localement par le propriétaire du projet : `assets/dresseurs/<clé>.jpg|png|webp`,
  * sinon l'image de repli du dresseur (le personnage ou sa classe : `flora.jpg`, `gamin.png`…).
- * Le dossier est ignoré par Git (voir `assets/dresseurs/LISEZMOI.md`).
+ * Les noms sont comparés sans tenir compte des tirets, soulignés, majuscules ni accents : `pierre_rochard.JPG`,
+ * `pierre-rochard.jpg` et `Pierre Rochard.png` désignent la même image. Les soulignés sont conseillés, car
+ * Android refuse les tirets dans les ressources. Le dossier est ignoré par Git (voir `assets/dresseurs/LISEZMOI.md`).
  */
 object ImagesDresseurs {
     private const val DOSSIER = "dresseurs"
-    private val EXTENSIONS = listOf("jpg", "png", "webp")
+    private val EXTENSIONS = setOf("jpg", "jpeg", "png", "webp")
 
     /** Côté maximal visé d'une image décodée, en pixels (largement assez pour la fiche et la liste). */
     private const val COTE_MAX_PX = 768
@@ -36,15 +39,32 @@ object ImagesDresseurs {
             } catch (_: IOException) {
                 emptySet()
             }
-            val nom =
-                listOf(cle, repli).flatMap { base -> EXTENSIONS.map { "$base.$it" } }.firstOrNull { it in fichiers }
-                    ?: return@withContext null
+            val nom = trouverFichier(fichiers, cle, repli) ?: return@withContext null
             try {
                 decoderReduite(context, "$DOSSIER/$nom")?.asImageBitmap()
             } catch (_: IOException) {
                 null
             }
         }
+
+    /** Le fichier image de [cle], sinon celui de [repli], parmi [fichiers] ; null si aucun ne correspond. */
+    fun trouverFichier(fichiers: Collection<String>, cle: String, repli: String = cle): String? {
+        val images = fichiers.filter { it.substringAfterLast('.', "").lowercase() in EXTENSIONS }
+            .groupBy { normaliser(it.substringBeforeLast('.')) }
+        return listOf(cle, repli).firstNotNullOfOrNull { images[normaliser(it)]?.minOrNull() }
+    }
+
+    /** « Pierre-Rochard », « pierre_rochard » et « pierre rochard » → « pierre_rochard ». */
+    fun normaliser(nom: String): String =
+        Normalizer.normalize(nom.trim().lowercase(), Normalizer.Form.NFD)
+            .replace(ACCENTS, "")
+            .replace("œ", "oe")
+            .replace("&", "et")
+            .replace(SEPARATEURS, "_")
+            .trim('_')
+
+    private val ACCENTS = Regex("\\p{Mn}+")
+    private val SEPARATEURS = Regex("[^a-z0-9]+")
 
     /**
      * Décode l'image réduite à [COTE_MAX_PX] environ : une photo de plusieurs milliers de pixels, décodée en
